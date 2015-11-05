@@ -2,6 +2,7 @@ public class Calendar
 {
   
   // public for now, maybe use a hashmap or something instead?
+  // I thought it would be helpful to easily access the date
   public Map<Date, Auction> auctionList = new Map<Date, Auction>();
   
   // create calendar based of of existing auctions perhaps?
