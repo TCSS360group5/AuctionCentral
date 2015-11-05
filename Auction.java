@@ -41,5 +41,17 @@ public class Auction
   {
     return inventory;
   }
+  
+  public boolean editItemName(Item item, String name)
+  {
+  }
+  
+  public boolean editItemStartingBid(Item item, double startingBid)
+  {
+  }
+  
+  public boolean editItemDescription(Item item, String description)
+  {
+  }
 
 }
