@@ -16,10 +16,13 @@ public class Calendar
   {
   }
   
-  // I was thinking we could have a string that represents what to edit instead
-  // of having multiple methods for different edits
   // returns whether or not a successful edit
-  public editAuction(Auction theAuction, String whatToEdit, String newEdit)
+  public editAuctionOrg(Auction theAuction, String orgName)
+  {
+  }
+  
+  // returns whether or not a successful edit
+  public editAuctionDate(Auction theAuction, String auctionDate)
   {
   }
   
