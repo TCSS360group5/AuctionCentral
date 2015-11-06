@@ -5,15 +5,18 @@ public class Auction
   // them by name?
   public Map<String, Item> inventory;
   public String orgName;
-  public Date auctionDate;
+  public String dateMonth;
+  public int dateDay;
+  public int dateYear;
+  
   
   // may have to add a time argument as well
-  public Auction(String theOrgName, Date theAuctionDate)
+  public Auction(String theOrgName, String theMonth, int theDay, int theYear)
   {
   }
   
   // may have to add a time argument as well
-  public Auction(String theOrgName, Date theAuctionDate, Map<String, Item> theInventory)
+  public Auction(String theOrgName, String theMonth, int theDay, int theYear, Map<String, Item> theInventory)
   {
   }
   
