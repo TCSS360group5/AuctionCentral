@@ -1,41 +1,54 @@
+package user;
+
+import java.util.Map;
+
 public class Item
 {
   String itemName;
-  double startingBid;
+  double myMinimumBid;
   String description;
-  double sellingPrice;
-  Map<User, double> bids;
+  //double sellingPrice;
+  private Map<User, Double> bids;
   
-  public Item(String theItemName, double theStartingBid, String the Description)
+  public Item(String theItemName, double theMinimumBid, String theDescription)
+  {
+	  
+  }
+  
+  public Item(Item theItem) {
+	  
+  }
+  
+  public void setItemName(String theItemname)
   {
   }
   
-  public boolean setItemName(String theItemname)
+  public void setMinimumBid(double theMinimumBid)
   {
   }
   
-  public boolean setStartingBid(double theStartingBid)
-  {
-  }
-  
-  public boolean setDescription(String theDescription)
+  public void setDescription(String theDescription)
   {
   }
   
   public String getItemName()
   {
+	return description;
   }
   
-  public double getStartingBid()
+  public double getMinimumBid()
   {
+	return myMinimumBid;
   }
   
   public String getDescription()
   {
+	return description;
   }
   
-  public Map<User, double> getBids()
+  public Map<User, Double> getBids()
   {
+	return bids;
   }
   
   public void bidOnItem(User user, double bid)
