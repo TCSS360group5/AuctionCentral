@@ -1,11 +1,34 @@
-public class User
+import java.util.ArrayList;
+
+public abstract class User
 {
   String username;
-  String userType;
+  public enum UserType {NPO, EMPLOYEE, BIDDER}
+  public enum Command {VIEWCALENDAR, VIEWMAINMENU, VIEWAUCTION, VIEWITEM,
+	  ADDAUCTION, EDITAUCTION, ADDITEM, EDITITEM, GOBACK, BID, EDITBID}
   
-  public User(String theUsername, String theUserType)
+  private UserType myUserType;
+  private String myUserName;
+  
+  public User(String theUserName, UserType theUserType)
   {
+	  myUserName = theUserName;
+	  myUserType = theUserType;
   }
   
-  // ... a little confused about methods here...
+  public abstract ArrayList<Command> ExecuteCommand(Command theCommand, AuctionCalendar theCalendar, Auction theAuction, Item theItem);
+  
+  public UserType getUserType(){
+	  return myUserType;
+  }
+  public String getUserName(){
+	  return myUserName;
+  }
+  public void setUserType(UserType theUserType){
+	  myUserType = theUserType;
+  }
+  public void setUserName(String theUsername){
+	  myUserName = theUsername;
+  }
+
 }
