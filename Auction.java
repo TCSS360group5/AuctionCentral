@@ -1,57 +1,76 @@
+package user;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+
 public class Auction
 {
   // public for now
   // I thought it would be good to have the item name easily available since users will be choosing
   // them by name?
-  public Map<String, Item> inventory;
-  public String orgName;
-  public Date auctionDate;
+  private ArrayList<Item> myInventory;
+  public NonProfit myNPO;
+  public Calendar myAuctionDate;
   
   // may have to add a time argument as well
-  public Auction(String theOrgName, Date theAuctionDate)
+  public Auction(NonProfit theNPO, Calendar theAuctionDate)
   {
   }
   
   // may have to add a time argument as well
-  public Auction(String theOrgName, Date theAuctionDate, Map<String, Item> theInventory)
+  // public Auction(String theOrgName, Date theAuctionDate, Map<String, Item> theInventory)
+//   {
+//   }
+  
+  public boolean setAuctionOrg(NonProfit theNPO)
   {
+    myNPO = theNPO;
+	return false;
   }
   
-  public boolean setAuctionOrg(String theOrgName)
+  public boolean setAuctionDate(Calendar theAuctionDate)
   {
-    orgName = theOrgName;
+    myAuctionDate = theAuctionDate;
+	return false;
   }
   
-  public boolean setAuctionDate(Date theAuctionDate)
+  public NonProfit getAuctionOrg()
   {
-    auctionDate = theAuctionDate;
+    return myNPO;
   }
   
-  public String getAuctionOrg()
+  public Calendar getAuctionDate()
   {
-    return orgName;
+    return myAuctionDate;
   }
   
-  public Date getAuctionDate()
+  public ArrayList<Item> getAuctionItems()
   {
-    return auctionDate;
+    return myInventory;
   }
   
-  public Map<String, Item> getAuctionItems()
+  public boolean editItemName(Item theItem, String theName)
   {
-    return inventory;
+	return false;
   }
   
-  public boolean editItemName(Item item, String name)
-  {
+  public boolean addItem(Item theItem) {
+	  return false;
   }
   
-  public boolean editItemStartingBid(Item item, double startingBid)
+  public boolean editItemStartingBid(Item theItem, double theStartingBid)
   {
+	return false;
   }
   
-  public boolean editItemDescription(Item item, String description)
+  public boolean editItemDescription(Item theItem, String theDescription)
   {
+	return false;
+  }
+  
+  public boolean placeBid(Item theItem, double theBid)
+  {
+	return false;
   }
 
 }
