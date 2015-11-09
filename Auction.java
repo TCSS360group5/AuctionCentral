@@ -1,3 +1,5 @@
+import java.util.Map;
+
 public class Auction
 {
   // public for now
@@ -20,12 +22,12 @@ public class Auction
   {
   }
   
-  public boolean setAuctionOrg(String theOrgName)
+  public void setAuctionOrg(String theOrgName)
   {
     orgName = theOrgName;
   }
   
-  public boolean setAuctionDate(Date theAuctionDate)
+  public void setAuctionDate(Date theAuctionDate)
   {
     auctionDate = theAuctionDate;
   }

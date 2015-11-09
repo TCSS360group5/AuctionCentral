@@ -16,7 +16,7 @@ public abstract class User
 	  myUserType = theUserType;
   }
   
-  public abstract ArrayList<Command> ExecuteCommand(Command theCommand, AuctionCalendar theCalendar, Auction theAuction, Item theItem);
+  public abstract ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem);
   
   public UserType getUserType(){
 	  return myUserType;
@@ -31,4 +31,8 @@ public abstract class User
 	  myUserName = theUsername;
   }
 
+  public String toString() {
+	  return myUserName + " " + myUserType.toString();
+  }
+  
 }
