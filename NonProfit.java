@@ -26,6 +26,7 @@ public class NonProfit extends User
 	  int day;
 	  int hour;
 	  int minutes;
+	  int duration;
 	  String ItemName;
 	  double MinimumPrice;
 	  String Description;
@@ -41,7 +42,9 @@ public class NonProfit extends User
 			  hour = user_input.nextInt();
 			  System.out.println("Please enter the Auction minute:");
 			  minutes = user_input.nextInt();
-			  theCalendar.addAuction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes));
+			  System.out.println("Please enter the duration (in hours) of the Auction");
+			  duration = user_input.nextInt();
+			  theCalendar.addAuction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour, minutes).plusHours(duration));
 			  break;
 		  case EDITAUCTION:
 
@@ -56,9 +59,11 @@ public class NonProfit extends User
 			  hour = user_input.nextInt();
 			  System.out.println("Please enter the Auction minute:");
 			  minutes = user_input.nextInt();
+			  System.out.println("Please enter the duration (in hours) of the Auction");
+			  duration = user_input.nextInt();
 			  try
 			  {
-				  theCalendar.addAuction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes));
+				  theCalendar.addAuction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour, minutes).plusHours(duration));
 			  } catch (Exception e) {
 				  
 			  }			  

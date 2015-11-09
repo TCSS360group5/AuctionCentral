@@ -8,10 +8,16 @@ import java.util.Scanner;
 
 public class AuctionCentralMain {
 	
-	public static void main(String theArgs[]) throws FileNotFoundException {
+	public static void main(String theArgs[]) {
 		Calendar calendar = new Calendar();
 		File userFile = new File("users.txt");
-		PrintStream out = new PrintStream(userFile);
+		PrintStream out = null;
+		try {
+			out = new PrintStream(userFile);
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		User user;
 		List<User> userList = new ArrayList<User>();
@@ -154,7 +160,8 @@ public class AuctionCentralMain {
 		for(int i = 0; i < userList.size(); i++) {
 			out.print(userList.get(i).toString()+"\n");
 		}
-		
+		out.close();
+		sc.close();
 	}
 	
 	/**
