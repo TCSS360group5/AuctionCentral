@@ -1,16 +1,35 @@
-public class User {
-  String myUsername;
-  String myUserType;
+import java.util.ArrayList;
+
+public abstract class User
+{
+  String username;
+  public enum UserType {NPO, EMPLOYEE, BIDDER}
+  public enum Command {VIEWCALENDAR, VIEWMAINMENU, VIEWAUCTION, VIEWITEM,
+	  ADDAUCTION, EDITAUCTION, ADDITEM, EDITITEM, GOBACK, BID, EDITBID}
   
-  public User(String theUsername, int theUserType) {
-	  if(theUserType == 1) {
-		  myUserType = "AuctionCentral";
-	  } else if (theUserType == 2) {
-		  myUserType = "NPO";
-	  } else if (theUserType == 3) {
-		  myUserType = "Bidder";
-	  }
+  private UserType myUserType;
+  private String myUserName;
+  
+  public User(String theUserName, UserType theUserType)
+  {
+	  myUserName = theUserName;
+	  myUserType = theUserType;
+>>>>>>> 791c892da5d07b9a1eed7c3a2a17e0efa15e1edc
   }
   
-  // ... a little confused about methods here...
+  public abstract ArrayList<Command> ExecuteCommand(Command theCommand, AuctionCalendar theCalendar, Auction theAuction, Item theItem);
+  
+  public UserType getUserType(){
+	  return myUserType;
+  }
+  public String getUserName(){
+	  return myUserName;
+  }
+  public void setUserType(UserType theUserType){
+	  myUserType = theUserType;
+  }
+  public void setUserName(String theUsername){
+	  myUserName = theUsername;
+  }
+
 }
