@@ -18,7 +18,7 @@ public class NonProfit extends User
 
   }
   
-  public ArrayList<Command> ExecuteCommand(Command theCommand, AuctionCalendar theCalendar, Auction theAuction, Item theItem)
+  public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
   {
 	  ArrayList<Command> answer = new ArrayList<Command>();
 	  int year;
@@ -32,7 +32,7 @@ public class NonProfit extends User
 	  Scanner user_input = new Scanner( System.in );
 	  switch (theCommand) {
 		  case ADDAUCTION:	  
-			  year = implementYear(user_input);user_input.nextInt();				  
+			  year = implementYear(user_input);				  
 			  System.out.println("Please enter the Auction month:");
 			  month = user_input.nextInt();
 			  System.out.println("Please enter the Auction day:");

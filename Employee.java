@@ -7,7 +7,7 @@ public class Employee extends User
 		super(theUsername, theUserType);
 	}
 
-public ArrayList<Command> ExecuteCommand(Command theCommand, AuctionCalendar theCalendar, Auction theAuction, Item theItem)
+public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
   {
 	ArrayList<Command> answer = new ArrayList<Command>();
 	switch (theCommand) {
