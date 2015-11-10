@@ -6,15 +6,20 @@ import java.util.List;
 import java.util.Scanner;
 
 
-public class AuctionCentralMain {
+public class AuctionCentralMain 
+{
 	
-	public static void main(String theArgs[]) {
+	public static void main(String theArgs[]) 
+	{
 		Calendar calendar = new Calendar();
 		File userFile = new File("users.txt");
 		PrintStream out = null;
-		try {
+		try 
+		{
 			out = new PrintStream(userFile);
-		} catch (FileNotFoundException e1) {
+		} 
+		catch (FileNotFoundException e1) 
+		{
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
@@ -26,7 +31,8 @@ public class AuctionCentralMain {
 		List<String> auctionList = new ArrayList<String>();		
 //		List<Auction> auctionList = new ArrayList<Auction>();
 
-		try {
+		try 
+		{
 	        Scanner s = new Scanner(userFile);
 	        while (s.hasNext()) {
 //	        	userList.add(s.nextLine());
@@ -45,7 +51,8 @@ public class AuctionCentralMain {
 	        }
 	        s.close();
 	    } 
-	    catch (FileNotFoundException e) {
+	    catch (FileNotFoundException e) 
+		{
 	        e.printStackTrace();
 	    }
 				
@@ -63,11 +70,15 @@ public class AuctionCentralMain {
 		System.out.println("1) AuctionCentral Employee\n2) Non-Profit Organization\n3) Bidder");
 		
 		int userType = sc.nextInt();
-		if(userType == 1) {
+		if(userType == 1) 
+		{
 			user = new Employee(userName, User.UserType.EMPLOYEE);
-			if(checkLogin(userList, user)) {
+			if(checkLogin(userList, user))
+			{
 				System.out.println("Welcome back, " + userName + "!");
-			} else {
+			} 
+			else 
+			{
 				userList.add(user);
 			}
 			System.out.println("\nAuctionCentral Employee Homepage");
@@ -77,33 +88,44 @@ public class AuctionCentralMain {
 			System.out.println("2) View auctions");
 			
 			option = sc.nextInt();
-			if (option == 1) {
+			if (option == 1) 
+			{
 				System.out.println(calendar);
-			} else if (option == 2) {
+			} 
+			else if (option == 2) 
+			{
 				System.out.println("Enter the number of an auction to view its details.");
 				// print out auction list
 			}
-		} else if(userType == 2) {
+		} 
+		else if(userType == 2)
+		{
 			System.out.println("What is the name of your Non-Profit Organization?");
 			String NPOname = sc.nextLine();
 			user = new NonProfit(userName, User.UserType.NPO, NPOname, 0);
-			if(checkLogin(userList, user)) {
+			if(checkLogin(userList, user)) 
+			{
 				System.out.println("Welcome back, " + userName + "!");
-			} else {
+			} 
+			else 
+			{
 				userList.add(user);
 			}
 			
 			System.out.println("\nNon-Profit Organization Staff Member Homepage");
 			System.out.println("------------------------------------------------");
 			boolean existingAuction = false;
-			if(checkAuctions(auctionList, NPOname)) {
+			if(checkAuctions(auctionList, NPOname)) 
+			{
 				existingAuction = true;
 				System.out.println("You have an auction scheduled already.");
 				System.out.println("What would you like to do?");
 				System.out.println("1. Edit auction information");
 				System.out.println("2. Add new inventory items");
 				System.out.println("3. Edit inventory items");
-			} else {
+			} 
+			else 
+			{
 				System.out.println("What would you like to do?");
 				System.out.println("1) Schedule an auction");
 			}
@@ -112,12 +134,16 @@ public class AuctionCentralMain {
 			
 			
 			
-			switch(option) { 
+			switch(option) 
+			{ 
 				
 			case 1:
-				if(existingAuction) {
+				if(existingAuction) 
+				{
 					user.ExecuteCommand(User.Command.EDITAUCTION, calendar, null, null);
-				} else {
+				}
+				else 
+				{
 					user.ExecuteCommand(User.Command.ADDAUCTION, calendar, null, null);
 				}
 				
@@ -131,11 +157,16 @@ public class AuctionCentralMain {
 			case 3: 
 				user.ExecuteCommand(User.Command.EDITITEM, calendar, null, null);
 			}
-		} else if (userType == 3) {
+		} 
+		else if (userType == 3)
+		{
 			user = new Bidder(userName, User.UserType.BIDDER);
-			if(checkLogin(userList, user)) {
+			if(checkLogin(userList, user)) 
+			{
 				System.out.println("Welcome back, " + userName + "!");
-			} else {
+			}
+			else 
+			{
 				userList.add(user);
 			}
 			
@@ -147,7 +178,8 @@ public class AuctionCentralMain {
 			
 			option = sc.nextInt();
 			
-			switch(option) {
+			switch(option)
+			{
 				case 1: 
 					// print out auction list
 					break;
@@ -157,7 +189,8 @@ public class AuctionCentralMain {
 			}
 		}
 		
-		for(int i = 0; i < userList.size(); i++) {
+		for(int i = 0; i < userList.size(); i++) 
+		{
 			out.print(userList.get(i).toString()+"\n");
 		}
 		out.close();
@@ -171,10 +204,13 @@ public class AuctionCentralMain {
 	 * @param theUser
 	 * @return true if the user exists, false otherwise
 	 */
-	public static boolean checkLogin(List<User> theList, User theUser) {
+	public static boolean checkLogin(List<User> theList, User theUser) 
+	{
 		boolean result = false;
-		for(int i = 0; i < theList.size(); i++) {
-			if(theList.get(i).getUserName().equals(theUser.getUserName()) && theList.get(i).getUserType().equals(theUser.getUserType())) {
+		for(int i = 0; i < theList.size(); i++) 
+		{
+			if(theList.get(i).getUserName().equals(theUser.getUserName()) && theList.get(i).getUserType().equals(theUser.getUserType()))
+			{
 				result = true;
 			}
 		}
@@ -188,7 +224,8 @@ public class AuctionCentralMain {
 	 * @param theNPOname
 	 * @return true if an auction exists, false otherwise
 	 */
-	public static boolean checkAuctions(List<String> theAuctions, String theNPOname) {
+	public static boolean checkAuctions(List<String> theAuctions, String theNPOname) 
+	{
 		return theAuctions.contains(theNPOname);
 	}
 	
