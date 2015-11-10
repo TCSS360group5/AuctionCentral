@@ -1,112 +1,121 @@
+import java.util.List;
+
 import java.time.LocalDateTime;
-
-import java.util.Map;
-
 
 public class Auction
 {
   // public for now
-  // I thought it would be good to have the item name easily available since users will be choosing
-  // them by name?
-  private Map<String, Item> myInventory;
-  private String myOrgName;
-  private String myAuctionName;
-  private LocalDateTime myAuctionStart;
-  private LocalDateTime myAuctionEnd;
+  public List<Item> inventory;
+  public String orgName;
+  //public Date auctionDate;
+  public String auctionName;
   
   //Fields for local date
-//  LocalDate startTime;
-//  LocalDate endTime;
+  LocalDateTime startTime;
+  LocalDateTime endTime;
   
-  // may have to add a time argument as well
-  public Auction(String theOrgName, String theAuctionName, LocalDateTime theAuctionStart, LocalDateTime theAuctionEnd)
+  //create auction constructor
+  public Auction(String theOrgName, String myAuctionName, LocalDateTime myStartTime, LocalDateTime myEndTime)
   {
-	  myOrgName = theOrgName;
-     myAuctionName = theAuctionName;
-	  myAuctionStart = theAuctionStart;
-     myAuctionEnd = theAuctionEnd;
+	  orgName = theOrgName;
+	  auctionName = myAuctionName;
+	  startTime = myStartTime;
+	  endTime = myEndTime;
   }
   
-  // may have to add a time argument as well
-  public Auction(String theOrgName, String theAuctionName, LocalDateTime theAuctionStart, LocalDateTime theAuctionEnd, Map<String, Item> theInventory)
+  //create another auction constructor with same inventory list - copy constructor?
+  public Auction(String theOrgName, String myAuctionName, LocalDateTime myStartTime, LocalDateTime myEndTime, List<Item> myInventory)
   {
-	  myOrgName = theOrgName;
-     myAuctionName = theAuctionName;
-     myAuctionStart = theAuctionStart;
-     myAuctionEnd = theAuctionEnd;
-	  myInventory = theInventory;
+	  orgName = theOrgName;
+	  auctionName = myAuctionName;
+	  startTime = myStartTime;
+	  endTime = myEndTime;
+	  inventory = myInventory;
   }
   
-  public boolean setAuctionOrg(String theOrgName)
-  {
-    myOrgName = theOrgName;
-    return true;
-  }
-  
-  public boolean setAuctionName(String theName)
-  {
-      myAuctionName = theName;
-      return true;
-  }
-  
-  public boolean setAuctionDate(LocalDateTime theAuctionStart, LocalDateTime theAuctionEnd)
-  {
-     myAuctionStart = theAuctionStart;
-     myAuctionEnd = theAuctionEnd;
-    return true;
-  }
-  
+  //get the auction organization
   public String getAuctionOrg()
   {
-    return myOrgName;
+    return orgName;
   }
   
+  //set the auction's organization name
+  public boolean setAuctionOrg(String theOrgName)
+  {
+    orgName = theOrgName;
+    return true;
+  }
+  
+  //return the list of auction items
+  public List<Item> getAuctionItems()
+  {
+    return inventory;
+  }
+  
+  //add item to auction inventory list
+  public boolean addItem(Item myItem)
+  {
+	  inventory.add(myItem);
+	  return true;
+  }
+  
+  //edit the item name
+  public boolean editItemName(Item myItem, String newName)
+  {
+	  inventory.get(inventory.indexOf(myItem)).setItemName(newName);
+	  return true;
+  }
+  
+  //edit the starting bid of the item
+  public boolean editItemStartingBid(Item myItem, double myStartingBid)
+  {
+	  inventory.get(inventory.indexOf(myItem)).setStartingBid(myStartingBid);
+	  return true;
+  }
+  
+  //method to edit item's description
+  public boolean editItemDescription(Item myItem, String description)
+  {
+	  inventory.get(inventory.indexOf(myItem)).setDescription(description);
+	  return true;
+  }
+ 
+  //get auction name
   public String getAuctionName()
   {
-    return myAuctionName;
+	  return auctionName;
   }
   
-    public LocalDateTime getStartDate()
+  //set auction name
+  public void setAuctionName(String myAuctionName)
   {
-    return myAuctionStart;
+	  auctionName = myAuctionName;
   }
   
-   public LocalDateTime getEndDate()
+  //returns start time of the auction
+  public LocalDateTime getStartTime()
   {
-    return myAuctionEnd;
+	  return endTime;
   }
   
-  public Map<String, Item> getAuctionItems()
+  //sets the starting time of the auction
+  public boolean setStartTime(LocalDateTime myStartTime)
   {
-    return myInventory;
+	  endTime = myStartTime;
+	  return true;	  
   }
   
-  public boolean addItem(Item item){
-	      myInventory.put(item.getItemName(), item);
-	 return true;
-  }
-  public boolean editItemName(Item item, String newName)
+  //returns the ending time of the auction
+  public LocalDateTime getEndTime()
   {
-	  myInventory.remove(item);
-     
-	  //inventory.put(item, newName);
-	  return true;
+	  return endTime;
   }
   
-  public boolean editItemStartingBid(Item item, double startingBid)
+  //set end time of the auction
+  public boolean setEndTime(LocalDateTime myEndTime)
   {
-	  
-	  return true;
-  }
-  
-  public boolean editItemDescription(Item item, String description)
-  {
-	  //inventory.put(item.getItemName());
-	  return true;
-  }
-  
-  public void updateItem(Item item){
-	  
+	  endTime = myEndTime;
+	  return true;	  
   }
 
 }
