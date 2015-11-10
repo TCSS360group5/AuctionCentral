@@ -1,4 +1,5 @@
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,13 +9,13 @@ import java.text.DateFormatSymbols;
 
 public class Calendar
 {
-  public Map<LocalDateTime, ArrayList<Auction>> myAuctionByDateList;
+  public Map<LocalDate, ArrayList<Auction>> myAuctionByDateList;
   public int futureAuctions;
   DateFormatSymbols symbols = new DateFormatSymbols();
   
   public Calendar()
   {
-	  myAuctionByDateList = new HashMap<LocalDateTime, ArrayList<Auction>>();
+	  myAuctionByDateList = new HashMap<LocalDate, ArrayList<Auction>>();
 	  futureAuctions = 0;
   }
   
@@ -24,12 +25,13 @@ public class Calendar
 						Start.getHour(), Start.getMinute(), End.getHour(), End.getMinute());
 			}
   
+  // TODO: check the week requirement
   public boolean addAuction(String orgName, int month, int day, int year,
 		  					int auctionHourStart, int auctionMinuteStart,
 		  					int auctionHourEnd, int auctionMinuteEnd)
   {
 	  // create new dates
-	  //LocalDate	auctionDate = LocalDate.of(year, month, day);
+	  LocalDate auctionDate = LocalDate.of(year, month, day);
 	  LocalDateTime auctionStart = LocalDateTime.of(year, month, day, auctionHourStart, auctionMinuteStart);
 	  LocalDateTime auctionEnd = LocalDateTime.of(year, month, day, auctionHourEnd, auctionMinuteEnd);
 	  String auctionName = orgName.replace(' ', '-') + symbols.getMonths()[month-1] + "-" + day + "-" + year;
@@ -64,7 +66,7 @@ public class Calendar
 				  {
 					  dayAuctions.add(auctionToAdd);
 					  futureAuctions ++;
-					  myAuctionByDateList.replace(auctionStart, dayAuctions);
+					  myAuctionByDateList.replace(auctionDate, dayAuctions);
 					  return true;
 				  }
 				  else
@@ -79,7 +81,7 @@ public class Calendar
 				  {
 					  dayAuctions.add(auctionToAdd);
 					  futureAuctions ++;
-					  myAuctionByDateList.replace(auctionStart, dayAuctions);
+					  myAuctionByDateList.replace(auctionDate, dayAuctions);
 					  return true;
 				  }
 				  else
@@ -100,12 +102,13 @@ public class Calendar
 		  ArrayList<Auction> newListToAdd = new ArrayList<Auction>();
 		  newListToAdd.add(auctionToAdd);
 		  futureAuctions ++;
-		  myAuctionByDateList.put(auctionStart, newListToAdd);
+		  myAuctionByDateList.put(auctionDate, newListToAdd);
 		  return true;
 	  }
 	  
   }
   
+  // probably not needed
   public void editAuctionOrg(Auction theAuction, String orgName)
   {
 	  DateFormatSymbols symbols = new DateFormatSymbols();
@@ -120,6 +123,7 @@ public class Calendar
 	  theAuction.setAuctionName(auctionName);
   }
   
+  // TODO: check for time conflicts
   public void editAuctionDateTime(Auction theAuction,int month, int day, int year,
 								int auctionHourStart, int auctionMinuteStart,
 								int auctionHourEnd, int auctionMinuteEnd)
@@ -179,4 +183,6 @@ public class Calendar
   }
   
 }
+
+// TODO: add toString method
 
