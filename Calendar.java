@@ -59,10 +59,10 @@ public class Calendar
 		  if(dayAuctions.size() < 2)
 		  {
 			  Auction firstAuction = dayAuctions.get(0);
-			  if(auctionStart.isBefore(firstAuction.getStartDate()))
+			  if(auctionStart.isBefore(firstAuction.getStartTime()))
 			  {
 				  // at least 2 hours between actions
-				  if(auctionEnd.plusHours(2).isBefore(firstAuction.getStartDate()))
+				  if(auctionEnd.plusHours(2).isBefore(firstAuction.getStartTime()))
 				  {
 					  dayAuctions.add(auctionToAdd);
 					  futureAuctions ++;
@@ -77,7 +77,7 @@ public class Calendar
 			  else
 			  {
 				  // at least 2 hours between actions
-				  if(auctionStart.isAfter(firstAuction.getEndDate().plusHours(2)))
+				  if(auctionStart.isAfter(firstAuction.getEndTime().plusHours(2)))
 				  {
 					  dayAuctions.add(auctionToAdd);
 					  futureAuctions ++;
@@ -112,9 +112,9 @@ public class Calendar
   public void editAuctionOrg(Auction theAuction, String orgName)
   {
 	  DateFormatSymbols symbols = new DateFormatSymbols();
-	  int month = theAuction.getStartDate().getMonth().getValue();
-	  int day = theAuction.getStartDate().getDayOfMonth();
-	  int year = theAuction.getStartDate().getYear();
+	  int month = theAuction.getStartTime().getMonth().getValue();
+	  int day = theAuction.getStartTime().getDayOfMonth();
+	  int year = theAuction.getStartTime().getYear();
 	  // naming format requirement
 	  String auctionName = orgName.replace(' ', '-') + symbols.getMonths()[month-1] + "-" + day + "-" + year;
 	  
@@ -140,16 +140,16 @@ public class Calendar
   }
   
   // returns auctions for the current month
-  public Map<LocalDateTime, ArrayList<Auction>> displayCurrentMonth()
+  public Map<LocalDate, ArrayList<Auction>> displayCurrentMonth()
   {
-	  return displayChosenMonth(LocalDateTime.now().getMonth().getValue());
+	  return displayChosenMonth(LocalDate.now().getMonth().getValue());
   }
   
-  public Map<LocalDateTime, ArrayList<Auction>> displayChosenMonth(int month)
+  public Map<LocalDate, ArrayList<Auction>> displayChosenMonth(int month)
   {
-	  Map<LocalDateTime, ArrayList<Auction>> returnMap = new HashMap<LocalDateTime,ArrayList<Auction>>();
+	  Map<LocalDate, ArrayList<Auction>> returnMap = new HashMap<LocalDate,ArrayList<Auction>>();
 	  Month chosenMonth = Month.of(month);
-	  for(Entry<LocalDateTime, ArrayList<Auction>> entry : myAuctionByDateList.entrySet())
+	  for(Entry<LocalDate, ArrayList<Auction>> entry : myAuctionByDateList.entrySet())
 	  {
 		  if(entry.getKey().getMonth() == chosenMonth)
 		  {
