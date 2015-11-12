@@ -30,6 +30,9 @@ public class Calendar
 		  					int auctionHourStart, int auctionMinuteStart,
 		  					int auctionHourEnd, int auctionMinuteEnd)
   {
+	  
+	  boolean result = false;
+	  
 	  // create new dates
 	  LocalDate auctionDate = LocalDate.of(year, month, day);
 	  LocalDateTime auctionStart = LocalDateTime.of(year, month, day, auctionHourStart, auctionMinuteStart);
@@ -43,12 +46,12 @@ public class Calendar
 	  // don't add if future auctions is already at capacity
 	  if(futureAuctions == 25)
 	  {
-		  return false;
+		  result = false;
 	  }
 	  // do not allow past auctions to be added (not a business rule, but convenient)
 	  else if(auctionStart.isAfter(LocalDateTime.now().plusDays(90)) || auctionStart.isBefore(LocalDateTime.now()))
 	  {		   
-		  return false;
+		  result = false;
 	  }
 	  // if there is already at least one auction scheduled on the day, check business rules
 	  else if(myAuctionByDateList.containsKey(auctionStart))
@@ -67,11 +70,11 @@ public class Calendar
 					  dayAuctions.add(auctionToAdd);
 					  futureAuctions ++;
 					  myAuctionByDateList.replace(auctionDate, dayAuctions);
-					  return true;
+					  result = true;
 				  }
 				  else
 				  {
-					  return false;
+					  result = false;
 				  }
 			  }
 			  else
@@ -82,18 +85,18 @@ public class Calendar
 					  dayAuctions.add(auctionToAdd);
 					  futureAuctions ++;
 					  myAuctionByDateList.replace(auctionDate, dayAuctions);
-					  return true;
+					  result = true;
 				  }
 				  else
 				  {
-					  return false;
+					  result = false;
 				  }
 			  }
 		  }
 		  // 2 auctions already scheduled for the day
 		  else
 		  {
-			  return false;
+			  result = false;
 		  }
 	  }
 	  // go ahead and schdule if no auctions already scheduled for the day
@@ -103,9 +106,11 @@ public class Calendar
 		  newListToAdd.add(auctionToAdd);
 		  futureAuctions ++;
 		  myAuctionByDateList.put(auctionDate, newListToAdd);
-		  return true;
+		  result = true;
 	  }
 	  
+//	  System.out.println("Auctions: " + myAuctionByDateList.entrySet());
+	  return result;
   }
   
   // probably not needed
