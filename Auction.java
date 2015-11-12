@@ -5,122 +5,132 @@ import java.time.LocalDateTime;
 public class Auction
 {
   // public for now
-  public List<Item> inventory;
-  public String orgName;
+  public List<Item> myInventory;
+  public String myOrgName;
   //public Date auctionDate;
-  public String auctionName;
+  public String myAuctionName;
   
   //Fields for local date
-  LocalDateTime startTime;
-  LocalDateTime endTime;
+  LocalDateTime myStartTime;
+  LocalDateTime myEndTime;
   
   //create auction constructor
-  public Auction(String theOrgName, String myAuctionName, LocalDateTime myStartTime, LocalDateTime myEndTime)
+  public Auction(String theOrgName, String theAuctionName, LocalDateTime theStartTime, LocalDateTime theEndTime)
   {
-	  orgName = theOrgName;
-	  auctionName = myAuctionName;
-	  startTime = myStartTime;
-	  endTime = myEndTime;
+	  myOrgName = theOrgName;
+	  myAuctionName = theAuctionName;
+	  myStartTime = theStartTime;
+	  myEndTime = theEndTime;
   }
   
   //create another auction constructor with same inventory list - copy constructor?
-  public Auction(String theOrgName, String myAuctionName, LocalDateTime myStartTime, LocalDateTime myEndTime, List<Item> myInventory)
+  public Auction(String theOrgName, String theAuctionName, LocalDateTime theStartTime, LocalDateTime theEndTime, List<Item> theInventory)
   {
-	  orgName = theOrgName;
-	  auctionName = myAuctionName;
-	  startTime = myStartTime;
-	  endTime = myEndTime;
-	  inventory = myInventory;
+	  myOrgName = theOrgName;
+	  myAuctionName = theAuctionName;
+	  myStartTime = theStartTime;
+	  myEndTime = theEndTime;
+	  myInventory = theInventory;
   }
   
   //get the auction organization
   public String getAuctionOrg()
   {
-    return orgName;
+    return myOrgName;
   }
   
   //set the auction's organization name
   public boolean setAuctionOrg(String theOrgName)
   {
-    orgName = theOrgName;
+    myOrgName = theOrgName;
     return true;
   }
   
   //return the list of auction items
   public List<Item> getAuctionItems()
   {
-    return inventory;
+    return myInventory;
   }
   
   //add item to auction inventory list
   public boolean addItem(Item myItem)
   {
-	  inventory.add(myItem);
+	  myInventory.add(myItem);
 	  return true;
   }
   
   //edit the item name
   public boolean editItemName(Item myItem, String newName)
   {
-	  inventory.get(inventory.indexOf(myItem)).setItemName(newName);
+	  myInventory.get(myInventory.indexOf(myItem)).setItemName(newName);
 	  return true;
   }
   
   //edit the starting bid of the item
   public boolean editItemStartingBid(Item myItem, double myStartingBid)
   {
-	  inventory.get(inventory.indexOf(myItem)).setStartingBid(myStartingBid);
+	  myInventory.get(myInventory.indexOf(myItem)).setStartingBid(myStartingBid);
 	  return true;
   }
   
   //method to edit item's description
   public boolean editItemDescription(Item myItem, String description)
   {
-	  inventory.get(inventory.indexOf(myItem)).setDescription(description);
+	  myInventory.get(myInventory.indexOf(myItem)).setDescription(description);
 	  return true;
   }
  
   //get auction name
   public String getAuctionName()
   {
-	  return auctionName;
+	  return myAuctionName;
   }
   
   //set auction name
-  public void setAuctionName(String myAuctionName)
+  public void setAuctionName(String theAuctionName)
   {
-	  auctionName = myAuctionName;
+	  myAuctionName = theAuctionName;
   }
   
   //returns start time of the auction
   public LocalDateTime getStartTime()
   {
-	  return endTime;
+	  return myEndTime;
   }
   
   //sets the starting time of the auction
-  public boolean setStartTime(LocalDateTime myStartTime)
+  public boolean setStartTime(LocalDateTime theStartTime)
   {
-	  startTime = myStartTime;
+	  myStartTime = theStartTime;
 	  return true;	  
   }
   
   //returns the ending time of the auction
   public LocalDateTime getEndTime()
   {
-	  return endTime;
+	  return myEndTime;
   }
   
   //set end time of the auction
-  public boolean setEndTime(LocalDateTime myEndTime)
+  public boolean setEndTime(LocalDateTime theEndTime)
   {
-	  endTime = myEndTime;
+	  myEndTime = theEndTime;
 	  return true;	  
   }
 
-public void setAuctionDate(LocalDateTime auctionStart, LocalDateTime auctionEnd) {
-	endTime = auctionEnd;
-	startTime = auctionStart;
-}
+  public void setAuctionDate(LocalDateTime theAuctionStart, LocalDateTime theAuctionEnd) {
+	myEndTime = theAuctionEnd;
+	myStartTime = theAuctionStart;
+  }
+  
+  public String toString(){
+	  StringBuilder answer = new StringBuilder();
+	  answer.append("Name: " + myAuctionName + "/n");
+	  answer.append("org: " + myOrgName + "/n");
+	  answer.append("Start: " + myStartTime + "/n");
+	  answer.append("End: " + myEndTime + "/n");
+	  answer.append("Items: " + myInventory.size() + "/n/n");
+	  return answer.toString();
+  }
 
 }
