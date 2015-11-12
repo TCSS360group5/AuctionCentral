@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 
-public abstract class User
+public class User
 {
   String username;
   public enum UserType {NPO, EMPLOYEE, BIDDER}
   public enum Command {VIEWCALENDAR, VIEWMAINMENU, VIEWAUCTION, VIEWITEM,
-	  ADDAUCTION, EDITAUCTION, ADDITEM, EDITITEM, GOBACK, BID, EDITBID}
+	  ADDAUCTION, EDITAUCTION, ADDITEM, EDITITEM, GOBACK, BID, EDITBID, LOGIN}
   
   private UserType myUserType;
   private String myUserName;
@@ -16,7 +16,13 @@ public abstract class User
 	  myUserType = theUserType;
   }
   
-  public abstract ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem);
+  public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
+  {
+	  ArrayList<Command> answer = new ArrayList<Command>();
+	  answer.add(User.Command.LOGIN);
+	  return answer;
+  }
+
   
   public UserType getUserType(){
 	  return myUserType;
