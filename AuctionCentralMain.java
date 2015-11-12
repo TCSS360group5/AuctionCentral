@@ -101,7 +101,7 @@ public class AuctionCentralMain
 		else if(userType == 2)
 		{
 			System.out.println("What is the name of your Non-Profit Organization?");
-			String NPOname = sc.nextLine();
+			String NPOname = sc.next();
 			user = new NonProfit(userName, User.UserType.NPO, NPOname, 0);
 			if(checkLogin(userList, user)) 
 			{
@@ -145,6 +145,8 @@ public class AuctionCentralMain
 				else 
 				{
 					user.ExecuteCommand(User.Command.ADDAUCTION, calendar, null, null);
+					 System.out.println("Auctions: " + calendar.myAuctionByDateList.entrySet());
+					 
 				}
 				
 				// Need a way to get the auction created back to main, so that it can be added to the text file.
