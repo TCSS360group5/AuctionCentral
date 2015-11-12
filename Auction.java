@@ -95,7 +95,7 @@ public class Auction
   //returns start time of the auction
   public LocalDateTime getStartTime()
   {
-	  return myEndTime;
+	  return myStartTime;
   }
   
   //sets the starting time of the auction

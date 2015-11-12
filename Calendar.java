@@ -13,6 +13,9 @@ public class Calendar
   public int futureAuctions;
   DateFormatSymbols symbols = new DateFormatSymbols();
   
+  // maybe new constructor to pass in a Map of previous auctions stored in text file from main? and the number of future auctoins
+  
+  
   public Calendar()
   {
 	  myAuctionByDateList = new HashMap<LocalDate, ArrayList<Auction>>();
@@ -37,7 +40,7 @@ public class Calendar
 	  LocalDate auctionDate = LocalDate.of(year, month, day);
 	  LocalDateTime auctionStart = LocalDateTime.of(year, month, day, auctionHourStart, auctionMinuteStart);
 	  LocalDateTime auctionEnd = LocalDateTime.of(year, month, day, auctionHourEnd, auctionMinuteEnd);
-	  String auctionName = orgName.replace(' ', '-') + symbols.getMonths()[month-1] + "-" + day + "-" + year;
+	  String auctionName = orgName.replace(' ', '-') + "-" + symbols.getMonths()[month-1] + "-" + day + "-" + year;
 	  
 	  // new auction to add
 	  Auction auctionToAdd = new Auction(orgName, auctionName, auctionStart, auctionEnd);

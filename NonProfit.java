@@ -44,7 +44,7 @@ public class NonProfit extends User
 			  minutes = user_input.nextInt();
 			  System.out.println("Please enter the duration (in hours) of the Auction");
 			  duration = user_input.nextInt();
-			  theCalendar.addAuction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour, minutes).plusHours(duration));
+			  theCalendar.addAuction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
 			  break;
 		  case EDITAUCTION:
 
