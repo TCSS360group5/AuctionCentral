@@ -24,6 +24,16 @@ public class AuctionCentralMain
 		Calendar calendar = new Calendar();
 		ArrayList<User> userList = new ArrayList<User>();
 		ArrayList<Auction> auctionList = new ArrayList<Auction>();
+		//if the file doesn't exist, it creates it
+		if (!(new File("AuctionCentral/users.txt").isFile())) 
+		{
+			outputUsers(new File("users.txt"), userList);
+		}
+		if (!(new File("auctions.txt").isFile())) 
+		{
+			outputAuctions(new File("auctions.txt"), auctionList);
+		}
+		
 		File userFile = new File("users.txt");
 		File auctionFile = new File("auctions.txt");
 
@@ -34,7 +44,7 @@ public class AuctionCentralMain
 		
 		System.out.println("Welcome to AuctionCentral!");
 		System.out.print("Please enter your username: ");
-		String userName = userScanner.next();
+		String userName = userScanner.nextLine();
 		System.out.println("Hello, " + userName + "!");
 		System.out.println("Are you an AuctionCentral employee, a non-profit organization member, or a bidder?");
 		System.out.println("1) AuctionCentral Employee\n2) Non-Profit Organization\n3) Bidder");
