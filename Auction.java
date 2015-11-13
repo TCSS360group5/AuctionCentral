@@ -99,13 +99,7 @@ public class Auction
   {
 	  return myStartTime;
   }
-  
-  //sets the starting time of the auction
-  public boolean setStartTime(LocalDateTime theStartTime)
-  {
-	  myStartTime = theStartTime;
-	  return true;	  
-  }
+
   
   //returns the ending time of the auction
   public LocalDateTime getEndTime()
@@ -117,12 +111,6 @@ public class Auction
 	  return myUserName;
   }
   
-  //set end time of the auction
-  public boolean setEndTime(LocalDateTime theEndTime)
-  {
-	  myEndTime = theEndTime;
-	  return true;	  
-  }
 
   public void setAuctionDate(LocalDateTime theAuctionStart, LocalDateTime theAuctionEnd) {
 	myEndTime = theAuctionEnd;
