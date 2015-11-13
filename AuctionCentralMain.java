@@ -103,12 +103,13 @@ public class AuctionCentralMain
 		{
 	        Scanner s = new Scanner(auctionFile);
 	        while (s.hasNext()) {
+	        	System.out.println("BACK HERE! ");
 	        String auctionName = s.next();
 	        
 	        int j = auctionName.indexOf('-');			// finding the indexes of - to skip over them
 	        int k = auctionName.indexOf('-', j+1);
 	        int l = auctionName.indexOf('-', k+1);
-
+//	        System.out.println(auctionName);
 	        String orgName = auctionName.substring(0, j); // name
 	        String month = auctionName.substring(j+1, k); // month
 	        int day = Integer.parseInt(auctionName.substring(k+1, l)); // day
@@ -120,12 +121,18 @@ public class AuctionCentralMain
 	        int endMinute = s.nextInt();
 	        
 	        String item = s.next();
-	        
-	        auctionList.add(new Auction(orgName, auctionName, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
-	        		LocalDateTime.of(year, months.get(month), day, endHour, endMinute)));
-	        
-	        calendar.addAuction(orgName, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
+//	        String userName = "";
+	        String userName = s.next();
+	        Auction newAuction = new Auction(orgName, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
 	        		LocalDateTime.of(year, months.get(month), day, endHour, endMinute));
+	        newAuction.setUserName(userName);
+	        auctionList.add(newAuction);
+	        
+	        calendar.addAuction(userName, newAuction, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
+	        		LocalDateTime.of(year, months.get(month), day, endHour, endMinute));
+	        
+//	        calendar.addAuction(userName, newAuction, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
+//	        		LocalDateTime.of(year, months.get(month), day, endHour, endMinute));
 	        }
 	        s.close();
 	    } 
@@ -162,11 +169,11 @@ public class AuctionCentralMain
 	 * @param theNPOname
 	 * @return true if an auction exists, false otherwise
 	 */
-	public static boolean checkAuctions(List<Auction> theAuctions, String theNPOname) 
+	public static boolean checkAuctions(List<Auction> theAuctions, String theNPOname, String theUserName) 
 	{
 		boolean result = false;
 		for(int i = 0; i < theAuctions.size(); i++) {
-			if(theAuctions.get(i).getAuctionOrg().equals(theNPOname)) {
+			if(theAuctions.get(i).getAuctionOrg().equals(theNPOname) && theAuctions.get(i).getUserName().equals(theUserName)) {
 				result = true;
 			}
 		}
@@ -234,20 +241,45 @@ public class AuctionCentralMain
 		
 		System.out.println("\nNon-Profit Organization Staff Member Homepage");
 		System.out.println("------------------------------------------------");
+		boolean loginPass = false;
 		boolean existingAuction = false;
-		if(checkAuctions(theAuctionList, NPOname)) 
-		{
-			existingAuction = true;
-			System.out.println("You have an auction scheduled already.");
+		boolean auctionFound = false;
+		Auction currentNPOauction = null;
+		int i = 0;
+		if(!theAuctionList.isEmpty()){
+			while(!auctionFound) {
+			if(theAuctionList.get(i).getAuctionOrg().equals(NPOname) && theAuctionList.get(i).getUserName().equals(theUserName)) {
+				currentNPOauction = theAuctionList.get(i);
+				System.out.println("You have an auction scheduled already.");
+				System.out.println("What would you like to do?");
+				System.out.println("1. Edit auction information");
+				System.out.println("2. Add new inventory items");
+				System.out.println("3. Edit inventory items");
+				loginPass = true;
+				existingAuction = true;
+				auctionFound = true;
+			} else if(theAuctionList.get(i).getAuctionOrg().equals(NPOname) && !theAuctionList.get(i).getUserName().equals(theUserName)) {
+				System.out.println("Someone else from your Non-Profit organization has already scheduled an auction.");
+				System.out.println("Only one person from each Non-Profit organization may schedule an auction for that organization.");
+				auctionFound = true;
+			} else if(!theAuctionList.get(i).getAuctionOrg().equals(NPOname) && theAuctionList.get(i).getUserName().equals(theUserName)) {
+				System.out.println("This username is already registered for a different Non-Profit organization.");
+				System.out.println("You may only represent one Non-Profit Organization.");
+				auctionFound = true;
+			} else if(!(theAuctionList.get(i).getAuctionOrg().equals(NPOname) || theAuctionList.get(i).getUserName().equals(theUserName))) {
+				System.out.println("What would you like to do?");
+				System.out.println("1) Schedule an auction");			
+				loginPass = true;
+				existingAuction = false;
+				auctionFound = true;
+			}
+			i++;
+		}
+		} else {
 			System.out.println("What would you like to do?");
-			System.out.println("1. Edit auction information");
-			System.out.println("2. Add new inventory items");
-			System.out.println("3. Edit inventory items");
-		} 
-		else 
-		{
-			System.out.println("What would you like to do?");
-			System.out.println("1) Schedule an auction");
+			System.out.println("1) Schedule an auction");	
+			loginPass = true;
+			existingAuction = false;
 		}
 		
 		option = theScanner.nextInt();
@@ -256,20 +288,22 @@ public class AuctionCentralMain
 		{ 
 			
 		case 1:
-			if(existingAuction) 		// the NPO has an auction already, so edit
+			if(loginPass && existingAuction) 		// the NPO has an auction already, so edit
 			{
-				user.ExecuteCommand(User.Command.EDITAUCTION, theCalendar, null, null);
+				user.ExecuteCommand(User.Command.EDITAUCTION, theCalendar, currentNPOauction, null);
 			}
-			else 				// NPO doesn't have an auction so add one
+			else if(loginPass && !existingAuction)				// NPO doesn't have an auction so add one
 			{							
 				user.ExecuteCommand(User.Command.ADDAUCTION, theCalendar, null, null);
 				Collection<ArrayList<Auction>> auctions = theCalendar.myAuctionByDateList.values();
 				Iterator it = auctions.iterator();
 				while(it.hasNext()) {
 					ArrayList<Auction> a = (ArrayList<Auction>) it.next();
-					for(int i = 0; i < a.size(); i++) {
-						Auction auction = a.get(i);
-						theAuctionList.add(auction);
+					for(int j = 0; j < a.size(); j++) {
+						Auction auction = a.get(j);
+						if(auction.myOrgName.equals(NPOname)) {
+							theAuctionList.add(auction);
+						}
 					}
 				}
 			}
@@ -366,6 +400,8 @@ public class AuctionCentralMain
 			e1.printStackTrace();
 		}
 		
+//		System.out.println(theAuctionList.size());
+		
 		for(int i = 0; i < theAuctionList.size(); i++)
 		{
 			Auction auction = theAuctionList.get(i);
@@ -374,6 +410,7 @@ public class AuctionCentralMain
 			outputAuctions.println(auction.getStartTime().getHour() + " " + auction.getStartTime().getMinute());
 			outputAuctions.println(auction.getEndTime().getHour() + " " + auction.getEndTime().getMinute());
 			outputAuctions.println(auction.getAuctionItems());
+			outputAuctions.println(auction.getUserName());
 		}
 		outputAuctions.close();
 	}
