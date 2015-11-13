@@ -38,7 +38,7 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
 			answer.add(User.Command.GOBACK);
 			answer.add(User.Command.VIEWITEM);
 			break;
-		case VIEWCALENDAR:
+		case VIEWCALENDAR:				// the bidder can't view the calendar ??? unless we are using this to print the current auctions? - shannon
 			answer.add(User.Command.GOBACK);
 			answer.add(User.Command.VIEWAUCTION);
 			break;

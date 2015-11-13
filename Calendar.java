@@ -2,7 +2,9 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.text.DateFormatSymbols;
@@ -22,17 +24,32 @@ public class Calendar
 	  futureAuctions = 0;
   }
   
-  public boolean addAuction(String orgName, LocalDateTime Start, LocalDateTime End)
-			{
-				return addAuction(orgName, Start.getMonth().getValue(), Start.getDayOfMonth(), Start.getYear(), 
-						Start.getHour(), Start.getMinute(), End.getHour(), End.getMinute());
-			}
+  /** I changed these constructors to accept an Auction to add. This has been working with main so far. 
+    	Didnt want to delete in case you wanted to change it
+    	-Shannon 11/13/15 */
+  
+  
+//  public boolean addAuction(String userName, String orgName, LocalDateTime Start, LocalDateTime End)
+//			{
+//				return addAuction(userName, orgName, Start.getMonth().getValue(), Start.getDayOfMonth(), Start.getYear(), 
+//						Start.getHour(), Start.getMinute(), End.getHour(), End.getMinute());
+//			}
+  public boolean addAuction(String userName, Auction theAuction, LocalDateTime Start, LocalDateTime End) 
+	{
+		return addAuction(userName, theAuction, Start.getMonth().getValue(), Start.getDayOfMonth(), Start.getYear(), 
+				Start.getHour(), Start.getMinute(), End.getHour(), End.getMinute());
+	}
   
   // TODO: check the week requirement
-  public boolean addAuction(String orgName, int month, int day, int year,
-		  					int auctionHourStart, int auctionMinuteStart,
-		  					int auctionHourEnd, int auctionMinuteEnd)
-  {
+ 
+//  public boolean addAuction(String userName, String orgName, int month, int day, int year,
+//		  					int auctionHourStart, int auctionMinuteStart,
+//		  					int auctionHourEnd, int auctionMinuteEnd)
+//  {
+  	public boolean addAuction(String userName, Auction theAuctionToAdd, int month, int day, int year,
+			int auctionHourStart, int auctionMinuteStart,
+			int auctionHourEnd, int auctionMinuteEnd)
+  	{	
 	  
 	  boolean result = false;
 	  
@@ -40,10 +57,12 @@ public class Calendar
 	  LocalDate auctionDate = LocalDate.of(year, month, day);
 	  LocalDateTime auctionStart = LocalDateTime.of(year, month, day, auctionHourStart, auctionMinuteStart);
 	  LocalDateTime auctionEnd = LocalDateTime.of(year, month, day, auctionHourEnd, auctionMinuteEnd);
-	  String auctionName = orgName.replace(' ', '-') + "-" + symbols.getMonths()[month-1] + "-" + day + "-" + year;
+	  String auctionName = theAuctionToAdd.myOrgName.replace(' ', '-') + "-" + symbols.getMonths()[month-1] + "-" + day + "-" + year;
 	  
 	  // new auction to add
-	  Auction auctionToAdd = new Auction(orgName, auctionName, auctionStart, auctionEnd);
+//	  Auction auctionToAdd = new Auction(orgName, auctionStart, auctionEnd);
+	  theAuctionToAdd.setAuctionName(auctionName);
+	  theAuctionToAdd.setUserName(userName);
 	  
 	  // checking business rules (does not check if the organization has already had an auction for the year)
 	  // don't add if future auctions is already at capacity
@@ -70,7 +89,7 @@ public class Calendar
 				  // at least 2 hours between actions
 				  if(auctionEnd.plusHours(2).isBefore(firstAuction.getStartTime()))
 				  {
-					  dayAuctions.add(auctionToAdd);
+					  dayAuctions.add(theAuctionToAdd);
 					  futureAuctions ++;
 					  myAuctionByDateList.replace(auctionDate, dayAuctions);
 					  result = true;
@@ -85,7 +104,7 @@ public class Calendar
 				  // at least 2 hours between actions
 				  if(auctionStart.isAfter(firstAuction.getEndTime().plusHours(2)))
 				  {
-					  dayAuctions.add(auctionToAdd);
+					  dayAuctions.add(theAuctionToAdd);
 					  futureAuctions ++;
 					  myAuctionByDateList.replace(auctionDate, dayAuctions);
 					  result = true;
@@ -106,7 +125,7 @@ public class Calendar
 	  else
 	  {
 		  ArrayList<Auction> newListToAdd = new ArrayList<Auction>();
-		  newListToAdd.add(auctionToAdd);
+		  newListToAdd.add(theAuctionToAdd);
 		  futureAuctions ++;
 		  myAuctionByDateList.put(auctionDate, newListToAdd);
 		  result = true;
@@ -190,7 +209,23 @@ public class Calendar
 	return null;
   }
   
+  
+  public void removeAuction(Auction theAuction) {
+	  Collection<ArrayList<Auction>> auctions = myAuctionByDateList.values();
+		Iterator it = auctions.iterator();
+		while(it.hasNext()) {
+			ArrayList<Auction> a = (ArrayList<Auction>) it.next();
+			for(int j = 0; j < a.size(); j++) {
+				Auction oldAuction = a.get(j);
+					if(oldAuction.myAuctionName.equals(theAuction.myAuctionName)) {
+						System.out.println("old auction " + oldAuction.myAuctionName);
+						a.remove(oldAuction);
+					}
+			}
+		}
+	}
 }
+  
 
 // TODO: add toString method
 

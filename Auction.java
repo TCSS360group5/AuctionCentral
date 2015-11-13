@@ -13,21 +13,23 @@ public class Auction
   //Fields for local date
   LocalDateTime myStartTime;
   LocalDateTime myEndTime;
+  LocalDateTime myDate;
+  String myUserName;
   
   //create auction constructor
-  public Auction(String theOrgName, String theAuctionName, LocalDateTime theStartTime, LocalDateTime theEndTime)
+  public Auction(String theOrgName, LocalDateTime theStartTime, LocalDateTime theEndTime)
   {
 	  myOrgName = theOrgName;
-	  myAuctionName = theAuctionName;
+//	  myAuctionName = theAuctionName;
 	  myStartTime = theStartTime;
 	  myEndTime = theEndTime;
   }
   
   //create another auction constructor with same inventory list - copy constructor?
-  public Auction(String theOrgName, String theAuctionName, LocalDateTime theStartTime, LocalDateTime theEndTime, List<Item> theInventory)
+  public Auction(String theOrgName, LocalDateTime theStartTime, LocalDateTime theEndTime, List<Item> theInventory)
   {
 	  myOrgName = theOrgName;
-	  myAuctionName = theAuctionName;
+//	  myAuctionName = theAuctionName;
 	  myStartTime = theStartTime;
 	  myEndTime = theEndTime;
 	  myInventory = theInventory;
@@ -110,6 +112,10 @@ public class Auction
   {
 	  return myEndTime;
   }
+
+  public String getUserName() {
+	  return myUserName;
+  }
   
   //set end time of the auction
   public boolean setEndTime(LocalDateTime theEndTime)
@@ -123,13 +129,19 @@ public class Auction
 	myStartTime = theAuctionStart;
   }
   
+  public void setUserName(String theUserName) {
+	  myUserName = theUserName;
+  }
+  
   public String toString(){
 	  StringBuilder answer = new StringBuilder();
-	  answer.append("Name: " + myAuctionName + "/n");
-	  answer.append("org: " + myOrgName + "/n");
-	  answer.append("Start: " + myStartTime + "/n");
-	  answer.append("End: " + myEndTime + "/n");
-	  answer.append("Items: " + myInventory.size() + "/n/n");
+	  answer.append("Name: " + myAuctionName + "\n");
+	  answer.append("Organization name: " + myOrgName + "\n");
+	  answer.append("Date: " + myStartTime.getMonth() + " " + myStartTime.getDayOfMonth() +", " + myStartTime.getYear() + "\n");
+	  answer.append("Start time: " + myStartTime.getHour() + ":" + myStartTime.getMinute() + "\n");
+	  answer.append("End: " + myEndTime.getHour() + ":" + myEndTime.getMinute() + "\n");
+	  if(myInventory!= null) {
+	  answer.append("Items: " + myInventory.size() + "\n\n");}
 	  return answer.toString();
   }
 

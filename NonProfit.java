@@ -9,13 +9,14 @@ public class NonProfit extends User
   // or maybe they should see to schedule
   private Auction myAuction;
   private String myNPOName;
+  private String myUserName;
   
   // schedules an auction and enters auction info
   public NonProfit(String theUserName, UserType theUserType, String theNPOName, int theLastAuctionYear){
 	  super(theUserName, theUserType);
 	  myNPOName = theNPOName;
 	  myLastAuctionYear = theLastAuctionYear;
-
+	  myUserName = theUserName;
   }
   
   public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
@@ -44,7 +45,11 @@ public class NonProfit extends User
 			  minutes = user_input.nextInt();
 			  System.out.println("Please enter the duration (in hours) of the Auction");
 			  duration = user_input.nextInt();
-			  theCalendar.addAuction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
+			  
+			  myAuction = new Auction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), 
+					  LocalDateTime.of(year, month, day, hour+duration, minutes));
+			  theCalendar.addAuction(myUserName, myAuction, LocalDateTime.of(year, month, day, hour, minutes), 
+					  LocalDateTime.of(year, month, day, hour+duration, minutes));
 			  break;
 		  case EDITAUCTION:
 
@@ -61,11 +66,14 @@ public class NonProfit extends User
 			  minutes = user_input.nextInt();
 			  System.out.println("Please enter the duration (in hours) of the Auction");
 			  duration = user_input.nextInt();
+			  
+			  myAuction = new Auction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
 			  try
 			  {
-				  theCalendar.addAuction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour, minutes).plusHours(duration));
+				  theCalendar.removeAuction(theAuction);
+				  theCalendar.addAuction(myUserName, myAuction, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
 			  } catch (Exception e) {
-				  
+				  System.out.println("Auction wasn't added.");
 			  }			  
 			  break;
 		  case ADDITEM:
