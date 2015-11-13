@@ -13,6 +13,7 @@ public class Auction
   //Fields for local date
   LocalDateTime myStartTime;
   LocalDateTime myEndTime;
+  LocalDateTime myDate;
   String myUserName;
   
   //create auction constructor

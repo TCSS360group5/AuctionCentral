@@ -45,9 +45,11 @@ public class NonProfit extends User
 			  minutes = user_input.nextInt();
 			  System.out.println("Please enter the duration (in hours) of the Auction");
 			  duration = user_input.nextInt();
-			  myAuction = new Auction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
-			  theCalendar.addAuction(myUserName, myAuction, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
-//			  theCalendar.addAuction(myUserName, myNPOName, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
+			  
+			  myAuction = new Auction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), 
+					  LocalDateTime.of(year, month, day, hour+duration, minutes));
+			  theCalendar.addAuction(myUserName, myAuction, LocalDateTime.of(year, month, day, hour, minutes), 
+					  LocalDateTime.of(year, month, day, hour+duration, minutes));
 			  break;
 		  case EDITAUCTION:
 
@@ -64,11 +66,14 @@ public class NonProfit extends User
 			  minutes = user_input.nextInt();
 			  System.out.println("Please enter the duration (in hours) of the Auction");
 			  duration = user_input.nextInt();
+			  
+			  myAuction = new Auction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
 			  try
 			  {
-				  theCalendar.addAuction(myUserName, myAuction, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour, minutes).plusHours(duration));
+				  theCalendar.removeAuction(theAuction);
+				  theCalendar.addAuction(myUserName, myAuction, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
 			  } catch (Exception e) {
-				  
+				  System.out.println("Auction wasn't added.");
 			  }			  
 			  break;
 		  case ADDITEM:

@@ -2,7 +2,9 @@ import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.text.DateFormatSymbols;
@@ -22,6 +24,11 @@ public class Calendar
 	  futureAuctions = 0;
   }
   
+  /** I changed these constructors to accept an Auction to add. This has been working with main so far. 
+    	Didnt want to delete in case you wanted to change it
+    	-Shannon 11/13/15 */
+  
+  
 //  public boolean addAuction(String userName, String orgName, LocalDateTime Start, LocalDateTime End)
 //			{
 //				return addAuction(userName, orgName, Start.getMonth().getValue(), Start.getDayOfMonth(), Start.getYear(), 
@@ -34,6 +41,7 @@ public class Calendar
 	}
   
   // TODO: check the week requirement
+ 
 //  public boolean addAuction(String userName, String orgName, int month, int day, int year,
 //		  					int auctionHourStart, int auctionMinuteStart,
 //		  					int auctionHourEnd, int auctionMinuteEnd)
@@ -201,7 +209,23 @@ public class Calendar
 	return null;
   }
   
+  
+  public void removeAuction(Auction theAuction) {
+	  Collection<ArrayList<Auction>> auctions = myAuctionByDateList.values();
+		Iterator it = auctions.iterator();
+		while(it.hasNext()) {
+			ArrayList<Auction> a = (ArrayList<Auction>) it.next();
+			for(int j = 0; j < a.size(); j++) {
+				Auction oldAuction = a.get(j);
+					if(oldAuction.myAuctionName.equals(theAuction.myAuctionName)) {
+						System.out.println("old auction " + oldAuction.myAuctionName);
+						a.remove(oldAuction);
+					}
+			}
+		}
+	}
 }
+  
 
 // TODO: add toString method
 

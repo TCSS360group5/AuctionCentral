@@ -50,7 +50,7 @@ public class AuctionCentralMain
 		} 
 		else if (userType == 3)
 		{
-			executeBidder(userName, userList, userScanner);
+			executeBidder(userName, userList, userScanner, auctionList);
 		}
 		
 		outputUsers(userFile, userList);
@@ -103,13 +103,11 @@ public class AuctionCentralMain
 		{
 	        Scanner s = new Scanner(auctionFile);
 	        while (s.hasNext()) {
-	        	System.out.println("BACK HERE! ");
 	        String auctionName = s.next();
 	        
 	        int j = auctionName.indexOf('-');			// finding the indexes of - to skip over them
 	        int k = auctionName.indexOf('-', j+1);
 	        int l = auctionName.indexOf('-', k+1);
-//	        System.out.println(auctionName);
 	        String orgName = auctionName.substring(0, j); // name
 	        String month = auctionName.substring(j+1, k); // month
 	        int day = Integer.parseInt(auctionName.substring(k+1, l)); // day
@@ -121,7 +119,6 @@ public class AuctionCentralMain
 	        int endMinute = s.nextInt();
 	        
 	        String item = s.next();
-//	        String userName = "";
 	        String userName = s.next();
 	        Auction newAuction = new Auction(orgName, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
 	        		LocalDateTime.of(year, months.get(month), day, endHour, endMinute));
@@ -130,9 +127,6 @@ public class AuctionCentralMain
 	        
 	        calendar.addAuction(userName, newAuction, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
 	        		LocalDateTime.of(year, months.get(month), day, endHour, endMinute));
-	        
-//	        calendar.addAuction(userName, newAuction, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
-//	        		LocalDateTime.of(year, months.get(month), day, endHour, endMinute));
 	        }
 	        s.close();
 	    } 
@@ -291,6 +285,16 @@ public class AuctionCentralMain
 			if(loginPass && existingAuction) 		// the NPO has an auction already, so edit
 			{
 				user.ExecuteCommand(User.Command.EDITAUCTION, theCalendar, currentNPOauction, null);
+				theAuctionList.clear();
+				Collection<ArrayList<Auction>> auctions = theCalendar.myAuctionByDateList.values();
+				Iterator it = auctions.iterator();
+				while(it.hasNext()) {
+					ArrayList<Auction> a = (ArrayList<Auction>) it.next();
+					for(int j = 0; j < a.size(); j++) {
+						Auction auction = a.get(j);
+						theAuctionList.add(auction);
+					}
+				}
 			}
 			else if(loginPass && !existingAuction)				// NPO doesn't have an auction so add one
 			{							
@@ -323,7 +327,7 @@ public class AuctionCentralMain
 	 * @param theUserList
 	 * @param theScanner
 	 */
-	public static void executeBidder(String theUserName, ArrayList<User> theUserList, Scanner theScanner) {
+	public static void executeBidder(String theUserName, ArrayList<User> theUserList, Scanner theScanner, ArrayList<Auction> theAuctionList) {
 		int option;
 		User user = new Bidder(theUserName, User.UserType.BIDDER);
 		if(checkLogin(theUserList, user)) 
@@ -346,7 +350,7 @@ public class AuctionCentralMain
 		switch(option)
 		{
 			case 1: 
-				// print out auction list
+				System.out.println(theAuctionList);		// this will probably need more formatting
 				break;
 			case 2:
 				// print out the list of this bidder's bids
