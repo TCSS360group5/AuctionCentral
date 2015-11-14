@@ -125,8 +125,7 @@ public class AuctionCentralMain
 	        newAuction.setUserName(userName);
 	        auctionList.add(newAuction);
 	        
-	        calendar.addAuction(userName, newAuction, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
-	        		LocalDateTime.of(year, months.get(month), day, endHour, endMinute));
+	        calendar.addAuction(newAuction);
 	        }
 	        s.close();
 	    } 

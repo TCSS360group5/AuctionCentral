@@ -9,14 +9,14 @@ public class NonProfit extends User
   // or maybe they should see to schedule
   private Auction myAuction;
   private String myNPOName;
-  private String myUserName;
+  //private String myUserName;
   
   // schedules an auction and enters auction info
   public NonProfit(String theUserName, UserType theUserType, String theNPOName, int theLastAuctionYear){
 	  super(theUserName, theUserType);
 	  myNPOName = theNPOName;
 	  myLastAuctionYear = theLastAuctionYear;
-	  myUserName = theUserName;
+	  //myUserName = theUserName;
   }
   
   public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
@@ -48,8 +48,7 @@ public class NonProfit extends User
 			  
 			  myAuction = new Auction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), 
 					  LocalDateTime.of(year, month, day, hour+duration, minutes));
-			  theCalendar.addAuction(myUserName, myAuction, LocalDateTime.of(year, month, day, hour, minutes), 
-					  LocalDateTime.of(year, month, day, hour+duration, minutes));
+			  theCalendar.addAuction(myAuction);
 			  break;
 		  case EDITAUCTION:
 
@@ -71,7 +70,7 @@ public class NonProfit extends User
 			  try
 			  {
 				  theCalendar.removeAuction(theAuction);
-				  theCalendar.addAuction(myUserName, myAuction, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
+				  theCalendar.addAuction(myAuction);
 			  } catch (Exception e) {
 				  System.out.println("Auction wasn't added.");
 			  }			  

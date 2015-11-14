@@ -1,5 +1,4 @@
 import java.util.List;
-
 import java.time.LocalDateTime;
 
 public class Auction
@@ -20,17 +19,21 @@ public class Auction
   public Auction(String theOrgName, LocalDateTime theStartTime, LocalDateTime theEndTime)
   {
 	  myOrgName = theOrgName;
-//	  myAuctionName = theAuctionName;
 	  myStartTime = theStartTime;
+	  updateAuctionName();
 	  myEndTime = theEndTime;
   }
   
-  //create another auction constructor with same inventory list - copy constructor?
+  private void updateAuctionName() {
+	  myAuctionName = myOrgName + "-" + myStartTime.getMonth().name() + "-" + myStartTime.getDayOfMonth() + "-" + myStartTime.getYear();
+}
+
+//create another auction constructor with same inventory list - copy constructor?
   public Auction(String theOrgName, LocalDateTime theStartTime, LocalDateTime theEndTime, List<Item> theInventory)
   {
-	  myOrgName = theOrgName;
-//	  myAuctionName = theAuctionName;
+	  myOrgName = theOrgName;  
 	  myStartTime = theStartTime;
+	  updateAuctionName();
 	  myEndTime = theEndTime;
 	  myInventory = theInventory;
   }
@@ -45,6 +48,7 @@ public class Auction
   public boolean setAuctionOrg(String theOrgName)
   {
     myOrgName = theOrgName;
+    updateAuctionName();
     return true;
   }
   
@@ -89,10 +93,10 @@ public class Auction
   }
   
   //set auction name
-  public void setAuctionName(String theAuctionName)
-  {
-	  myAuctionName = theAuctionName;
-  }
+//  public void setAuctionName(String theAuctionName)
+//  {
+//	  myAuctionName = theAuctionName;
+//  }
   
   //returns start time of the auction
   public LocalDateTime getStartTime()
@@ -104,6 +108,7 @@ public class Auction
   public boolean setStartTime(LocalDateTime theStartTime)
   {
 	  myStartTime = theStartTime;
+	  updateAuctionName();
 	  return true;	  
   }
   
@@ -111,10 +116,6 @@ public class Auction
   public LocalDateTime getEndTime()
   {
 	  return myEndTime;
-  }
-
-  public String getUserName() {
-	  return myUserName;
   }
   
   //set end time of the auction
@@ -127,6 +128,11 @@ public class Auction
   public void setAuctionDate(LocalDateTime theAuctionStart, LocalDateTime theAuctionEnd) {
 	myEndTime = theAuctionEnd;
 	myStartTime = theAuctionStart;
+	updateAuctionName();
+  }
+  
+  public String getUserName() {
+	  return myUserName;
   }
   
   public void setUserName(String theUserName) {

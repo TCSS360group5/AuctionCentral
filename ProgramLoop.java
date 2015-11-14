@@ -169,8 +169,7 @@ public class ProgramLoop {
 	        newAuction.setUserName(userName);
 	        auctionList.add(newAuction);
 	        
-	        calendar.addAuction(userName, newAuction, LocalDateTime.of(year, myMonths.get(month), day, startHour, startMinute), 
-	        		LocalDateTime.of(year, myMonths.get(month), day, endHour, endMinute));
+	        calendar.addAuction(newAuction);
 	        }
 	        s.close();
 	    } 
@@ -357,7 +356,7 @@ public class ProgramLoop {
 
 	private void viewCalendarAuctions() {
 		
-		
+		myAuctionList.clear();
 		Map<LocalDate, ArrayList<Auction>> theAuctionList = myCalendar.displayCurrentMonth();
 		if (theAuctionList.size() == 0)
 		{
@@ -381,8 +380,12 @@ public class ProgramLoop {
 				}
 				System.out.println("");
 			}
-			System.out.println("Enter the number of an auction to view its details.\nPress 0 to go back.");
-			int userAnswer = getNumberFromUser();
+			int userAnswer = 0;
+			if (myAuctionList.size() > 0) 
+			{
+				System.out.println("Enter the number of an auction to view its details.\nPress 0 to go back.");
+				userAnswer = getNumberFromUser();
+			}
 			if (userAnswer > 0) {
 				myCurrentState = User.Command.VIEWAUCTION;
 				myCurrentAuction = myAuctionList.get(userAnswer);
