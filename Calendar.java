@@ -173,10 +173,10 @@ public class Calendar
 	  
 	  LocalDateTime oldStart = theAuction.getStartTime();
 	  LocalDateTime oldEnd = theAuction.getEndTime();
-	  String oldName = theAuction.getAuctionName();
+	  //String oldName = theAuction.getAuctionName();
 	  
-	  String orgName = theAuction.getAuctionOrg();
-	  String auctionName = orgName.replace(' ', '-') + symbols.getMonths()[month-1] + "-" + day + "-" + year;
+	  //String orgName = theAuction.getAuctionOrg();
+	  //String auctionName = orgName.replace(' ', '-') + symbols.getMonths()[month-1] + "-" + day + "-" + year;
 
 	  ArrayList<Auction> oldList = myAuctionByDateList.get(oldStart.toLocalDate());
 	  ArrayList<Auction> removeFrom = oldList;
@@ -185,7 +185,7 @@ public class Calendar
 	  myAuctionByDateList.replace(oldStart.toLocalDate(), removeFrom);
 	  
 	  theAuction.setAuctionDate(newStart, newEnd);
-	  theAuction.setAuctionName(auctionName);
+	  //theAuction.setAuctionName(auctionName);
 	  
 	  if(addAuction(theAuction))
 	  {
@@ -194,7 +194,7 @@ public class Calendar
 	  else
 	  {
 		  theAuction.setAuctionDate(oldStart, oldEnd);
-		  theAuction.setAuctionName(oldName);
+		  //theAuction.setAuctionName(oldName);
 		  myAuctionByDateList.replace(oldStart.toLocalDate(), oldList);
 		  return false;
 	  }
@@ -259,6 +259,30 @@ public class Calendar
 	  
 	  myAuctionByDateList.replace(date, removeDay);
   }
+  
+
+	public String toString(LocalDate theDate) 
+	{
+		StringBuilder answer = new StringBuilder();
+		if (futureAuctions > 0)
+		{
+			for (Map.Entry<LocalDate,ArrayList<Auction>> entry :myAuctionByDateList.entrySet()) 
+			{
+				answer.append(entry.getKey());
+				ArrayList<Auction> Auctions = entry.getValue();
+				for (int i = 0; i < Auctions.size(); i++)
+				{
+					answer.append(i + " " + Auctions.get(i));
+				}
+			}
+		}
+		else
+		{
+			answer.append("No Current Auctions for " + theDate.getMonth().name());
+		}
+		return answer.toString();
+	}
+
   
   public String toString()
   {

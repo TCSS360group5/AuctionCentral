@@ -64,7 +64,6 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
 		default:
 			break;
 	}
-	user_input.close();
 	return answer;
 }
 
