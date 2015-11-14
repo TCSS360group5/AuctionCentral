@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class User
 {
-  String username;
   public enum UserType {NPO, EMPLOYEE, BIDDER}
   public enum Command {VIEWCALENDAR, VIEWMAINMENU, VIEWAUCTION, VIEWITEM,
 	  ADDAUCTION, EDITAUCTION, ADDITEM, EDITITEM, GOBACK, BID, EDITBID, LOGIN}

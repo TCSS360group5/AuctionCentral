@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,54 +9,97 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
-/**
- * Main controller for AuctionCentral
- * Saves/loads files, runs menu driven I/O
- * 
- * @author Shannon Murphy
- * @version 11/11/2015
- */
-public class AuctionCentralMain 
-{	
-	public static void main(String theArgs[]) 
-	{
-		Calendar calendar = new Calendar();
-		ArrayList<User> userList = new ArrayList<User>();
-		ArrayList<Auction> auctionList = new ArrayList<Auction>();
-		File userFile = new File("users.txt");
-		File auctionFile = new File("auctions.txt");
 
-		loadUsers(userFile, userList);
-		loadAuctions(auctionFile, auctionList, calendar);
+public class ProgramLoop {
+	private static final String myACFileName = "AuctionCentral/";
+	private static final String myUserFile = myACFileName + "users.txt";
+	private static final String myAuctionFile = myACFileName + "auction.txt";
+	
+	private User myUser;
+	private Calendar myCalendar;
+	private ArrayList<User> myUserList;
+	private ArrayList<Auction> myAuctionList;
+	private Scanner myScanner;
+	private String myHomePageMessage;
+	private User.Command myCurrentState;
+	private Auction myCurrentAuction;
+	private Item myCurrentItem;
+	private Map<String, Integer> myMonths;
+	
+	//region Strings
+	private static final String myHomePageMessageEnd = " Homepage\n"
+		+ "----------------------------------\n"
+		+ "What would you like to do?\n";
+	//endregion
+	
+	public ProgramLoop()
+	{
+		myCurrentState = User.Command.VIEWMAINMENU;
+		myCalendar = new Calendar();
+		myUserList = new ArrayList<User>();
+		myAuctionList = new ArrayList<Auction>();
+		myMonths = createMonths();
+		myScanner = new Scanner(System.in);
+	}
+	
+	public void startProgram() 
+	{
+		//Calendar calendar = new Calendar();
+		//Scanner myScanner = new Scanner(System.in);
 		
-		Scanner userScanner = new Scanner(System.in);
+		//if the file doesn't exist, it creates it
+		if (!(new File(myUserFile).isFile())) 
+		{
+			outputUsers(new File(myUserFile), myUserList);
+		}
+		if (!(new File(myAuctionFile).isFile())) 
+		{
+			outputAuctions(new File(myAuctionFile), myAuctionList);
+		}
+		
+		File userFile = new File(myUserFile);
+		File auctionFile = new File(myAuctionFile);
+
+		loadUsers(userFile, myUserList);
+		loadAuctions(auctionFile, myAuctionList, myCalendar);
+		
+		
 		
 		System.out.println("Welcome to AuctionCentral!");
 		System.out.print("Please enter your username: ");
-		String userName = userScanner.next();
+		String userName = myScanner.next();
 		System.out.println("Hello, " + userName + "!");
 		System.out.println("Are you an AuctionCentral employee, a non-profit organization member, or a bidder?");
 		System.out.println("1) AuctionCentral Employee\n2) Non-Profit Organization\n3) Bidder");
 		
-		int userType = userScanner.nextInt();
+		int userType = myScanner.nextInt();
+		myScanner.nextLine();
 		if(userType == 1) 
 		{
-			executeEmployee(userName, userList, calendar, userScanner);
+			myUser = new Employee(userName, User.UserType.EMPLOYEE);
 		} 
 		else if(userType == 2)
 		{
-			executeNPO(userName, userList, auctionList, calendar, userScanner);
+			System.out.println("What is the name of your Non-Profit Organization?");
+			String NPOname = myScanner.nextLine();
+			System.out.println("Your NPO is " + NPOname);
+			myUser = new NonProfit(userName, User.UserType.NPO, NPOname, 0);
 		} 
 		else if (userType == 3)
 		{
-			executeBidder(userName, userList, userScanner, auctionList);
+			myUser = new Bidder(userName, User.UserType.BIDDER);
 		}
+		checkLogin(myUserList, myUser);
 		
-		outputUsers(userFile, userList);
-		outputAuctions(auctionFile, auctionList);
-		userScanner.close();
+		executeProgramLoop();//myScanner);
+		
+		outputUsers(userFile, myUserList);
+		outputAuctions(auctionFile, myAuctionList);
+		System.out.println("Changes Have Been Saved.\nThankyou for using Auction Central.");
+		myScanner.close();
 	}
 	
 	/**
@@ -97,8 +141,8 @@ public class AuctionCentralMain
 	 * @param auctionList
 	 * @param calendar
 	 */
-	public static void loadAuctions(File auctionFile, ArrayList<Auction> auctionList, Calendar calendar) {
-		Map<String, Integer> months = createMonths();	// map to convert month name strings to ints
+	public void loadAuctions(File auctionFile, ArrayList<Auction> auctionList, Calendar calendar) {
+			// map to convert month name strings to ints
 		try 
 		{
 	        Scanner s = new Scanner(auctionFile);
@@ -120,13 +164,13 @@ public class AuctionCentralMain
 	        
 	        String item = s.next();
 	        String userName = s.next();
-	        Auction newAuction = new Auction(orgName, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
-	        		LocalDateTime.of(year, months.get(month), day, endHour, endMinute));
+	        Auction newAuction = new Auction(orgName, LocalDateTime.of(year, myMonths.get(month), day, startHour, startMinute), 
+	        		LocalDateTime.of(year, myMonths.get(month), day, endHour, endMinute));
 	        newAuction.setUserName(userName);
 	        auctionList.add(newAuction);
 	        
-	        calendar.addAuction(userName, newAuction, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
-	        		LocalDateTime.of(year, months.get(month), day, endHour, endMinute));
+	        calendar.addAuction(userName, newAuction, LocalDateTime.of(year, myMonths.get(month), day, startHour, startMinute), 
+	        		LocalDateTime.of(year, myMonths.get(month), day, endHour, endMinute));
 	        }
 	        s.close();
 	    } 
@@ -153,6 +197,12 @@ public class AuctionCentralMain
 				result = true;
 			}
 		}
+		if (result) 
+		{
+			System.out.println("Welcome back, " + theUser.getUserName() + "!");
+		} else {
+			theList.add(theUser);
+		}
 		return result;
 	}
 	
@@ -174,41 +224,184 @@ public class AuctionCentralMain
 		return result;
 	}
 	
-	/**
-	 * Runs the Employee menu.
-	 * 
-	 * @param userName
-	 * @param userList
-	 * @param theCalendar
-	 * @param theScanner
-	 */
-	public static void executeEmployee(String userName, ArrayList<User> userList, Calendar theCalendar, Scanner theScanner) {
-		User user = new Employee(userName, User.UserType.EMPLOYEE);
-		if(checkLogin(userList, user))
+	private void executeProgramLoop()//Scanner theScanner)
+	{
+		//Scanner myScanner = new Scanner(System.in);
+		myHomePageMessage = "\nAuctionCentral " + myUser.getUserType() + myHomePageMessageEnd;
+		System.out.println(myHomePageMessage);
+		boolean notQuit = true;
+		
+		
+		Auction currentAuction = null;
+		Item currentItem = null;
+		do
 		{
-			System.out.println("Welcome back, " + userName + "!");
-		} 
+			 ArrayList<User.Command> currentCommands = myUser.ExecuteCommand(myCurrentState, myCalendar, currentAuction, currentItem);
+			 System.out.println("0) Quit");
+			 //print out available commands
+			 for (int i = 0; i < currentCommands.size(); i++)
+			 {
+				 System.out.print(i + 1 + ") ");
+				 switch (currentCommands.get(i))
+				 {
+				 case VIEWCALENDAR:
+					 System.out.println("View Calendar");
+					 break;
+				case ADDAUCTION:
+					System.out.println("Add Auction");
+					break;
+				case ADDITEM:
+					System.out.println("Add Item");
+					break;
+				case BID:
+					System.out.println("Bid");
+					break;
+				case EDITAUCTION:
+					System.out.println("Edit Auction");
+					break;
+				case EDITBID:
+					System.out.println("Edit Bid");
+					break;
+				case EDITITEM:
+					System.out.println("Edit Item");
+					break;
+				case GOBACK:
+					System.out.println("Go Back to Previous Menu");
+					break;
+				case VIEWAUCTION:
+					System.out.println("View Auctions");
+					break;
+				case VIEWITEM:
+					System.out.println("View Items");
+					break;
+				default:
+					break;						 
+				 }				 
+			 }
+			 
+			 //get command 
+
+			 String TempString = myScanner.nextLine();
+
+			 boolean validCommand = false;
+			 int commandInt = -1;
+			 try 
+			 {
+				 commandInt = Integer.parseInt(TempString);
+				 validCommand = true;
+			 } catch (Exception e) {
+				 System.out.println("Enter a Number");
+			 }
+			 
+			 if (validCommand)
+			 {
+				 if (commandInt == 0)
+				 {
+					 notQuit = false;
+				 } 
+				 else if (commandInt <= currentCommands.size())
+				 {
+					 //System.out.println("You selected " + commandInt);	
+					 User.Command thisCommand = currentCommands.get(commandInt - 1);
+					 if (thisCommand == User.Command.VIEWCALENDAR)
+					 {
+						 myCurrentState = User.Command.VIEWCALENDAR;
+						 viewCalendarAuctions();
+						 //System.out.println(myCalendar.toString(LocalDate.now()));						
+					 } 
+					 else if (thisCommand == User.Command.VIEWMAINMENU)
+					 {
+						 myCurrentState = User.Command.VIEWMAINMENU;
+						 executeProgramLoop();//theScanner);
+					 } 
+					 else if (thisCommand == User.Command.VIEWAUCTION)
+					 {
+						 myCurrentState = User.Command.VIEWAUCTION;
+					 } 
+					 else if (thisCommand == User.Command.GOBACK)
+					 {
+						 goBackState();						 
+					 } 					 
+					 else 
+					 {
+						 myUser.ExecuteCommand(thisCommand, myCalendar, myCurrentAuction, myCurrentItem);
+					 }					 
+				 } 
+				 else 
+				 {
+					 System.out.println("Please enter a valid selection.");
+				 }
+			 }
+		} while (notQuit);		
+	}
+	
+	
+	
+	private void goBackState() {
+		switch (myCurrentState)
+		 {
+		 	case VIEWCALENDAR:
+		 		myCurrentState = User.Command.VIEWMAINMENU;
+				break;
+		 	case VIEWAUCTION:
+		 		myCurrentState = User.Command.VIEWCALENDAR;
+		 		break;
+	 		case VIEWITEM:
+	 			myCurrentState = User.Command.VIEWAUCTION;
+	 			break;						
+	 		default:
+	 			System.out.println("Cannot Go Back");
+	 			break;						 
+		 }		
+	}
+
+	private void viewCalendarAuctions() {
+		
+		
+		Map<LocalDate, ArrayList<Auction>> theAuctionList = myCalendar.displayCurrentMonth();
+		if (theAuctionList.size() == 0)
+		{
+			System.out.println("No Auctions to view");
+		}
 		else 
 		{
-			userList.add(user);
-		}
-		System.out.println("\nAuctionCentral Employee Homepage");
-		System.out.println("----------------------------------");
-		System.out.println("What would you like to do?");
-		System.out.println("1) View calendar");
-		System.out.println("2) View auctions");
-		
-		int option = theScanner.nextInt();
-		if (option == 1) 		
-		{
-			System.out.println(theCalendar);
-		} 
-		else if (option == 2) 
-		{
-			System.out.println("Enter the number of an auction to view its details.");
-			// print out auction list
-		}
+			System.out.println("Auctions for " + LocalDate.now().getMonth().name());
+			int AuctionListNumber = 1;
+			for (Entry<LocalDate, ArrayList<Auction>> entry: theAuctionList.entrySet())
+			{
+				ArrayList<Auction> temp = entry.getValue();
+				for (int i = 0; i < temp.size(); i++) 
+				{
+					Auction tempAuction = temp.get(i);
+					myAuctionList.add(tempAuction);
+					System.out.print(AuctionListNumber + ") ");
+					System.out.println(tempAuction.getAuctionName());
+					AuctionListNumber++;
+					
+				}
+				System.out.println("");
+			}
+			System.out.println("Enter the number of an auction to view its details.\nPress 0 to go back.");
+			int userAnswer = getNumberFromUser();
+			if (userAnswer > 0) {
+				myCurrentState = User.Command.VIEWAUCTION;
+				myCurrentAuction = myAuctionList.get(userAnswer);
+				System.out.println(myCurrentAuction.toString());
+			}
+		}		
 	}
+	
+	private int getNumberFromUser()
+	{
+		int answer = -1;
+		if(myScanner.hasNextInt()) {
+			answer = myScanner.nextInt();
+		}
+		myScanner.nextLine();
+		return answer;
+	}
+	
+
 	
 	/**
 	 * Runs the NPO menu.
@@ -219,14 +412,15 @@ public class AuctionCentralMain
 	 * @param theCalendar
 	 * @param theScanner
 	 */
-	public static void executeNPO(String theUserName, ArrayList<User> theUserList, ArrayList<Auction> theAuctionList, Calendar theCalendar, Scanner theScanner) {
+	public void executeNPO(String theUserName, ArrayList<User> theUserList, ArrayList<Auction> theAuctionList, Calendar theCalendar, Scanner theScanner) {
 		int option;
+		Scanner myScanner = new Scanner(System.in);
 		System.out.println("What is the name of your Non-Profit Organization?");
-		String NPOname = theScanner.next();
+		String NPOname = myScanner.next();
 		User user = new NonProfit(theUserName, User.UserType.NPO, NPOname, 0);
 		if(checkLogin(theUserList, user)) 
 		{
-			System.out.println("Welcome back, " + theUserName + "!");
+			System.out.println("Welcome backz, " + theUserName + "!");
 		} 
 		else 
 		{
@@ -287,7 +481,7 @@ public class AuctionCentralMain
 				user.ExecuteCommand(User.Command.EDITAUCTION, theCalendar, currentNPOauction, null);
 				theAuctionList.clear();
 				Collection<ArrayList<Auction>> auctions = theCalendar.myAuctionByDateList.values();
-				Iterator it = auctions.iterator();
+				Iterator <ArrayList<Auction>> it = auctions.iterator();
 				while(it.hasNext()) {
 					ArrayList<Auction> a = (ArrayList<Auction>) it.next();
 					for(int j = 0; j < a.size(); j++) {
@@ -300,7 +494,7 @@ public class AuctionCentralMain
 			{							
 				user.ExecuteCommand(User.Command.ADDAUCTION, theCalendar, null, null);
 				Collection<ArrayList<Auction>> auctions = theCalendar.myAuctionByDateList.values();
-				Iterator it = auctions.iterator();
+				Iterator <ArrayList<Auction>> it = auctions.iterator();
 				while(it.hasNext()) {
 					ArrayList<Auction> a = (ArrayList<Auction>) it.next();
 					for(int j = 0; j < a.size(); j++) {
@@ -318,6 +512,7 @@ public class AuctionCentralMain
 		case 3: 
 			user.ExecuteCommand(User.Command.EDITITEM, theCalendar, null, null);
 		}
+		myScanner.close();
 	}
 	
 	/**
@@ -332,7 +527,7 @@ public class AuctionCentralMain
 		User user = new Bidder(theUserName, User.UserType.BIDDER);
 		if(checkLogin(theUserList, user)) 
 		{
-			System.out.println("Welcome back, " + theUserName + "!");
+			System.out.println("Welcome backz, " + theUserName + "!");
 		}
 		else 
 		{
@@ -374,7 +569,6 @@ public class AuctionCentralMain
 		} 
 		catch (FileNotFoundException e1) 
 		{
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -441,5 +635,4 @@ public class AuctionCentralMain
 		months.put("December", 12);
 		return months;
 	}
-	
 }

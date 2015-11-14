@@ -133,6 +133,17 @@ public class Auction
 	  myUserName = theUserName;
   }
   
+  public String toStringSimple(){
+	  StringBuilder answer = new StringBuilder();
+	  answer.append("Name: " + myAuctionName + "\n");
+	  //answer.append("Organization name: " + myOrgName + "\n");
+	  answer.append("Date: " + myStartTime.getMonth() + " " + myStartTime.getDayOfMonth() +", " + myStartTime.getYear() + "\n");
+	 // answer.append("Start time: " + myStartTime.getHour() + ":" + myStartTime.getMinute() + "\n");
+	  //answer.append("End: " + myEndTime.getHour() + ":" + myEndTime.getMinute() + "\n");
+
+	  return answer.toString();  
+  }
+  
   public String toString(){
 	  StringBuilder answer = new StringBuilder();
 	  answer.append("Name: " + myAuctionName + "\n");
@@ -140,8 +151,14 @@ public class Auction
 	  answer.append("Date: " + myStartTime.getMonth() + " " + myStartTime.getDayOfMonth() +", " + myStartTime.getYear() + "\n");
 	  answer.append("Start time: " + myStartTime.getHour() + ":" + myStartTime.getMinute() + "\n");
 	  answer.append("End: " + myEndTime.getHour() + ":" + myEndTime.getMinute() + "\n");
-	  if(myInventory!= null) {
-	  answer.append("Items: " + myInventory.size() + "\n\n");}
+	  if(myInventory!= null) 
+	  {
+		  answer.append("Items: " + myInventory.size());
+	  } 
+	  else 
+	  {
+		  answer.append("Items: 0");
+	  }
 	  return answer.toString();
   }
 

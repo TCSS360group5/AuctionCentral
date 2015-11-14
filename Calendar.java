@@ -212,7 +212,7 @@ public class Calendar
   
   public void removeAuction(Auction theAuction) {
 	  Collection<ArrayList<Auction>> auctions = myAuctionByDateList.values();
-		Iterator it = auctions.iterator();
+		Iterator <ArrayList<Auction>> it = auctions.iterator();
 		while(it.hasNext()) {
 			ArrayList<Auction> a = (ArrayList<Auction>) it.next();
 			for(int j = 0; j < a.size(); j++) {
@@ -224,8 +224,30 @@ public class Calendar
 			}
 		}
 	}
+
+
+	public String toString(LocalDate theDate) 
+	{
+		StringBuilder answer = new StringBuilder();
+		if (futureAuctions > 0)
+		{
+			for (Map.Entry<LocalDate,ArrayList<Auction>> entry :myAuctionByDateList.entrySet()) 
+			{
+				answer.append(entry.getKey());
+				ArrayList<Auction> Auctions = entry.getValue();
+				for (int i = 0; i < Auctions.size(); i++)
+				{
+					answer.append(i + " " + Auctions.get(i));
+				}
+			}
+		}
+		else
+		{
+			answer.append("No Current Auctions for " + theDate.getMonth().name());
+		}
+		return answer.toString();
+	}
 }
-  
 
 // TODO: add toString method
 

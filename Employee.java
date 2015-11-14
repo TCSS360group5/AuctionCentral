@@ -20,6 +20,7 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
 		break;
 	case VIEWMAINMENU:
 		answer.add(User.Command.VIEWCALENDAR);
+		//answer.add(User.Command.VIEWAUCTION);
 		break;
 	default:
 		break;

@@ -126,9 +126,10 @@ public class NonProfit extends User
 			  answer.add(User.Command.VIEWCALENDAR);
 			  break;
 		  default:
+			  System.out.println("Command Not Recognized");
 			  break;	  
 	  }
-	  user_input.close();
+	  //user_input.close();
 	  return answer;
   }
    
