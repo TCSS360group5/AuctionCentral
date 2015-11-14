@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,7 +77,7 @@ public class AuctionCentralMain
 	        		theUserList.add(new Employee(userName, User.UserType.EMPLOYEE));
 	        		break;
 	        	case "NPO":
-	        		theUserList. add(new NonProfit(userName, User.UserType.NPO, "", 0));
+	        		theUserList. add(new NonProfit(userName, User.UserType.NPO, "", LocalDate.now().minusYears(1)));
 	        		break;
 	        	case "BIDDER":
         			theUserList.add(new Bidder(userName, User.UserType.BIDDER));
@@ -120,7 +121,7 @@ public class AuctionCentralMain
 	        
 	        String item = s.next();
 	        String userName = s.next();
-	        Auction newAuction = new Auction(orgName, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
+	        Auction newAuction = new Auction(orgName, userName, LocalDateTime.of(year, months.get(month), day, startHour, startMinute), 
 	        		LocalDateTime.of(year, months.get(month), day, endHour, endMinute));
 	        newAuction.setUserName(userName);
 	        auctionList.add(newAuction);
@@ -222,7 +223,7 @@ public class AuctionCentralMain
 		int option;
 		System.out.println("What is the name of your Non-Profit Organization?");
 		String NPOname = theScanner.next();
-		User user = new NonProfit(theUserName, User.UserType.NPO, NPOname, 0);
+		User user = new NonProfit(theUserName, User.UserType.NPO, NPOname, LocalDate.now().minusYears(1));
 		if(checkLogin(theUserList, user)) 
 		{
 			System.out.println("Welcome back, " + theUserName + "!");

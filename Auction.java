@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
@@ -16,26 +17,36 @@ public class Auction
   String myUserName;
   
   //create auction constructor
-  public Auction(String theOrgName, LocalDateTime theStartTime, LocalDateTime theEndTime)
+  public Auction(String theOrgName, String theUserName, LocalDateTime theStartTime, LocalDateTime theEndTime)
   {
-	  myOrgName = theOrgName;
-	  myStartTime = theStartTime;
-	  updateAuctionName();
-	  myEndTime = theEndTime;
+	  this(theOrgName, theUserName, theStartTime, theEndTime, null);
+//	  myOrgName = theOrgName;
+//	  myStartTime = theStartTime;
+//	  updateAuctionName();
+//	  myEndTime = theEndTime;
+//	  myInventory = new ArrayList<Item>();
   }
   
   private void updateAuctionName() {
-	  myAuctionName = myOrgName + "-" + myStartTime.getMonth().name() + "-" + myStartTime.getDayOfMonth() + "-" + myStartTime.getYear();
+	  myAuctionName = myOrgName.replace(' ', '-') + "-" + myStartTime.getMonth().name() + "-" + myStartTime.getDayOfMonth() + "-" + myStartTime.getYear();
 }
 
 //create another auction constructor with same inventory list - copy constructor?
-  public Auction(String theOrgName, LocalDateTime theStartTime, LocalDateTime theEndTime, List<Item> theInventory)
+  public Auction(String theOrgName, String theUserName, LocalDateTime theStartTime, LocalDateTime theEndTime, List<Item> theInventory)
   {
 	  myOrgName = theOrgName;  
+	  myUserName = theUserName;
 	  myStartTime = theStartTime;
 	  updateAuctionName();
 	  myEndTime = theEndTime;
-	  myInventory = theInventory;
+	  if (theInventory != null)
+	  {
+		  myInventory = theInventory;
+	  }
+	  else 
+	  {
+		  myInventory = new ArrayList<Item>();
+	  }
   }
   
   //get the auction organization

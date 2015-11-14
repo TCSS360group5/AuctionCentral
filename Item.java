@@ -60,6 +60,11 @@ public class Item
 	  return myBids;
   }
   
+  public void setBids(Map<User, Double> theBids)
+  {
+	  myBids = theBids;
+  }
+  
   public void bidOnItem(User user, double bid)
   {
 	  	  myBids.put(user, bid);
@@ -72,22 +77,22 @@ public class Item
   
   public String toString() {
 	  StringBuilder answer = new StringBuilder();
-	  answer.append("Name: " + myItemName + "/n");
-	  answer.append("Description: " + myDescription + "/n");
-	  answer.append("Starting Bid: " + myStartingBid + "/n");
-	  answer.append("Selling Price: " + mySellingPrice + "/n");
+	  answer.append("Name: " + myItemName + "\n");
+	  answer.append("Description: " + myDescription + "\n");
+	  answer.append("Starting Bid: " + myStartingBid + "\n");
+	  answer.append("Selling Price: " + mySellingPrice + "\n");
 	  return answer.toString();
   }
   
   public String toStringWithBids() {
 	  StringBuilder answer = new StringBuilder();
-	  answer.append("Name: " + myItemName + "/n");
-	  answer.append("Description: " + myDescription + "/n");
-	  answer.append("Starting Bid: " + myStartingBid + "/n");
-	  answer.append("Selling Price: " + mySellingPrice + "/n");
+	  answer.append("Name: " + myItemName + "\n");
+	  answer.append("Description: " + myDescription + "\n");
+	  answer.append("Starting Bid: " + myStartingBid + "\n");
+	  answer.append("Selling Price: " + mySellingPrice + "\n");
 	  for (Entry<User, Double> entry : myBids.entrySet()) 
 	  {
-		  answer.append(entry.getKey() + " " + entry.getValue() + "/n");
+		  answer.append(entry.getKey() + " " + entry.getValue() + "\n");
 	  }
 	  return answer.toString();
   }

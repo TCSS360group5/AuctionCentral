@@ -1,5 +1,7 @@
 import static org.junit.Assert.*;
 
+import java.time.LocalDateTime;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,11 +15,16 @@ import org.junit.Test;
  */
 public class AuctionTest {
 
+	Auction testAuction;
+	Auction testAuctionWithItems;
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
+		LocalDateTime now = LocalDateTime.now();
+		testAuction = new Auction("My Org Name", "steve", now.plusDays(2), now.plusDays(2).plusHours(2));
 	}
 
 	/**
@@ -49,7 +56,8 @@ public class AuctionTest {
 	 */
 	@Test
 	public void testAddItem() {
-		fail("Not yet implemented"); // TODO
+		Item myItem = new Item("Puppy", 120, "Happy puppy ready for a new home");
+		testAuction.addItem(myItem);
 	}
 
 	/**

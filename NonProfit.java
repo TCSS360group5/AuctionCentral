@@ -1,10 +1,11 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class NonProfit extends User
 {
-  private int myLastAuctionYear;
+  private LocalDate myLastAuctionYear;
   // since we have this, maybe they don't need to see the calendar?
   // or maybe they should see to schedule
   private Auction myAuction;
@@ -12,7 +13,7 @@ public class NonProfit extends User
   //private String myUserName;
   
   // schedules an auction and enters auction info
-  public NonProfit(String theUserName, UserType theUserType, String theNPOName, int theLastAuctionYear){
+  public NonProfit(String theUserName, UserType theUserType, String theNPOName, LocalDate theLastAuctionYear){
 	  super(theUserName, theUserType);
 	  myNPOName = theNPOName;
 	  myLastAuctionYear = theLastAuctionYear;
@@ -46,7 +47,7 @@ public class NonProfit extends User
 			  System.out.println("Please enter the duration (in hours) of the Auction");
 			  duration = user_input.nextInt();
 			  
-			  myAuction = new Auction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), 
+			  myAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), 
 					  LocalDateTime.of(year, month, day, hour+duration, minutes));
 			  theCalendar.addAuction(myAuction);
 			  break;
@@ -66,7 +67,7 @@ public class NonProfit extends User
 			  System.out.println("Please enter the duration (in hours) of the Auction");
 			  duration = user_input.nextInt();
 			  
-			  myAuction = new Auction(myNPOName, LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
+			  myAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
 			  try
 			  {
 				  theCalendar.removeAuction(theAuction);
@@ -81,13 +82,14 @@ public class NonProfit extends User
 			  ItemName = user_input.nextLine();
 			  System.out.println("Please enter the Minimum Bid:");
 			  MinimumPrice = user_input.nextDouble();
+			  user_input.nextLine();
 			  System.out.println("Please enter the Item Description:");
 			  Description = user_input.nextLine();
 			  try
 			  {
 				  theAuction.addItem(new Item(ItemName, MinimumPrice, Description));
 			  } catch (Exception e) {
-				  
+				  System.out.println("Item could not be added");
 			  }
 			  break;
 		  case EDITITEM:
@@ -132,37 +134,48 @@ public class NonProfit extends User
 	  return answer;
   }
    
-  private int implementYear(Scanner user_input) {
+  private int implementYear(Scanner user_input) 
+  {
 	  int year;
 	  System.out.println("Please enter the Auction year:");
 	  year = user_input.nextInt();
-	  if (year <= myLastAuctionYear) {
+	  if (year <= myLastAuctionYear.getYear()) 
+	  {
 		  System.out.println("You already have an auction this year.");
 		  year = implementYear(user_input);
 	  }
 	return year;
   }
   
-  public int getLastAuctionYear() {
+  public String getNPOName()
+  {
+	  return myNPOName;
+  }
+  
+  public void setNPOName(String theNewName)
+  {
+	  myNPOName = theNewName;
+  }
+  
+  public LocalDate getLastAuctionDate() 
+  {
 	  return myLastAuctionYear;
   }
   
-  public void setLastAuctionYear(int theNewYear) {
+  public void setLastAuctionDate(LocalDate theNewYear) 
+  {
 	  myLastAuctionYear = theNewYear;
   }
-
-// edits auction info
   
-  // adds to auction inventory
+  public Auction getAuction()
+  {
+	  return myAuction;
+  }
   
-  // edits auction inventory
-  
-  public Auction getAuction(){
-	return myAuction;}
-  
-  public boolean setAuction(Auction theAuction){
-      myAuction = theAuction;
-	return false;
+  public boolean setAuction(Auction theAuction)
+  {
+	  myAuction = theAuction;
+	  return false;
   }
   
 }
