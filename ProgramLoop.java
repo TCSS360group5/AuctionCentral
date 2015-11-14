@@ -4,9 +4,7 @@ import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -388,7 +386,7 @@ public class ProgramLoop {
 			}
 			if (userAnswer > 0) {
 				myCurrentState = User.Command.VIEWAUCTION;
-				myCurrentAuction = myAuctionList.get(userAnswer);
+				myCurrentAuction = myAuctionList.get(userAnswer - 1);
 				System.out.println(myCurrentAuction.toString());
 			}
 		}		
@@ -402,158 +400,6 @@ public class ProgramLoop {
 		}
 		myScanner.nextLine();
 		return answer;
-	}
-	
-
-	
-	/**
-	 * Runs the NPO menu.
-	 * 
-	 * @param theUserName
-	 * @param theUserList
-	 * @param theAuctionList
-	 * @param theCalendar
-	 * @param theScanner
-	 */
-	public void executeNPO(String theUserName, ArrayList<User> theUserList, ArrayList<Auction> theAuctionList, Calendar theCalendar, Scanner theScanner) {
-		int option;
-		Scanner myScanner = new Scanner(System.in);
-		System.out.println("What is the name of your Non-Profit Organization?");
-		String NPOname = myScanner.next();
-		User user = new NonProfit(theUserName, User.UserType.NPO, NPOname, 0);
-		if(checkLogin(theUserList, user)) 
-		{
-			System.out.println("Welcome backz, " + theUserName + "!");
-		} 
-		else 
-		{
-			theUserList.add(user);
-		}
-		
-		System.out.println("\nNon-Profit Organization Staff Member Homepage");
-		System.out.println("------------------------------------------------");
-		boolean loginPass = false;
-		boolean existingAuction = false;
-		boolean auctionFound = false;
-		Auction currentNPOauction = null;
-		int i = 0;
-		if(!theAuctionList.isEmpty()){
-			while(!auctionFound) {
-			if(theAuctionList.get(i).getAuctionOrg().equals(NPOname) && theAuctionList.get(i).getUserName().equals(theUserName)) {
-				currentNPOauction = theAuctionList.get(i);
-				System.out.println("You have an auction scheduled already.");
-				System.out.println("What would you like to do?");
-				System.out.println("1. Edit auction information");
-				System.out.println("2. Add new inventory items");
-				System.out.println("3. Edit inventory items");
-				loginPass = true;
-				existingAuction = true;
-				auctionFound = true;
-			} else if(theAuctionList.get(i).getAuctionOrg().equals(NPOname) && !theAuctionList.get(i).getUserName().equals(theUserName)) {
-				System.out.println("Someone else from your Non-Profit organization has already scheduled an auction.");
-				System.out.println("Only one person from each Non-Profit organization may schedule an auction for that organization.");
-				auctionFound = true;
-			} else if(!theAuctionList.get(i).getAuctionOrg().equals(NPOname) && theAuctionList.get(i).getUserName().equals(theUserName)) {
-				System.out.println("This username is already registered for a different Non-Profit organization.");
-				System.out.println("You may only represent one Non-Profit Organization.");
-				auctionFound = true;
-			} else if(!(theAuctionList.get(i).getAuctionOrg().equals(NPOname) || theAuctionList.get(i).getUserName().equals(theUserName))) {
-				System.out.println("What would you like to do?");
-				System.out.println("1) Schedule an auction");			
-				loginPass = true;
-				existingAuction = false;
-				auctionFound = true;
-			}
-			i++;
-		}
-		} else {
-			System.out.println("What would you like to do?");
-			System.out.println("1) Schedule an auction");	
-			loginPass = true;
-			existingAuction = false;
-		}
-		
-		option = theScanner.nextInt();
-		
-		switch(option) 
-		{ 
-			
-		case 1:
-			if(loginPass && existingAuction) 		// the NPO has an auction already, so edit
-			{
-				user.ExecuteCommand(User.Command.EDITAUCTION, theCalendar, currentNPOauction, null);
-				theAuctionList.clear();
-				Collection<ArrayList<Auction>> auctions = theCalendar.myAuctionByDateList.values();
-				Iterator <ArrayList<Auction>> it = auctions.iterator();
-				while(it.hasNext()) {
-					ArrayList<Auction> a = (ArrayList<Auction>) it.next();
-					for(int j = 0; j < a.size(); j++) {
-						Auction auction = a.get(j);
-						theAuctionList.add(auction);
-					}
-				}
-			}
-			else if(loginPass && !existingAuction)				// NPO doesn't have an auction so add one
-			{							
-				user.ExecuteCommand(User.Command.ADDAUCTION, theCalendar, null, null);
-				Collection<ArrayList<Auction>> auctions = theCalendar.myAuctionByDateList.values();
-				Iterator <ArrayList<Auction>> it = auctions.iterator();
-				while(it.hasNext()) {
-					ArrayList<Auction> a = (ArrayList<Auction>) it.next();
-					for(int j = 0; j < a.size(); j++) {
-						Auction auction = a.get(j);
-						if(auction.myOrgName.equals(NPOname)) {
-							theAuctionList.add(auction);
-						}
-					}
-				}
-			}
-			break;
-		case 2: 
-			user.ExecuteCommand(User.Command.ADDITEM, theCalendar, null, null);
-			break;
-		case 3: 
-			user.ExecuteCommand(User.Command.EDITITEM, theCalendar, null, null);
-		}
-		myScanner.close();
-	}
-	
-	/**
-	 * Runs the Bidder menu.
-	 * 
-	 * @param theUserName
-	 * @param theUserList
-	 * @param theScanner
-	 */
-	public static void executeBidder(String theUserName, ArrayList<User> theUserList, Scanner theScanner, ArrayList<Auction> theAuctionList) {
-		int option;
-		User user = new Bidder(theUserName, User.UserType.BIDDER);
-		if(checkLogin(theUserList, user)) 
-		{
-			System.out.println("Welcome backz, " + theUserName + "!");
-		}
-		else 
-		{
-			theUserList.add(user);
-		}
-		
-		System.out.println("\nBidder Homepage");
-		System.out.println("------------------------------------------------");
-		System.out.println("What would you like to do?");
-		System.out.println("1) View auctions available for bidding");
-		System.out.println("2) View/Edit my bids");
-		
-		option = theScanner.nextInt();
-		
-		switch(option)
-		{
-			case 1: 
-				System.out.println(theAuctionList);		// this will probably need more formatting
-				break;
-			case 2:
-				// print out the list of this bidder's bids
-				break;
-		}
 	}
 	
 	/**
