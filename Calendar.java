@@ -20,7 +20,6 @@ public class Calendar
   public Calendar()
   {
 	  myAuctionByDateList = new HashMap<LocalDate, ArrayList<Auction>>();
-	  futureAuctions = 0;
   }
 
   // TODO: check the week requirement
@@ -78,8 +77,10 @@ public class Calendar
   
   private boolean checkNinetyDays(LocalDateTime theAuctionStart)
   {
-	  if(theAuctionStart.isAfter(LocalDateTime.now().plusDays(90)) || theAuctionStart.isBefore(LocalDateTime.now()))
+	  if(theAuctionStart.isAfter(LocalDateTime.now().plusDays(90)) || theAuctionStart.isBefore(LocalDateTime.now().minusDays(1)))
+	  {
 		  return false;
+	  }
 	  else
 		  return true;
   }
@@ -87,24 +88,25 @@ public class Calendar
   private boolean checkWeek(LocalDate theAuctionDate)
   {
 	 int count = 0;
+	 
 	 if(myAuctionByDateList.containsKey(theAuctionDate))
 	 {
 		 ArrayList<Auction> dayOfAuctions = myAuctionByDateList.get(theAuctionDate);
 		 count += dayOfAuctions.size();
-	 }
-
-	 for(int i = 1; i <=3; i++)
-	 {
-		 if(myAuctionByDateList.containsKey(theAuctionDate.plusDays(i)))
-		{
-			ArrayList<Auction> dayAuctions = myAuctionByDateList.get(theAuctionDate.plusDays(i));
-			count += dayAuctions.size();
-		}
-		if(myAuctionByDateList.containsKey(theAuctionDate.minusDays(i)))
-		{
-			ArrayList<Auction> dayAuctions = myAuctionByDateList.get(theAuctionDate.minusDays(i));
-			count += dayAuctions.size();
-		}
+		
+		 for(int i = 1; i <=3; i++)
+		 {
+			 if(myAuctionByDateList.containsKey(theAuctionDate.plusDays(i)))
+			{
+				ArrayList<Auction> dayAuctions = myAuctionByDateList.get(theAuctionDate.plusDays(i));
+				count += dayAuctions.size();
+			}
+			if(myAuctionByDateList.containsKey(theAuctionDate.minusDays(i)))
+			{
+				ArrayList<Auction> dayAuctions = myAuctionByDateList.get(theAuctionDate.minusDays(i));
+				count += dayAuctions.size();
+			}
+		 }
 	 }
 	 
 	 if(count >= 5)
@@ -120,7 +122,7 @@ public class Calendar
 	  LocalDateTime auctionEnd = theAuction.getEndTime();
 	  
 	  ArrayList<Auction> dayAuctions = myAuctionByDateList.get(auctionDate);
-	  
+
 	  if(dayAuctions.size() < 2)
 	  {
 		  Auction firstAuction = dayAuctions.get(0);
@@ -162,7 +164,6 @@ public class Calendar
 	  }
   }
   
-  // TODO: check for time conflicts
   public boolean editAuctionDateTime(Auction theAuction,int month, int day, int year,
 								int auctionHourStart, int auctionMinuteStart,
 								int auctionHourEnd, int auctionMinuteEnd)
@@ -184,7 +185,7 @@ public class Calendar
 	  myAuctionByDateList.replace(oldStart.toLocalDate(), removeFrom);
 	  
 	  theAuction.setAuctionDate(newStart, newEnd);
-	  //theAuction.setAuctionName(auctionName);
+	  theAuction.setAuctionName(auctionName);
 	  
 	  if(addAuction(theAuction))
 	  {
@@ -193,7 +194,7 @@ public class Calendar
 	  else
 	  {
 		  theAuction.setAuctionDate(oldStart, oldEnd);
-		  //theAuction.setAuctionName(oldName);
+		  theAuction.setAuctionName(oldName);
 		  myAuctionByDateList.replace(oldStart.toLocalDate(), oldList);
 		  return false;
 	  }
@@ -223,7 +224,7 @@ public class Calendar
 	  
   }
   
-  public Auction viewAuction(String auctionName, LocalDateTime auctionDate)
+  public Auction viewAuction(String auctionName, LocalDate auctionDate)
   {
 	  ArrayList<Auction> dayAuctions = myAuctionByDateList.get(auctionDate);
 	  if(dayAuctions.size() == 0)
@@ -244,6 +245,11 @@ public class Calendar
 	return null;
   }
   
+  public void getAuction(Auction theAuction)
+  {
+	  
+  }
+  
   public void removeAuction(Auction theAuction) 
   {
 	  LocalDate date = theAuction.getStartTime().toLocalDate();
@@ -254,44 +260,6 @@ public class Calendar
 	  myAuctionByDateList.replace(date, removeDay);
   }
   
-//  public void removeAuction(Auction theAuction) {
-//	  Collection<ArrayList<Auction>> auctions = myAuctionByDateList.values();
-//		Iterator <ArrayList<Auction>> it = auctions.iterator();
-//		while(it.hasNext()) {
-//			ArrayList<Auction> a = (ArrayList<Auction>) it.next();
-//			for(int j = 0; j < a.size(); j++) {
-//				Auction oldAuction = a.get(j);
-//					if(oldAuction.myAuctionName.equals(theAuction.myAuctionName)) {
-//						System.out.println("old auction " + oldAuction.myAuctionName);
-//						a.remove(oldAuction);
-//					}
-//			}
-//		}
-//	}
-
-
-	public String toString(LocalDate theDate) 
-	{
-		StringBuilder answer = new StringBuilder();
-		if (futureAuctions > 0)
-		{
-			for (Map.Entry<LocalDate,ArrayList<Auction>> entry :myAuctionByDateList.entrySet()) 
-			{
-				answer.append(entry.getKey());
-				ArrayList<Auction> Auctions = entry.getValue();
-				for (int i = 0; i < Auctions.size(); i++)
-				{
-					answer.append(i + " " + Auctions.get(i));
-				}
-			}
-		}
-		else
-		{
-			answer.append("No Current Auctions for " + theDate.getMonth().name());
-		}
-		return answer.toString();
-	}
-
   public String toString()
   {
 	  // returns a sorted treemap
@@ -307,7 +275,8 @@ public class Calendar
 		  char title = 'a';
 		  for(int j = 0; j < dayAuctions.size(); j++)
 		  {
-			  sb.append(title + ") " + dayAuctions.get(j).toString() + "\n");
+			  sb.append(title + ") " + dayAuctions.get(j).getAuctionName() + "\n");
+			  title = 'b';
 		  }
 		  sb.append("\n");
 		  i++;
@@ -315,6 +284,7 @@ public class Calendar
 	  
 	  return sb.toString();
   }
+  
 }
 
 	
