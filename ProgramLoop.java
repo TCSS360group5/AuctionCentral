@@ -11,9 +11,9 @@ import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class ProgramLoop {
-	private static final String myACFileName = "AuctionCentral/";
-	private static final String myUserFile = myACFileName + "users.txt";
-	private static final String myAuctionFile = myACFileName + "auction.txt";
+//	private static final String myACFileName = "./AuctionCentral/";
+	private static final String myUserFile = "users.txt";
+	private static final String myAuctionFile = "auction.txt";
 	
 	private User myUser;
 	private Calendar myCalendar;
@@ -77,7 +77,9 @@ public class ProgramLoop {
 					System.out.println("What is the name of your Non-Profit Organization?");
 					String NPOname = myScanner.nextLine();
 					System.out.println("Your NPO is " + NPOname);
-					myUser = new NonProfit(userName, User.UserType.NPO, NPOname, LocalDate.now().minusYears(1));
+					
+					myUser = new NonProfit(userName, User.UserType.NPO, NPOname, LocalDate.now().minusYears(1), hasExistingAuction(NPOname));
+
 				} 
 				else if (userType == 3)
 				{
@@ -125,7 +127,7 @@ public class ProgramLoop {
 	        		int month = s.nextInt();
 	        		int day = s.nextInt();
 	        		s.nextLine(); //clears the line
-	        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.of(year, month, day)));
+	        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.of(year, month, day), true));
 	        		break;
 	        	case "BIDDER":
         			theUserList.add(new Bidder(userName, User.UserType.BIDDER));
@@ -575,6 +577,18 @@ public class ProgramLoop {
 		outputAuctions.close();
 	}
 	
+	
+	public boolean hasExistingAuction(String theNPOname) {
+		Auction auction;
+		boolean result = false;
+		for(int i = 0; i < myAuctionList.size(); i++) {
+			auction = myAuctionList.get(i);
+			if(auction.myOrgName.equals(theNPOname)) {
+				result = true;
+			}
+		}
+		return result;
+	}
 	
 	/**
 	 * Creates a Map of month names to their corresponding integer values.

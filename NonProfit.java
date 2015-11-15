@@ -10,13 +10,15 @@ public class NonProfit extends User
   // or maybe they should see to schedule
   private Auction myAuction;
   private String myNPOName;
+  private boolean myExistingAuctionStatus;
   //private String myUserName;
   
   // schedules an auction and enters auction info
-  public NonProfit(String theUserName, UserType theUserType, String theNPOName, LocalDate theLastAuctionYear){
+  public NonProfit(String theUserName, UserType theUserType, String theNPOName, LocalDate theLastAuctionYear, boolean theAuctionStatus){
 	  super(theUserName, theUserType);
 	  myNPOName = theNPOName;
 	  myLastAuctionYear = theLastAuctionYear;
+	  myExistingAuctionStatus = theAuctionStatus;
 	  //myUserName = theUserName;
   }
   
@@ -125,6 +127,11 @@ public class NonProfit extends User
 			  break;
 		  case VIEWMAINMENU:
 			  answer.add(User.Command.VIEWCALENDAR);
+			  if(myExistingAuctionStatus) {
+				  answer.add(User.Command.EDITAUCTION);
+			  } else {
+				  answer.add(User.Command.ADDAUCTION);
+			  }
 			  break;
 		  default:
 			  System.out.println("Command Not Recognized");
@@ -132,6 +139,10 @@ public class NonProfit extends User
 	  }
 	  //user_input.close();
 	  return answer;
+  }
+  
+  public void setExistingActionStatus() {
+	  myExistingAuctionStatus = true;
   }
    
   private int implementYear(Scanner user_input) 
