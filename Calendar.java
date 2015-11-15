@@ -54,7 +54,7 @@ public class Calendar
   
   private boolean checkTimes(LocalDateTime theAuctionStart, LocalDateTime theAuctionEnd)
   {
-	  return theAuctionStart.toLocalDate().equals(theAuctionEnd.toLocalDate());
+	  return (theAuctionStart.toLocalDate().equals(theAuctionEnd.toLocalDate()) && theAuctionStart.isBefore(theAuctionEnd));
   }
   
   private boolean checkFutureAuctions()
@@ -93,21 +93,22 @@ public class Calendar
 	 {
 		 ArrayList<Auction> dayOfAuctions = myAuctionByDateList.get(theAuctionDate);
 		 count += dayOfAuctions.size();
-		
-		 for(int i = 1; i <=3; i++)
+	 }	
+	 for(int i = 1; i <=3; i++)
+	 {
+		 if(myAuctionByDateList.containsKey(theAuctionDate.plusDays(i)))
 		 {
-			 if(myAuctionByDateList.containsKey(theAuctionDate.plusDays(i)))
-			{
-				ArrayList<Auction> dayAuctions = myAuctionByDateList.get(theAuctionDate.plusDays(i));
-				count += dayAuctions.size();
-			}
-			if(myAuctionByDateList.containsKey(theAuctionDate.minusDays(i)))
-			{
-				ArrayList<Auction> dayAuctions = myAuctionByDateList.get(theAuctionDate.minusDays(i));
-				count += dayAuctions.size();
-			}
+			 ArrayList<Auction> dayAuctions = myAuctionByDateList.get(theAuctionDate.plusDays(i));
+			 System.out.println();
+			 count += dayAuctions.size();
+		 }
+		 if(myAuctionByDateList.containsKey(theAuctionDate.minusDays(i)))
+		 {
+			 ArrayList<Auction> dayAuctions = myAuctionByDateList.get(theAuctionDate.minusDays(i));
+			 count += dayAuctions.size();
 		 }
 	 }
+	 
 	 
 	 if(count >= 5)
 		 return false;
@@ -129,7 +130,7 @@ public class Calendar
 		  if(auctionStart.isBefore(firstAuction.getStartTime()))
 		  {
 			  // at least 2 hours between actions
-			  if(auctionEnd.plusHours(2).isBefore(firstAuction.getStartTime()))
+			  if(auctionEnd.plusHours(2).minusMinutes(1).isBefore(firstAuction.getStartTime()))
 			  {
 				  dayAuctions.add(theAuction);
 				  futureAuctions ++;
@@ -144,7 +145,7 @@ public class Calendar
 		  else
 		  {
 			  // at least 2 hours between actions
-			  if(auctionStart.isAfter(firstAuction.getEndTime().plusHours(2)))
+			  if(auctionStart.isAfter(firstAuction.getEndTime().plusHours(2).minusMinutes(1)))
 			  {
 				  dayAuctions.add(theAuction);
 				  futureAuctions ++;
