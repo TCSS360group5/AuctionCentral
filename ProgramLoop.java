@@ -4,7 +4,9 @@ import java.io.PrintStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -335,6 +337,8 @@ public class ProgramLoop {
 				 System.out.println("Enter a Number");
 			 }
 			 
+			 boolean addAuction = false;
+			 
 			 if (validCommand)
 			 {
 				 if (commandInt == 0)
@@ -368,11 +372,26 @@ public class ProgramLoop {
 					 else if (thisCommand == User.Command.GOBACK)
 					 {
 						 goBackState();						 
-					 } 					 
+					 } 		
 					 else 
 					 {
 						 myUser.ExecuteCommand(thisCommand, myCalendar, myCurrentAuction, myCurrentItem);
-					 }					 
+					 }	
+					 
+					 if(thisCommand.equals(User.Command.ADDAUCTION)) {
+							Collection<ArrayList<Auction>> auctions =myCalendar.myAuctionByDateList.values();
+							Iterator it = auctions.iterator();
+							myAuctionList.clear();
+							while(it.hasNext()) {
+								ArrayList<Auction> a = (ArrayList<Auction>) it.next();
+								for(int j = 0; j < a.size(); j++) {
+									Auction auction = a.get(j);
+									System.out.println("AUCTION " + auction);
+									myAuctionList.add(auction);
+								}
+							}
+					 }
+					 
 				 } 
 				 else 
 				 {
@@ -543,7 +562,10 @@ public class ProgramLoop {
 		
 		for(int i = 0; i < theAuctionList.size(); i++)
 		{
+			
 			Auction auction = theAuctionList.get(i);
+//			System.out.println("AUCTION : " + auction);
+
 			//outputAuctions.println(auction.getAuctionName()); // orgnameMonth-day-year
 			outputAuctions.println(auction.getAuctionOrg()); 
 			outputAuctions.println(auction.getStartTime().getMonthValue()); 
@@ -556,21 +578,21 @@ public class ProgramLoop {
 			int ItemListSize = 0;
 			if (ItemList != null)
 			{
-				ItemListSize = ItemList.size();
-			}
-			outputAuctions.println(ItemListSize);
-			for (int j = 0; j < ItemListSize; j++)
-			{
-				Item oneItem = ItemList.get(i);
-				outputAuctions.println(oneItem.myItemName);
-				outputAuctions.println(oneItem.myStartingBid);
-				outputAuctions.println(oneItem.myDescription);				
-				Map<User, Double> bidList = oneItem.getBids();
-				outputAuctions.println(bidList.size());
-				for (Entry<User, Double> entry: bidList.entrySet()) 
+				ItemListSize = ItemList.size() - 1;
+				outputAuctions.println(ItemListSize);
+				for (int j = 0; j < ItemListSize; j++)
 				{
-					outputAuctions.println(entry.getKey().getUserName());
-					outputAuctions.println(entry.getValue());
+					Item oneItem = ItemList.get(i);
+					outputAuctions.println(oneItem.myItemName);
+					outputAuctions.println(oneItem.myStartingBid);
+					outputAuctions.println(oneItem.myDescription);				
+					Map<User, Double> bidList = oneItem.getBids();
+					outputAuctions.println(bidList.size());
+					for (Entry<User, Double> entry: bidList.entrySet()) 
+					{
+						outputAuctions.println(entry.getKey().getUserName());
+						outputAuctions.println(entry.getValue());
+					}
 				}
 			}
 		}

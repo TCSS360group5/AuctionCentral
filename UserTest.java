@@ -12,7 +12,7 @@ public class UserTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		myNPO = new NonProfit("Billy", User.UserType.NPO, "BAuction", LocalDate.now().plusDays(5));
+		myNPO = new NonProfit("Billy", User.UserType.NPO, "BAuction", LocalDate.now().plusDays(5), true);
 		myEmployee = new Employee("Betty", User.UserType.EMPLOYEE);
 		myBidder = new Bidder("Sam", User.UserType.BIDDER);
 	}

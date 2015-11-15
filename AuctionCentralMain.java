@@ -77,7 +77,7 @@ public class AuctionCentralMain
 	        		theUserList.add(new Employee(userName, User.UserType.EMPLOYEE));
 	        		break;
 	        	case "NPO":
-	        		theUserList. add(new NonProfit(userName, User.UserType.NPO, "", LocalDate.now().minusYears(1)));
+	        		theUserList. add(new NonProfit(userName, User.UserType.NPO, "", LocalDate.now().minusYears(1), true));
 	        		break;
 	        	case "BIDDER":
         			theUserList.add(new Bidder(userName, User.UserType.BIDDER));
@@ -223,7 +223,7 @@ public class AuctionCentralMain
 		int option;
 		System.out.println("What is the name of your Non-Profit Organization?");
 		String NPOname = theScanner.next();
-		User user = new NonProfit(theUserName, User.UserType.NPO, NPOname, LocalDate.now().minusYears(1));
+		User user = new NonProfit(theUserName, User.UserType.NPO, NPOname, LocalDate.now().minusYears(1), true);
 		if(checkLogin(theUserList, user)) 
 		{
 			System.out.println("Welcome back, " + theUserName + "!");
