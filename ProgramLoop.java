@@ -316,7 +316,11 @@ public class ProgramLoop {
 				 switch (currentCommands.get(i))
 				 {
 				 case VIEWCALENDAR:
-					 System.out.println("View Calendar");
+					 if(myUser.getUserType().equals(User.UserType.BIDDER)) {
+						 System.out.println("View Auctions");
+					 } else {
+						 System.out.println("View Calendar");
+					 }
 					 break;
 				case ADDAUCTION:
 					System.out.println("Add Auction");
