@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 public class Bidder extends User
@@ -57,6 +58,7 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
 			break;
 		case VIEWMAINMENU:
 			answer.add(User.Command.VIEWCALENDAR);
+			answer.add(User.Command.VIEWBIDS);
 			break;
 		case BID:
 			bidOnItem(user_input, theItem);
@@ -65,6 +67,34 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
 			System.out.println("This is the previous Bid: $");
 			System.out.println(myBids.get(theItem).toString());
 			bidOnItem(user_input, theItem);
+			break;
+		case VIEWBIDS:
+			Scanner myScanner = new Scanner(System.in);
+			//answer.add(User.Command.VIEWCALENDAR);
+			if(myBids.size() == 0)
+			{
+				System.out.println("You have not placed any bids yet.");
+			}
+			else{
+				ArrayList<Item> bidsToEdit = new ArrayList<Item>();
+				System.out.println("Bids you have placed:");
+				int i = 1;
+				for(Entry<Item, Double> entry : myBids.entrySet())
+				{
+					System.out.println(i + ") Item Name: " + entry.getKey().getItemName() + " Your bid: " + entry.getValue());
+					bidsToEdit.add(entry.getKey());
+				}
+				System.out.println("Which would you like to edit?");
+				int auctionNum = myScanner.nextInt();
+				if(auctionNum > bidsToEdit.size())
+				{
+					System.out.println("Invalid bid.");
+				}
+				else
+				{
+					bidOnItem(myScanner, bidsToEdit.get(auctionNum - 1));
+				}
+			}
 			break;
 		default:
 			break;
@@ -80,6 +110,7 @@ private void bidOnItem(Scanner user_input,Item theItem) {
 		System.out.println("Bid is below minimum bid for this item.");
 	}else {
 		myBids.put(theItem, bid);
+		System.out.println("Bid entered.");
 	}
 	
 	
