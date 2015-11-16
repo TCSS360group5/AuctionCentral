@@ -76,6 +76,12 @@ public class Auction
 	  return true;
   }
   
+  //remove item
+  public boolean removeItem(Item theItem) {
+	  myInventory.remove(theItem);
+	  return true;
+  }
+  
   //edit the item name
   public boolean editItemName(Item myItem, String newName)
   {

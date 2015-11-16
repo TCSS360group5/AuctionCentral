@@ -94,7 +94,6 @@ public class Item
 	  answer.append("Name: " + myItemName + "\n");
 	  answer.append("Description: " + myDescription + "\n");
 	  answer.append("Starting Bid: " + myStartingBid + "\n");
-	  answer.append("Selling Price: " + mySellingPrice + "\n");
 	  for (Entry<User, Double> entry : myBids.entrySet()) 
 	  {
 		  answer.append(entry.getKey() + " " + entry.getValue() + "\n");

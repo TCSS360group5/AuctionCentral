@@ -19,7 +19,7 @@ public class ProgramLoop {
 	private static final String myAuctionFile = "auction.txt";
 	
 	private User myUser;
-	private Calendar myCalendar;
+	private static Calendar myCalendar;
 	private ArrayList<User> myUserList;
 	private ArrayList<Auction> myAuctionList;
 	private Scanner myScanner;
@@ -421,7 +421,7 @@ public class ProgramLoop {
 								ArrayList<Auction> a = (ArrayList<Auction>) it.next();
 								for(int j = 0; j < a.size(); j++) {
 									Auction auction = a.get(j);
-									System.out.println("AUCTION " + auction);
+//									System.out.println("AUCTION " + auction);
 									myAuctionList.add(auction);
 								}
 							}
@@ -582,6 +582,19 @@ public class ProgramLoop {
 	 * @param theAuctionList
 	 */
 	public static void outputAuctions(File theAuctionFile, ArrayList<Auction> theAuctionList) {
+		
+		Map<LocalDate, ArrayList<Auction>> auctionMap = myCalendar.myAuctionByDateList;
+		Collection<ArrayList<Auction>> auctionLists = auctionMap.values();
+		theAuctionList.clear();
+		
+		Iterator it = auctionLists.iterator();
+		while(it.hasNext()) {
+			ArrayList<Auction> auctionList = (ArrayList<Auction>) it.next();
+			for(int i = 0; i < auctionList.size(); i++) {
+				theAuctionList.add(auctionList.get(i));
+			}
+		}
+		
 		PrintStream outputAuctions = null;	// to write auctions to file
 		
 		try 
@@ -631,6 +644,7 @@ public class ProgramLoop {
 					}
 				}
 			}
+			outputAuctions.println();
 		}
 		outputAuctions.close();
 	}

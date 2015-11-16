@@ -32,9 +32,11 @@ public class NonProfit extends User
 	  int hour;
 	  int minutes;
 	  int duration;
-	  String ItemName;
-	  double MinimumPrice;
-	  String Description;
+	  String itemName;
+	  double minimumPrice;
+	  double sellingPrice;
+	  String description;
+	  
 	  Scanner user_input = new Scanner( System.in );
 	  switch (theCommand) {
 		  case ADDAUCTION:	  
@@ -72,6 +74,8 @@ public class NonProfit extends User
 			  
 			  List<Item> auctionItems = theAuction.getAuctionItems();
 			  myAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes), auctionItems);
+			  
+			  
 			  try
 			  {
 				  theCalendar.removeAuction(theAuction);
@@ -85,15 +89,15 @@ public class NonProfit extends User
 		  case ADDITEM:
 	  
 			  System.out.println("Please enter the Item name:");
-			  ItemName = user_input.nextLine();
+			  itemName = user_input.nextLine();
 			  System.out.println("Please enter the Minimum Bid:");
-			  MinimumPrice = user_input.nextDouble();
+			  minimumPrice = user_input.nextDouble();
 			  user_input.nextLine();
 			  System.out.println("Please enter the Item Description:");
-			  Description = user_input.nextLine();
+			  description = user_input.nextLine();
 			  try
 			  {
-				  theAuction.addItem(new Item(ItemName, MinimumPrice, Description));
+				  theAuction.addItem(new Item(itemName, minimumPrice, description));
 			  } catch (Exception e) {
 				  System.out.println("Item could not be added");
 			  }
@@ -105,14 +109,18 @@ public class NonProfit extends User
 			  System.out.println("The current Item details:");
 			  System.out.println(theItem.toString());
 			  System.out.println("Please enter the Item name:");
-			  ItemName = user_input.nextLine();
+			  itemName = user_input.nextLine();
 			  System.out.println("Please enter the Minimum Bid:");
-			  MinimumPrice = user_input.nextDouble();
+			  minimumPrice = user_input.nextDouble();
+			  user_input.nextLine();
 			  System.out.println("Please enter the Item Description:");
-			  Description = user_input.nextLine();
+			  description = user_input.nextLine();
+			  // there is a bug here.. console is not waiting for the user input
+			  
 			  try
 			  {
-				  theAuction.addItem(new Item(ItemName, MinimumPrice, Description));
+				  theAuction.removeItem(theItem);
+				  theAuction.addItem(new Item(itemName, minimumPrice, description));
 			  } catch (Exception e) {
 				  
 			  }
