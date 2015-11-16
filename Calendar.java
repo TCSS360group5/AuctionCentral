@@ -256,9 +256,15 @@ public class Calendar
 	  LocalDate date = theAuction.getStartTime().toLocalDate();
 	  ArrayList<Auction> removeDay = myAuctionByDateList.get(date);
 	  
-	  removeDay.remove(theAuction);
-	  
-	  myAuctionByDateList.replace(date, removeDay);
+	  if(removeDay.size() == 1)
+	  {
+		  myAuctionByDateList.remove(date);
+	  }
+	  else
+	  {
+		  removeDay.remove(theAuction);
+		  myAuctionByDateList.replace(date, removeDay);
+	  }
   }
   
 
