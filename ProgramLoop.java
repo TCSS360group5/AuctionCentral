@@ -178,7 +178,7 @@ public class ProgramLoop {
 				for (int j = 0; j < NumItems; j++)
 				{
 					String ItemName = s.nextLine();
-					System.out.println("Item: " + ItemName);
+//					System.out.println("Item: " + ItemName);
 					Double StartingBid = s.nextDouble();
 					s.nextLine();
 					String Description = s.nextLine();
