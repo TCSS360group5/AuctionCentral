@@ -54,7 +54,13 @@ public class NonProfit extends User
 			  
 			  myAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), 
 					  LocalDateTime.of(year, month, day, hour+duration, minutes));
-			  theCalendar.addAuction(myAuction);
+			  if(theCalendar.addAuction(myAuction))
+			  {
+				  System.out.println("Auction added!");
+				  this.myExistingAuctionStatus = true;
+			  }
+			  else
+				  System.out.println("There was an error adding your auction.");
 			  break;
 		  case EDITAUCTION:
 
@@ -75,16 +81,16 @@ public class NonProfit extends User
 			  List<Item> auctionItems = theAuction.getAuctionItems();
 			  myAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes), auctionItems);
 			  
-			  
-			  try
+			  if(theCalendar.addAuction(myAuction))
 			  {
-				  theCalendar.removeAuction(theAuction);
-				  theCalendar.addAuction(myAuction);
-			  } catch (Exception e) {
-				  // put back old auction
+				  System.out.println("Auction has been edited.");
+			  }
+			  else
+			  {
 				  theCalendar.addAuction(theAuction);
-				  System.out.println("Auction wasn't added.");
-			  }			  
+				  System.out.println("There was an error. Your auction has not been edited.");
+			  }
+			  System.out.println("\n What would you like to do next?");
 			  break;
 		  case ADDITEM:
 	  

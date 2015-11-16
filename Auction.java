@@ -20,9 +20,10 @@ public class Auction
 	  this(theOrgName, theUserName, theStartTime, theEndTime, null);
   }
   
-  private void updateAuctionName() {
+  private void updateAuctionName() 
+  {
 	  myAuctionName = myOrgName.replace(' ', '-') + "-" + myStartTime.getMonth().name() + "-" + myStartTime.getDayOfMonth() + "-" + myStartTime.getYear();
-}
+  }
 
 //create another auction constructor with same inventory list - copy constructor?
   public Auction(String theOrgName, String theUserName, LocalDateTime theStartTime, LocalDateTime theEndTime, List<Item> theInventory)
