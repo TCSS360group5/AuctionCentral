@@ -1,6 +1,7 @@
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class NonProfit extends User
@@ -56,7 +57,7 @@ public class NonProfit extends User
 		  case EDITAUCTION:
 
 			  System.out.println("The current Auction details:");
-			  System.out.println(theAuction.toString());
+			  System.out.println(myAuction.toString());
 			  year = implementYear(user_input);				  
 			  System.out.println("Please enter the Auction month:");
 			  month = user_input.nextInt();
@@ -69,12 +70,15 @@ public class NonProfit extends User
 			  System.out.println("Please enter the duration (in hours) of the Auction");
 			  duration = user_input.nextInt();
 			  
-			  myAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes));
+			  List<Item> auctionItems = theAuction.getAuctionItems();
+			  myAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes), auctionItems);
 			  try
 			  {
 				  theCalendar.removeAuction(theAuction);
 				  theCalendar.addAuction(myAuction);
 			  } catch (Exception e) {
+				  // put back old auction
+				  theCalendar.addAuction(theAuction);
 				  System.out.println("Auction wasn't added.");
 			  }			  
 			  break;
@@ -186,7 +190,13 @@ public class NonProfit extends User
   public boolean setAuction(Auction theAuction)
   {
 	  myAuction = theAuction;
+	  myExistingAuctionStatus = true;
 	  return false;
+  }
+  
+  public boolean hasAuction()
+  {
+	  return myExistingAuctionStatus;
   }
   
 }

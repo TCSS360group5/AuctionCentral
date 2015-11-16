@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
+
 public class ProgramLoop {
 //	private static final String myACFileName = "./AuctionCentral/";
 	private static final String myUserFile = "users.txt";
@@ -212,7 +213,8 @@ public class ProgramLoop {
 		        		LocalDateTime.of(year, month, day, endHour, endMinute), ItemList);
 		        //newAuction.setUserName(userName);
 		        auctionList.add(newAuction);
-		        
+		        User userToAdd = FindUserByNPOName(orgName);
+		        ((NonProfit)userToAdd).setAuction(newAuction);
 		        calendar.addAuction(newAuction);
 	        }
 	        s.close();
@@ -247,6 +249,22 @@ public class ProgramLoop {
 		return answerUser;
 	}
 	
+	private User FindUserByNPOName(String NPOName)
+	{
+		User answerUser = null;
+		for (User theUser: myUserList)
+		{
+			if(theUser.getUserType() == User.UserType.NPO)
+			{
+				if(((NonProfit)theUser).getNPOName().equals(NPOName))
+					{
+						answerUser = theUser;
+					}
+			}
+		}
+		return answerUser;
+	}
+	
 		
 	
 	/**
@@ -271,6 +289,13 @@ public class ProgramLoop {
 	private void executeProgramLoop()//Scanner theScanner)
 	{
 		//Scanner myScanner = new Scanner(System.in);
+		if(myUser.getUserType() == User.UserType.NPO)
+		{
+			if(((NonProfit)myUser).hasAuction() == true)
+			{
+				myCurrentAuction = ((NonProfit)myUser).getAuction();
+			}
+		}
 		myHomePageMessage = "\nAuctionCentral " + myUser.getUserType() + myHomePageMessageEnd;
 		System.out.println(myHomePageMessage);
 		boolean notQuit = true;
