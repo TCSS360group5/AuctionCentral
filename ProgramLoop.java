@@ -353,6 +353,8 @@ public class ProgramLoop {
 				case VIEWITEM:
 					System.out.println("View Items");
 					break;
+				case VIEWBIDS:
+					System.out.println("View Bids");
 				default:
 					break;						 
 				 }				 
