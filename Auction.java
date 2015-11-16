@@ -4,10 +4,8 @@ import java.time.LocalDateTime;
 
 public class Auction
 {
-  // public for now
   public List<Item> myInventory;
   public String myOrgName;
-  //public Date auctionDate;
   public String myAuctionName;
   
   //Fields for local date
@@ -20,11 +18,6 @@ public class Auction
   public Auction(String theOrgName, String theUserName, LocalDateTime theStartTime, LocalDateTime theEndTime)
   {
 	  this(theOrgName, theUserName, theStartTime, theEndTime, null);
-//	  myOrgName = theOrgName;
-//	  myStartTime = theStartTime;
-//	  updateAuctionName();
-//	  myEndTime = theEndTime;
-//	  myInventory = new ArrayList<Item>();
   }
   
   private void updateAuctionName() {
@@ -70,9 +63,9 @@ public class Auction
   }
   
   //add item to auction inventory list
-  public boolean addItem(Item myItem)
+  public boolean addItem(Item theItem)
   {
-	  myInventory.add(myItem);
+	  myInventory.add(theItem);
 	  return true;
   }
   
@@ -83,23 +76,23 @@ public class Auction
   }
   
   //edit the item name
-  public boolean editItemName(Item myItem, String newName)
+  public boolean editItemName(Item theItem, String theNewName)
   {
-	  myInventory.get(myInventory.indexOf(myItem)).setItemName(newName);
+	  myInventory.get(myInventory.indexOf(theItem)).setItemName(theNewName);
 	  return true;
   }
   
   //edit the starting bid of the item
-  public boolean editItemStartingBid(Item myItem, double myStartingBid)
+  public boolean editItemStartingBid(Item theItem, double theStartingBid)
   {
-	  myInventory.get(myInventory.indexOf(myItem)).setStartingBid(myStartingBid);
+	  myInventory.get(myInventory.indexOf(theItem)).setStartingBid(theStartingBid);
 	  return true;
   }
   
   //method to edit item's description
-  public boolean editItemDescription(Item myItem, String description)
+  public boolean editItemDescription(Item theItem, String theDescription)
   {
-	  myInventory.get(myInventory.indexOf(myItem)).setDescription(description);
+	  myInventory.get(myInventory.indexOf(theItem)).setDescription(theDescription);
 	  return true;
   }
  

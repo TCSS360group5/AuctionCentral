@@ -14,10 +14,8 @@ import java.util.Scanner;
 
 
 public class ProgramLoop {
-//	private static final String myACFileName = "./AuctionCentral/";
 	private static final String myUserFile = "users.txt";
 	private static final String myAuctionFile = "auction.txt";
-	
 	private User myUser;
 	private static Calendar myCalendar;
 	private ArrayList<User> myUserList;
@@ -351,7 +349,7 @@ public class ProgramLoop {
 					System.out.println("View Auctions");
 					break;
 				case VIEWITEM:
-					System.out.println("View Items");
+					System.out.println("View/Edit Items");
 					break;
 				case VIEWBIDS:
 					System.out.println("View Bids");
@@ -399,7 +397,7 @@ public class ProgramLoop {
 					 } 
 					 else if (thisCommand == User.Command.VIEWAUCTION)
 					 {
-						 myCurrentState = User.Command.VIEWAUCTION;
+						 myCurrentState = User.Command.VIEWAUCTION;						 
 						 viewCalendarAuctions();
 					 } 
 					 else if (thisCommand == User.Command.VIEWITEM)
