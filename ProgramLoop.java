@@ -603,7 +603,7 @@ public class ProgramLoop {
 			int ItemListSize = 0;
 			if (ItemList != null)
 			{
-				ItemListSize = ItemList.size() - 1;
+				ItemListSize = ItemList.size();
 				outputAuctions.println(ItemListSize);
 				for (int j = 0; j < ItemListSize; j++)
 				{
