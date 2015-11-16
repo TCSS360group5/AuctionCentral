@@ -103,7 +103,7 @@ public class ProgramLoop {
 		
 		outputUsers(userFile, myUserList);
 		outputAuctions(auctionFile, myAuctionList);
-		System.out.println("Changes Have Been Saved.\nThankyou for using Auction Central.");
+		System.out.println("Thank you for using Auction Central.");
 		myScanner.close();
 	}
 	
@@ -178,6 +178,7 @@ public class ProgramLoop {
 				for (int j = 0; j < NumItems; j++)
 				{
 					String ItemName = s.nextLine();
+					System.out.println("Item: " + ItemName);
 					Double StartingBid = s.nextDouble();
 					s.nextLine();
 					String Description = s.nextLine();
@@ -205,6 +206,9 @@ public class ProgramLoop {
 						oneItem.setBids(bidList);						
 					}	
 					ItemList.add(oneItem);
+					if(s.hasNextLine()) {
+						s.nextLine();
+					}
 				}			
 		        Auction newAuction = new Auction(orgName, userName, LocalDateTime.of(year, month, day, startHour, startMinute), 
 		        		LocalDateTime.of(year, month, day, endHour, endMinute), ItemList);
@@ -450,7 +454,7 @@ public class ProgramLoop {
 				int userAnswer = 0;
 				if (myAuctionList.size() > 0) 
 				{
-					System.out.println("Enter the number of an Item to view its details.\nPress 0 to go back.");
+					System.out.println("Enter the number of an item to view/edit its details.\nEnter 0 to go back.");
 					userAnswer = getNumberFromUser();
 				}
 				if (userAnswer > 0) {
@@ -589,13 +593,11 @@ public class ProgramLoop {
 			e1.printStackTrace();
 		}
 		
-//		System.out.println(theAuctionList.size());
 		
 		for(int i = 0; i < theAuctionList.size(); i++)
 		{
 			
 			Auction auction = theAuctionList.get(i);
-//			System.out.println("AUCTION : " + auction);
 
 			//outputAuctions.println(auction.getAuctionName()); // orgnameMonth-day-year
 			outputAuctions.println(auction.getAuctionOrg()); 
@@ -606,14 +608,17 @@ public class ProgramLoop {
 			outputAuctions.println(auction.getEndTime().getHour() + " " + auction.getEndTime().getMinute());			
 			outputAuctions.println(auction.getUserName());
 			List<Item> ItemList = auction.getAuctionItems();
-			int ItemListSize = 0;
+			
+			
+			int ItemListSize;
 			if (ItemList != null)
 			{
 				ItemListSize = ItemList.size();
 				outputAuctions.println(ItemListSize);
 				for (int j = 0; j < ItemListSize; j++)
 				{
-					Item oneItem = ItemList.get(i);
+					Item oneItem = ItemList.get(j);
+				
 					outputAuctions.println(oneItem.myItemName);
 					outputAuctions.println(oneItem.myStartingBid);
 					outputAuctions.println(oneItem.myDescription);				

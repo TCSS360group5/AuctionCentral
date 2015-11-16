@@ -1,5 +1,8 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -25,6 +28,8 @@ public class Bidder extends User
 		  myBids.put(theItem, theBid);
 		  answer = true;
 	  }	  
+
+	  
 	return answer;
   }
 
@@ -76,6 +81,25 @@ private void bidOnItem(Scanner user_input,Item theItem) {
 	}else {
 		myBids.put(theItem, bid);
 	}
+	
+	
+	  
+	  // I guess we don't need this but this checks to see if that bid is the highest, if it is, updates item's bid fields
+//	  Map<User, Double> itemBidMap = theItem.myBids;
+//	  Collection<Double> itemBids = itemBidMap.values();
+//	  System.out.println(itemBids);
+//	  if(itemBids.size() == 0) {
+//		  theItem.setHighestBid(bid);
+//	  } else {
+//		  Iterator it = itemBids.iterator();
+//		  while(it.hasNext()) {
+//		  		System.out.println(it.next());
+//			  if(bid > (Double) it.next()) {
+//					  theItem.setHighestBid(bid);
+//				  }
+//		  	}
+//	  }
+	
 }
   
   // bids on items

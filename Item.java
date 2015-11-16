@@ -9,6 +9,7 @@ public class Item
   double mySellingPrice;
   double myStartingBid;
   Map<User, Double> myBids;
+  double myHighestBid;
   
   public Item(String theItemName, double theStartingBid, String theDescription)
   {
@@ -17,6 +18,10 @@ public class Item
 	  myStartingBid = theStartingBid;
 	  myDescription = theDescription;
 	  
+  }
+  
+  public void setHighestBid(double theBid) {
+	  myHighestBid = theBid;
   }
   
   public boolean setItemName(String theItemName)

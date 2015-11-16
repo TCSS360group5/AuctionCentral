@@ -97,6 +97,9 @@ public class NonProfit extends User
 			  } catch (Exception e) {
 				  System.out.println("Item could not be added");
 			  }
+			  
+//			  System.out.println("Current items: " + theAuction.getAuctionItems());
+			  
 			  break;
 		  case EDITITEM:
 			  System.out.println("The current Item details:");
@@ -133,9 +136,14 @@ public class NonProfit extends User
 			  answer.add(User.Command.VIEWCALENDAR);
 			  if(myExistingAuctionStatus) {
 				  answer.add(User.Command.EDITAUCTION);
+				  answer.add(User.Command.ADDITEM);
+				  answer.add(User.Command.VIEWITEM);
+//				  answer.add(User.Command.EDITITEM);
 			  } else {
 				  answer.add(User.Command.ADDAUCTION);
 			  }
+			  
+			  
 			  break;
 		  default:
 			  System.out.println("Command Not Recognized");
