@@ -158,15 +158,11 @@ public class ProgramLoop {
 		{
 	        Scanner s = new Scanner(auctionFile);
 	        while (s.hasNext()) {
-		        //String auctionName = s.next();
-		        
-		        // int j = auctionName.indexOf('-');			// finding the indexes of - to skip over them
-		        //int k = auctionName.indexOf('-', j+1);
-		        //int l = auctionName.indexOf('-', k+1);
-		        String orgName = s.nextLine();//auctionName.substring(0, j); // name
-		        int month = s.nextInt();//auctionName.substring(j+1, k); // month
-		        int day = s.nextInt();//Integer.parseInt(auctionName.substring(k+1, l)); // day
-		        int year = s.nextInt();//Integer.parseInt(auctionName.substring(l+1, auctionName.length())); // year
+		        String orgName = s.nextLine();
+//		        System.out.println("ORG: " + orgName);
+		        int month = s.nextInt();
+		        int day = s.nextInt();
+		        int year = s.nextInt();
 		        
 		        int startHour = s.nextInt();
 		        int startMinute = s.nextInt();
@@ -175,6 +171,7 @@ public class ProgramLoop {
 		        s.nextLine();
 		        //Map<String, Integer> myMonths = createMonthsCap();
 		        String userName = s.nextLine();
+
 		        int NumItems = s.nextInt();
 		        s.nextLine();//clear the input
 		        List<Item> ItemList = new ArrayList<Item>();
@@ -216,6 +213,11 @@ public class ProgramLoop {
 		        User userToAdd = FindUserByNPOName(orgName);
 		        ((NonProfit)userToAdd).setAuction(newAuction);
 		        calendar.addAuction(newAuction);
+		        
+		        if(s.hasNextLine()) {
+		        s.nextLine();
+		        }
+		        
 	        }
 	        s.close();
 	    } 
