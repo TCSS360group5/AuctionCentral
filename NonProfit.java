@@ -80,7 +80,7 @@ public class NonProfit extends User
 			  
 			  List<Item> auctionItems = theAuction.getAuctionItems();
 			  myAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes), auctionItems);
-			  
+			  theCalendar.removeAuction(theAuction);
 			  if(theCalendar.addAuction(myAuction))
 			  {
 				  System.out.println("Auction has been edited.");
