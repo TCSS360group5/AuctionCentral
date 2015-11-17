@@ -24,74 +24,19 @@ public class NonProfit extends User
   
   public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
   {
-	  LocalDateTime startTime;
-	  LocalDateTime endTime;
 	  ArrayList<Command> answer = new ArrayList<Command>();
-	  int duration;
 	  
 	  Scanner user_input = new Scanner( System.in );
 	  switch (theCommand) {
 		  case ADDAUCTION:	  
-			  startTime = getAuctionDateTimeFromUser(user_input);
-			  System.out.println("Please enter the duration (in hours) of the Auction");
-			  duration = user_input.nextInt();
-			  endTime = startTime.plusHours(duration);
-			  if(startTime.getDayOfMonth() != endTime.getDayOfMonth())
-			  {
-				  System.out.println("Your auction is scheduled for more than one calendar day. It has not been scheduled.");
-			  }
-			  else{
-				  myAuction = new Auction(myNPOName, super.getUserName(), startTime, endTime);
-				  if(theCalendar.addAuction(myAuction))
-				  {
-					  System.out.println("Auction added!");
-					  this.myExistingAuctionStatus = true;
-				  }
-				  else
-					  System.out.println("There was an error adding your auction.");
-			  }
+			  addAuction(user_input, theCalendar);
 			  break;
 		  case EDITAUCTION:
 			  System.out.println("The current Auction details:");
-			  System.out.println(myAuction.toString());			  
-			  System.out.println("Would you like to edit the auction? (Enter 0 to go back, 1 to edit)");
-			  int decision = user_input.nextInt();
-			  if(decision < 0 || decision > 1)
-			  {
-				  do
-				  {
-					  System.out.println("Invalid input. Would you like to edit the auction? (Enter 0 to go back, 1 to edit)");
-					  decision = user_input.nextInt();
-				  } while(decision < 0 || decision > 1);
-			  }
-			  if(decision == 1)
-			  {
-				  startTime = getAuctionDateTimeFromUser(user_input);
-				  System.out.println("Please enter the duration (in hours) of the Auction");
-				  duration = user_input.nextInt();
-				  endTime = startTime.plusHours(duration);
-				  if(startTime.getDayOfMonth() != endTime.getDayOfMonth())
-				  {
-					  System.out.println("Your auction is scheduled for more than one calendar day. It has not been scheduled.");
-				  }
-				  else
-				  {
-					  List<Item> auctionItems = myAuction.getAuctionItems();
-					  Auction newAuction = new Auction(myNPOName, super.getUserName(), startTime, endTime, auctionItems);
-					  theCalendar.removeAuction(myAuction);
-					  if(theCalendar.addAuction(newAuction))
-					  {
-						  myAuction = newAuction;
-						  System.out.println("Auction has been edited.");
-					  }
-					  else
-					  {
-						  theCalendar.addAuction(myAuction);
-						  System.out.println("There was an error. Your auction has not been edited.");
-					  }
-				  }
-			  }
-			  System.out.println("What would you like to do next?");
+			  System.out.println(myAuction.toString());		
+			  
+			  editAuction(user_input, theCalendar);
+			  
 			  break;
 		  case ADDITEM:
 			  Item tempItem = getItemDetailsFromUser(user_input);	
@@ -100,9 +45,7 @@ public class NonProfit extends User
 		  case EDITITEM:
 			  System.out.println("The current Item details:");
 			  System.out.println(theItem.toString());
-
-			  Item tempEditItem = getItemDetailsFromUser(user_input);	
-			  
+			  Item tempEditItem = getItemDetailsFromUser(user_input);				  
 			  try
 			  {
 				  theAuction.removeItem(theItem);
@@ -134,9 +77,7 @@ public class NonProfit extends User
 				  answer.add(User.Command.VIEWAUCTION);
 			  } else {
 				  answer.add(User.Command.ADDAUCTION);
-			  }
-			  
-			  
+			  }		  
 			  break;
 		  default:
 			  System.out.println("Command Not Recognized");
@@ -145,7 +86,77 @@ public class NonProfit extends User
 	  return answer;
   }
   
-  private Item getItemDetailsFromUser(Scanner user_input) 
+  private void addAuction(Scanner user_input, Calendar theCalendar)
+  {
+	  LocalDateTime startTime;
+	  LocalDateTime endTime;
+	  int duration;
+	  startTime = getAuctionDateTimeFromUser(user_input);
+	  System.out.println("Please enter the duration (in hours) of the Auction");
+	  duration = user_input.nextInt();
+	  endTime = startTime.plusHours(duration);
+	  if(startTime.getDayOfMonth() != endTime.getDayOfMonth())
+	  {
+		  System.out.println("Your auction is scheduled for more than one calendar day. It has not been scheduled.");
+	  }
+	  else{
+		  myAuction = new Auction(myNPOName, super.getUserName(), startTime, endTime);
+		  if(theCalendar.addAuction(myAuction))
+		  {
+			  System.out.println("Auction added!");
+			  this.myExistingAuctionStatus = true;
+		  }
+		  else
+			  System.out.println("There was an error adding your auction.");
+	  }
+  }
+  
+  private void editAuction(Scanner user_input, Calendar theCalendar) 
+  {
+	  LocalDateTime startTime;
+	  LocalDateTime endTime;
+	  System.out.println("Would you like to edit the auction? (Enter 0 to go back, 1 to edit)");
+	  int decision = user_input.nextInt();
+	  if(decision < 0 || decision > 1)
+	  {
+		  do
+		  {
+			  System.out.println("Invalid input. Would you like to edit the auction? (Enter 0 to go back, 1 to edit)");
+			  decision = user_input.nextInt();
+		  } while(decision < 0 || decision > 1);
+	  }
+	  if(decision == 1)
+	  {
+		  startTime = getAuctionDateTimeFromUser(user_input);
+		  System.out.println("Please enter the duration (in hours) of the Auction");
+		  int duration = user_input.nextInt();
+		  endTime = startTime.plusHours(duration);
+		  if(startTime.getDayOfMonth() != endTime.getDayOfMonth())
+		  {
+			  System.out.println("Your auction is scheduled for more than one calendar day. It has not been scheduled.");
+		  }
+		  else
+		  {
+			  List<Item> auctionItems = myAuction.getAuctionItems();
+			  Auction newAuction = new Auction(myNPOName, super.getUserName(), startTime, endTime, auctionItems);
+			  theCalendar.removeAuction(myAuction);
+			  if(theCalendar.addAuction(newAuction))
+			  {
+				  myAuction = newAuction;
+				  System.out.println("Auction has been edited.");
+			  }
+			  else
+			  {
+				  theCalendar.addAuction(myAuction);
+				  System.out.println("There was an error. Your auction has not been edited.");
+			  }
+		  }
+	  }
+	  System.out.println("What would you like to do next?");
+	
+}
+
+private Item getItemDetailsFromUser(Scanner user_input) 
   {
 	  System.out.println("Please enter the Item name:");
 	  String itemName = user_input.nextLine();
