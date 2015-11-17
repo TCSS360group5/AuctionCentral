@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class NonProfit extends User
 {
-//  private LocalDate myLastAuctionDate;
+  private LocalDate myLastAuctionDate;
   // since we have this, maybe they don't need to see the calendar?
   // or maybe they should see to schedule
   private Auction myAuction;
@@ -19,7 +19,7 @@ public class NonProfit extends User
   public NonProfit(String theUserName, UserType theUserType, String theNPOName, LocalDate theLastAuctionYear, boolean theAuctionStatus){
 	  super(theUserName, theUserType);
 	  myNPOName = theNPOName;
-//	  myLastAuctionDate = theLastAuctionYear;
+	  myLastAuctionDate = theLastAuctionYear;
 //	  myExistingAuctionStatus = theAuctionStatus;
   }
   
@@ -213,10 +213,7 @@ private Item getItemDetailsFromUser(Scanner user_input)
   public boolean check365(LocalDate theDate)
   {
 	  boolean answer = false;
-	  if (myAuction == null) 
-	  {
-		  answer = true;
-	  } else if(theDate.minusDays(365).isAfter(myAuction.getStartTime().toLocalDate()))
+	  if(theDate.minusDays(365).isAfter(myLastAuctionDate))
 	  {
 		  answer = true;
 	  } else {
@@ -235,7 +232,7 @@ private Item getItemDetailsFromUser(Scanner user_input)
 	  myNPOName = theNewName;
   }
   
-  public LocalDate getLastAuctionDate() 
+  public LocalDate getCurrentAuctionDate() 
   {
 	  if (myAuction != null)
 	  {
@@ -243,12 +240,19 @@ private Item getItemDetailsFromUser(Scanner user_input)
 	  } 
 	  else 
 	  {
-		  return LocalDate.now().minusYears(1);
-	  }
-	  
+		  return null;
+	  }	  
   }
   
-  public Auction getAuction()
+  public LocalDate getLastAuctionDate() {
+	return myLastAuctionDate;
+  }
+  
+  public void setLastAuctionDate(LocalDate myLastAuctionDate) {
+	this.myLastAuctionDate = myLastAuctionDate;
+  }
+
+public Auction getAuction()
   {
 	  return myAuction;
   }
