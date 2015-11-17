@@ -11,11 +11,6 @@ public class EmployeeTest {
 	}
 
 	@Test
-	public void testExecuteCommand() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testEmployee() {
 		fail("Not yet implemented");
 	}

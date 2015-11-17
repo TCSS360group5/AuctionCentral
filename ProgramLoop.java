@@ -30,6 +30,9 @@ public class ProgramLoop {
 		+ "----------------------------------\n"
 		+ "What would you like to do?\n";
 	
+	/**
+	 * Constructor for ProgramLoop. Initializes some of the fields.
+	 */
 	public ProgramLoop()
 	{
 		myCurrentState = User.Command.VIEWMAINMENU;
@@ -39,6 +42,9 @@ public class ProgramLoop {
 		myScanner = new Scanner(System.in);
 	}
 	
+	/**
+	 * Loads and stores the files, handles user log in, and outputs files.
+	 */
 	public void startProgram() 
 	{	
 		//if the file doesn't exist, it creates it
@@ -79,7 +85,7 @@ public class ProgramLoop {
 					String NPOname = myScanner.nextLine();
 					System.out.println("Your NPO is " + NPOname);
 					
-					myUser = new NonProfit(userName, User.UserType.NPO, NPOname);
+					myUser = new NonProfit(userName, User.UserType.NPO, NPOname, LocalDate.now().minusYears(1).minusDays(1));
 
 				} 
 				else if (userType == 3)
@@ -95,10 +101,8 @@ public class ProgramLoop {
 				System.out.println("Welcome back, " + myUser.getUserName() + "!");
 			}
 		
-		//checkLogin(myUserList, myUser);
 		
 		executeProgramLoop();
-		
 		outputUsers(userFile, myUserList);
 		outputAuctions(auctionFile, myAuctionList);
 		System.out.println("Thank you for using Auction Central.");
@@ -108,8 +112,8 @@ public class ProgramLoop {
 	/**
 	 * Read in text file of existing users using a Scanner and import them into an ArrayList of users.
 	 *  
-	 * @param theFile
-	 * @param theUserList
+	 * @param theFile the file being read
+	 * @param theUserList the list that the users from the file are loading into
 	 */
 	public static void loadUsers(File theFile, ArrayList<User> theUserList) {
 		try 
@@ -123,12 +127,17 @@ public class ProgramLoop {
 	        		theUserList.add(new Employee(userName, User.UserType.EMPLOYEE));
 	        		break;
 	        	case "NPO":
-	        		String userNPOname = s.nextLine();	        		
-//	        		int year = s.nextInt();	        		
-//	        		int month = s.nextInt();
-//	        		int day = s.nextInt();
-//	        		s.nextLine(); //clears the line
-	        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname));
+	        		String userNPOname = s.nextLine();	 
+	        		if(s.hasNextInt()) {		// if in the user file there is a date saved, it means the NPO has an auction
+		        		int year = s.nextInt();	        		
+		        		int month = s.nextInt();
+		        		int day = s.nextInt();
+		        		s.nextLine(); //clears the line
+		        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.of(year, month, day)));
+	        		} else {					// this NPO doesn't have an auction saved, last parameter is set appropriately
+		        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.now().minusYears(1)));
+	        		}
+
 	        		break;
 	        	case "BIDDER":
         			theUserList.add(new Bidder(userName, User.UserType.BIDDER));
@@ -146,37 +155,31 @@ public class ProgramLoop {
 	/**
 	 * Read in text file of existing auctions using a Scanner. Import the auctions into an ArrayList of auctions, and add to Calendar.
 	 * 
-	 * @param auctionFile
-	 * @param auctionList
-	 * @param calendar
+	 * @param theAuctionFile the file of previous auctions
+	 * @param theAuctionList the list the auctions will be loaded into
+	 * @param theCalendar the main calendar for this program
 	 */
-	public void loadAuctions(File auctionFile, ArrayList<Auction> auctionList, Calendar calendar) {
-			// map to convert month name strings to ints
+	public void loadAuctions(File theAuctionFile, ArrayList<Auction> theAuctionList, Calendar theCalendar) {
 		try 
 		{
-	        Scanner s = new Scanner(auctionFile);
+	        Scanner s = new Scanner(theAuctionFile);
 	        while (s.hasNext()) {
 		        String orgName = s.nextLine();
-//		        System.out.println("ORG: " + orgName);
 		        int month = s.nextInt();
 		        int day = s.nextInt();
 		        int year = s.nextInt();
-		        
 		        int startHour = s.nextInt();
 		        int startMinute = s.nextInt();
 		        int endHour = s.nextInt();
 		        int endMinute = s.nextInt();
 		        s.nextLine();
-		        //Map<String, Integer> myMonths = createMonthsCap();
 		        String userName = s.nextLine();
-
 		        int NumItems = s.nextInt();
-		        s.nextLine();//clear the input
+		        s.nextLine();
 		        List<Item> ItemList = new ArrayList<Item>();
 				for (int j = 0; j < NumItems; j++)
 				{
 					String ItemName = s.nextLine();
-//					System.out.println("Item: " + ItemName);
 					Double StartingBid = s.nextDouble();
 					s.nextLine();
 					String Description = s.nextLine();
@@ -189,12 +192,13 @@ public class ProgramLoop {
 					{
 						for (int k = 0; k < NumBids; k++) 
 						{
-							String Bidder = s.nextLine();
+							String Bidder = s.next();
 							Double theBid = s.nextDouble();
 							User theUser = FindUser(Bidder);
 							if (theUser != null)
 							{
 								bidList.put(theUser, theBid);
+								((Bidder)theUser).addBid(oneItem, theBid);
 							} 
 							else 
 							{
@@ -204,19 +208,20 @@ public class ProgramLoop {
 						oneItem.setBids(bidList);						
 					}	
 					ItemList.add(oneItem);
-					if(s.hasNextLine()) {
+					if(s.hasNextLine()) 		// bug fix for input mismatch exceptions
+					{
 						s.nextLine();
 					}
 				}			
 		        Auction newAuction = new Auction(orgName, userName, LocalDateTime.of(year, month, day, startHour, startMinute), 
 		        		LocalDateTime.of(year, month, day, endHour, endMinute), ItemList);
-		        //newAuction.setUserName(userName);
-		        auctionList.add(newAuction);
+		        theAuctionList.add(newAuction);
 		        User userToAdd = FindUserByNPOName(orgName);
 		        ((NonProfit)userToAdd).setAuction(newAuction);
-		        calendar.addAuction(newAuction);
+		        theCalendar.addAuction(newAuction);
 		        
-		        if(s.hasNextLine()) {
+		        if(s.hasNextLine()) 			// bug fix for input mismatch exceptions
+		        {
 		        s.nextLine();
 		        }
 		        
@@ -233,8 +238,8 @@ public class ProgramLoop {
 	/**
 	 * Check the list of users to see if this user has registered already.
 	 * 
-	 * @param theUserName
-	 * @return if the user exists, it returns the user, null otherwise
+	 * @param theUserName the user name being searched for
+	 * @return a user if one exists, null otherwise
 	 */
 	private User FindUser(String theUserName)
 	{
@@ -245,14 +250,16 @@ public class ProgramLoop {
 			{
 				answerUser = theUser;
 			} 
-			else 
-			{
-				//System.out.println("didnt find user");
-			}
 		}
 		return answerUser;
 	}
 	
+	/**
+	 * Finds a NonProfit Organization member by the name of their organization.
+	 * 
+	 * @param NPOName the name of the organization
+	 * @return the user with that NPO name
+	 */
 	private User FindUserByNPOName(String NPOName)
 	{
 		User answerUser = null;
@@ -274,8 +281,8 @@ public class ProgramLoop {
 	/**
 	 * Check the list of Auctions to see if the NPO has an auction scheduled already.
 	 * 
-	 * @param theAuctions
-	 * @param theNPOname
+	 * @param theAuctions the list of auctions
+	 * @param theNPOname the name of the NPO being searched for
 	 * @return true if an auction exists, false otherwise
 	 */
 	public static boolean checkAuctions(List<Auction> theAuctions, String theNPOname, String theUserName) 
@@ -289,10 +296,11 @@ public class ProgramLoop {
 		return result;
 	}
 	
-	
-	private void executeProgramLoop()//Scanner theScanner)
+	/**
+	 * Executes the program.
+	 */
+	private void executeProgramLoop()
 	{
-		//Scanner myScanner = new Scanner(System.in);
 		if(myUser.getUserType() == User.UserType.NPO)
 		{
 			if(((NonProfit)myUser).getAuction() != null)
@@ -301,10 +309,7 @@ public class ProgramLoop {
 			}
 		}
 		myHomePageMessage = "\nAuctionCentral " + myUser.getUserType() + myHomePageMessageEnd;
-		//System.out.println(myHomePageMessage);
 		boolean notQuit = true;
-		
-		
 		Auction currentAuction = null;
 		Item currentItem = null;
 		do
@@ -335,7 +340,7 @@ public class ProgramLoop {
 					System.out.println("Bid");
 					break;
 				case EDITAUCTION:
-					System.out.println("Edit Auction");
+					System.out.println("View/Edit My Auction");
 					break;
 				case EDITBID:
 					System.out.println("Edit Bid");
@@ -350,7 +355,11 @@ public class ProgramLoop {
 					System.out.println("View All Auctions");
 					break;
 				case VIEWITEM:
-					System.out.println("View/Edit Items");
+					 if(myUser.getUserType().equals(User.UserType.BIDDER)) {
+						 System.out.println("View Items");
+					 } else {
+						 System.out.println("View/Edit Items");
+					 }
 					break;
 				case VIEWBIDS:
 					System.out.println("View Bids");
@@ -378,8 +387,6 @@ public class ProgramLoop {
 				 System.out.println("Enter a Number");
 			 }
 			 
-			 //boolean addAuction = false;
-			 
 			 if (validCommand)
 			 {
 				 if (commandInt == 0)
@@ -396,7 +403,6 @@ public class ProgramLoop {
 					 {
 						 myCurrentState = User.Command.VIEWCALENDAR;
 						 viewCalendarAuctions();
-						 //System.out.println(myCalendar.toString(LocalDate.now()));						
 					 } 
 					 else if (thisCommand == User.Command.VIEWMAINMENU)
 					 {
@@ -430,19 +436,24 @@ public class ProgramLoop {
 					 } 		
 					 else 
 					 {
-						 
+						 myUser.ExecuteCommand(thisCommand, myCalendar, myCurrentAuction, myCurrentItem);
+						 if(myUser.getUserType() == User.UserType.NPO && thisCommand == User.Command.ADDAUCTION)
+						 {
+							 myCurrentAuction = ((NonProfit)myUser).getAuction();
+						 }
 					 }	
 					 
+					 // neccessary to transfer the newest auction that was added to the Calendar to our local AuctionList
 					 if(thisCommand.equals(User.Command.ADDAUCTION)) {
-						Collection<ArrayList<Auction>> auctions =myCalendar.myAuctionByDateList.values();
-						Iterator<ArrayList<Auction>> it = auctions.iterator();
-						myAuctionList.clear();
-						while(it.hasNext()) {
-							ArrayList<Auction> a = (ArrayList<Auction>) it.next();
-							for(int j = 0; j < a.size(); j++) {
-								Auction auction = a.get(j);
-//								System.out.println("AUCTION " + auction);
-								myAuctionList.add(auction);
+							Collection<ArrayList<Auction>> auctions =myCalendar.myAuctionByDateList.values();
+							Iterator<ArrayList<Auction>> it = auctions.iterator();
+							myAuctionList.clear();
+							while(it.hasNext()) {
+								ArrayList<Auction> a = (ArrayList<Auction>) it.next();
+								for(int j = 0; j < a.size(); j++) {
+									Auction auction = a.get(j);
+									myAuctionList.add(auction);
+								}
 							}
 						}
 					 }
@@ -452,12 +463,13 @@ public class ProgramLoop {
 				 {
 					 System.out.println("Please enter a valid selection.");
 				 }
-			 }
 		} while (notQuit);	
 	
 	}
 	
-		
+	/**
+	 * Displays/controls menu for viewing items of the current auction.
+	 */
 	private void viewItems() {
 		System.out.println("Item List View");
 		 List<Item> theItems = myCurrentAuction.getAuctionItems();
@@ -471,6 +483,7 @@ public class ProgramLoop {
 				{
 					System.out.print(theItemIndex + ") ");
 					System.out.println(theItem.getItemName());
+					theItemIndex++;
 				}
 			System.out.println("");
 			int userAnswer = 0;
@@ -487,8 +500,64 @@ public class ProgramLoop {
 	 	}		
 	}
 	
-	private void viewCalendarAuctions() 
-	{		
+//	private void viewCalendarAuctions() 
+//	{		
+//				System.out.println("");
+//				int userAnswer = 0;
+//				if (myAuctionList.size() > 0) 
+//				{
+//					System.out.println("Enter the number of an item to view/edit its details.\nEnter 0 to go back.");
+//					userAnswer = getNumberFromUser();
+//				}
+//				if(userAnswer < 0 || userAnswer > theItems.size())
+//				{
+//					do
+//					{
+//						System.out.println("Invalid answer. Enter the number of an item to view/edit its details.\nEnter 0 to go back.");
+//						userAnswer = getNumberFromUser();
+//					} while(userAnswer < 0 || userAnswer > theItems.size());
+//				}
+//				if (userAnswer > 0) {
+//					myCurrentState = User.Command.VIEWITEM;
+//					myCurrentItem = theItems.get(userAnswer - 1);
+//					System.out.println(myCurrentItem.toString());
+//				}
+//		 }		
+	
+
+//	/**
+//	 * Determines which menu will be displayed when "go back" is selected, depending on the current menu or "state"
+//	 */
+//	private void goBackState() {
+//		switch (myCurrentState)
+//		 {
+//		 	case VIEWCALENDAR:
+//		 		myCurrentState = User.Command.VIEWMAINMENU;
+//				break;
+//		 	case VIEWAUCTIONS:
+//		 		if(myUser.getUserType().equals(User.UserType.NPO)) {
+//		 			myCurrentState = User.Command.VIEWMAINMENU;
+//		 		} else {
+//		 			myCurrentState = User.Command.VIEWCALENDAR;
+//		 		}
+//		 		break;
+//	 		case VIEWITEM:
+//		 		if(myUser.getUserType().equals(User.UserType.NPO)) {
+//		 			myCurrentState = User.Command.VIEWMAINMENU;
+//		 		} else {
+//		 			myCurrentState = User.Command.VIEWAUCTIONS;
+//		 		}
+//	 			break;						
+//	 		default:
+//	 			System.out.println("Cannot Go Back");
+//	 			break;						 
+//		 }		
+//	}
+
+	/**
+	 * Displays/Controls the View Calendar menu.
+	 */
+	private void viewCalendarAuctions() {
 		myAuctionList.clear();
 		Map<LocalDate, ArrayList<Auction>> theAuctionList = myCalendar.displayCurrentMonth();
 		if (theAuctionList.size() == 0)
@@ -527,7 +596,11 @@ public class ProgramLoop {
 		}		
 	}
 	
-	
+	/**
+	 * Gets the user input.
+	 * 
+	 * @return the user's selection
+	 */
 	private int getNumberFromUser()
 	{
 		int answer = -1;
@@ -542,10 +615,8 @@ public class ProgramLoop {
 	/**
 	 * Prints the existing users to the users.txt file.
 	 * 
-	 * @param theUserFile
-	 * @param theAuctionFile
-	 * @param theUserList
-	 * @param theAuctionList
+	 * @param theUserFile the file of users
+	 * @param theUserList the list of users
 	 */
 	public static void outputUsers(File theUserFile, ArrayList<User> theUserList) 
 	{
@@ -568,13 +639,20 @@ public class ProgramLoop {
 			{		
 				NonProfit tempNPOUser = (NonProfit) tempUser;
 				outputUsers.println(tempNPOUser.getNPOName());
-				//LocalDate LastAuctionDate = tempNPOUser.getLastAuctionDate();
-				//outputUsers.println(LastAuctionDate.getYear() + " " + LastAuctionDate.getMonthValue() + " " + LastAuctionDate.getDayOfMonth());
+				if(tempNPOUser.hasAuction()) {
+					LocalDate LastAuctionDate = tempNPOUser.getLastAuctionDate();
+					outputUsers.println(LastAuctionDate.getYear() + " " + LastAuctionDate.getMonthValue() + " " + LastAuctionDate.getDayOfMonth());
+				}
 			}
 		}
 		outputUsers.close();
 	}
 	
+	/**
+	 * Returns the menu title based on the current state.
+	 * 
+	 * @return a String of the menu title
+	 */
 	private String menuTitle() 
 	{
 		String answerString = "";
@@ -624,8 +702,8 @@ public class ProgramLoop {
 	/**
 	 * Outputs the existing auctions to the auctions.txt file.
 	 * 
-	 * @param theAuctionFile
-	 * @param theAuctionList
+	 * @param theAuctionFile the file of auctions
+	 * @param theAuctionList the list of auctions
 	 */
 	public static void outputAuctions(File theAuctionFile, ArrayList<Auction> theAuctionList) 
 	{		
@@ -641,7 +719,7 @@ public class ProgramLoop {
 			}
 		}
 		
-		PrintStream outputAuctions = null;	// to write auctions to file
+		PrintStream outputAuctions = null;
 		
 		try 
 		{
@@ -652,13 +730,9 @@ public class ProgramLoop {
 			e1.printStackTrace();
 		}
 		
-		
 		for(int i = 0; i < theAuctionList.size(); i++)
 		{
-			
 			Auction auction = theAuctionList.get(i);
-
-			//outputAuctions.println(auction.getAuctionName()); // orgnameMonth-day-year
 			outputAuctions.println(auction.getAuctionOrg()); 
 			outputAuctions.println(auction.getStartTime().getMonthValue()); 
 			outputAuctions.println(auction.getStartTime().getDayOfMonth());
@@ -667,8 +741,6 @@ public class ProgramLoop {
 			outputAuctions.println(auction.getEndTime().getHour() + " " + auction.getEndTime().getMinute());			
 			outputAuctions.println(auction.getUserName());
 			List<Item> ItemList = auction.getAuctionItems();
-			
-			
 			int ItemListSize;
 			if (ItemList != null)
 			{
@@ -695,7 +767,12 @@ public class ProgramLoop {
 		outputAuctions.close();
 	}
 	
-	
+	/**
+	 * Returns whether or not the specified NPO has an auction already.
+	 * 
+	 * @param theNPOname the name of the NonProfit Organization we are checking
+	 * @return true if an auction exists, false otherwise
+	 */
 	public boolean hasExistingAuction(String theNPOname) {
 		Auction auction;
 		boolean result = false;
@@ -706,47 +783,5 @@ public class ProgramLoop {
 			}
 		}
 		return result;
-	}
-	
-	/**
-	 * Creates a Map of month names to their corresponding integer values.
-	 * Useful for converting file input.
-	 * 
-	 * @return
-	 */
-	
-	public static HashMap<String, Integer> createMonths() {
-		HashMap<String, Integer> months = new HashMap<String, Integer>();
-		months.put("January", 1);
-		months.put("February", 2);
-		months.put("March", 3);
-		months.put("April", 4);
-		months.put("May", 5);
-		months.put("June", 6);
-		months.put("July", 7);
-		months.put("August", 8);
-		months.put("September", 9);
-		months.put("October", 10);
-		months.put("November", 11);
-		months.put("December", 12);
-		return months;
-	}
-	
-	
-	public static HashMap<String, Integer> createMonthsCap() {
-		HashMap<String, Integer> months = new HashMap<String, Integer>();
-		months.put("JANUARY", 1);
-		months.put("FEBRUARY", 2);
-		months.put("MARCH", 3);
-		months.put("APRIL", 4);
-		months.put("MAY", 5);
-		months.put("JUNE", 6);
-		months.put("JULY", 7);
-		months.put("AUGUST", 8);
-		months.put("SEPTEMBER", 9);
-		months.put("OCTOBER", 10);
-		months.put("NOVEMBER", 11);
-		months.put("DECEMBER", 12);
-		return months;
 	}
 }

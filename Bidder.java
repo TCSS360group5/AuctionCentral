@@ -4,32 +4,52 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
 
+/**
+ * @author Group 5
+ * The bidder class represents the bidders that use our system and produces
+ * the menus and allows the bidder to bid and edit his bid.
+ */
 public class Bidder extends User
 {
   private Map<Item, Double> myBids;
-  
-  public Bidder(String theUserName, UserType theUserType)
-  {
-	  super(theUserName, theUserType);
-	  myBids = new HashMap<Item, Double>();
-  }
-  
-  //if fail return false, also print to console why failed.
-  public boolean bid(Item theItem, double theBid){
-	  boolean answer = false;
-	  boolean allDone = false;
-	  if (theItem.getStartingBid() < theBid) {
-		  allDone = true;
-		  System.out.println("Bid does not meet minimum bid for this item.");
-	  }
-	  if (!allDone) {
-		  myBids.put(theItem, theBid);
-		  answer = true;
-	  }	  
 
+	/**
+	 * @param theUserName
+	 * @param theUserType  This is an enum of one of the three user types.
+	 * 
+	 * This creates a bidder.
+	 */
+	public Bidder(String theUserName, UserType theUserType)
+	  {
+		  super(theUserName, theUserType);
+		  myBids = new HashMap<Item, Double>();
+	  }
 	  
-	return answer;
-  }
+    /**
+     * This function accepts the item and the bid and then puts the bid in the item.
+     * 
+	 * @param theItem
+	 * @param theBid
+	 * @return if fail return false, also print to console why failed.
+	 */
+	public boolean bid(Item theItem, double theBid){
+		  boolean answer = false;
+		  boolean allDone = false;
+		  if (theItem.getStartingBid() > theBid) {
+			  allDone = true;
+			  System.out.println("Bid does not meet minimum bid for this item.");
+		  }
+		  if (!allDone) {
+			  myBids.put(theItem, theBid);
+			  theItem.bidOnItem(this, theBid);
+			  answer = true;
+		  }	  	  
+		return answer;
+	  }
+	
+	/* (non-Javadoc)
+	 * @see User#ExecuteCommand(User.Command, Calendar, Auction, Item)
+	 */
 
 	@Override
 	public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar,
@@ -41,10 +61,6 @@ public class Bidder extends User
 				answer.add(User.Command.GOBACK);
 				answer.add(User.Command.VIEWITEM);
 				break;
-//			case VIEWCALENDAR:				// the bidder can't view the calendar ??? unless we are using this to print the current auctions? - shannon
-//				answer.add(User.Command.GOBACK);
-//				answer.add(User.Command.VIEWAUCTION);
-//				break;
 			case VIEWITEM:
 				answer.add(User.Command.GOBACK);
 				if(myBids.containsKey(theItem)) {
@@ -54,16 +70,19 @@ public class Bidder extends User
 				}				
 				break;
 			case VIEWMAINMENU:
-				//answer.add(User.Command.VIEWCALENDAR);
 				answer.add(User.Command.VIEWAUCTIONS);
 				answer.add(User.Command.VIEWBIDS);
 				break;
 			case BID:
+
+				answer.add(User.Command.VIEWCALENDAR);
+				answer.add(User.Command.VIEWBIDS);
 				bidOnItem(user_input, theItem);
 				break;
 			case EDITBID:
 				System.out.println("This is the previous Bid: $");
 				System.out.println(myBids.get(theItem).toString());
+				System.out.println("Please Enter a new Bid:");
 				bidOnItem(user_input, theItem);
 				break;
 			case VIEWBIDS:
@@ -99,6 +118,7 @@ public class Bidder extends User
 		return answer;
 	}
 	
+
 	private void bidOnItem(Scanner user_input,Item theItem) {
 		double bid;
 		System.out.println("Please Enter a Bid:");
@@ -108,26 +128,7 @@ public class Bidder extends User
 		}else {
 			myBids.put(theItem, bid);
 			System.out.println("Bid entered.");
-		}
-		
-		
-		  
-		  // I guess we don't need this but this checks to see if that bid is the highest, if it is, updates item's bid fields
-	//	  Map<User, Double> itemBidMap = theItem.myBids;
-	//	  Collection<Double> itemBids = itemBidMap.values();
-	//	  System.out.println(itemBids);
-	//	  if(itemBids.size() == 0) {
-	//		  theItem.setHighestBid(bid);
-	//	  } else {
-	//		  Iterator it = itemBids.iterator();
-	//		  while(it.hasNext()) {
-	//		  		System.out.println(it.next());
-	//			  if(bid > (Double) it.next()) {
-	//					  theItem.setHighestBid(bid);
-	//				  }
-	//		  	}
-	//	  }
-	
+		}	
 	}
 	
 	public Command getMovementCommand(Command myCurrentState) {
@@ -150,10 +151,9 @@ public class Bidder extends User
 		 }		
 		return answer;
 	}
-  
-  // bids on items
-  // views auctions
-  // chooses auctions
-  // views items
-  // updates credit card info
+
+	public void addBid(Item theItem, double theBid)
+	{
+		myBids.put(theItem, theBid);
+	}
 }
