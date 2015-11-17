@@ -77,37 +77,31 @@ public class Auction
   }
   
   //edit the item name
-  public boolean editItemName(Item theItem, String theNewName)
-  {
-	  myInventory.get(myInventory.indexOf(theItem)).setItemName(theNewName);
-	  return true;
-  }
+//  public boolean editItemName(Item theItem, String theNewName)
+//  {
+//	  myInventory.get(myInventory.indexOf(theItem)).setItemName(theNewName);
+//	  return true;
+//  }
   
   //edit the starting bid of the item
-  public boolean editItemStartingBid(Item theItem, double theStartingBid)
-  {
-	  myInventory.get(myInventory.indexOf(theItem)).setStartingBid(theStartingBid);
-	  return true;
-  }
+//  public boolean editItemStartingBid(Item theItem, double theStartingBid)
+//  {
+//	  myInventory.get(myInventory.indexOf(theItem)).setStartingBid(theStartingBid);
+//	  return true;
+//  }
   
   //method to edit item's description
-  public boolean editItemDescription(Item theItem, String theDescription)
-  {
-	  myInventory.get(myInventory.indexOf(theItem)).setDescription(theDescription);
-	  return true;
-  }
+//  public boolean editItemDescription(Item theItem, String theDescription)
+//  {
+//	  myInventory.get(myInventory.indexOf(theItem)).setDescription(theDescription);
+//	  return true;
+//  }
  
   //get auction name
   public String getAuctionName()
   {
 	  return myAuctionName;
   }
-  
-  //set auction name
-//  public void setAuctionName(String theAuctionName)
-//  {
-//	  myAuctionName = theAuctionName;
-//  }
   
   //returns start time of the auction
   public LocalDateTime getStartTime()
@@ -153,11 +147,7 @@ public class Auction
   public String toStringSimple(){
 	  StringBuilder answer = new StringBuilder();
 	  answer.append("Name: " + myAuctionName + "\n");
-	  //answer.append("Organization name: " + myOrgName + "\n");
 	  answer.append("Date: " + myStartTime.getMonth() + " " + myStartTime.getDayOfMonth() +", " + myStartTime.getYear() + "\n");
-	 // answer.append("Start time: " + myStartTime.getHour() + ":" + myStartTime.getMinute() + "\n");
-	  //answer.append("End: " + myEndTime.getHour() + ":" + myEndTime.getMinute() + "\n");
-
 	  return answer.toString();  
   }
   

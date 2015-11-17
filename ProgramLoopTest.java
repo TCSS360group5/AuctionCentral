@@ -10,15 +10,15 @@ public class ProgramLoopTest {
 	public void setUp() throws Exception {
 	}
 
-	@Test
-	public void testProgramLoop() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public void testStartProgram() {
-		fail("Not yet implemented"); // TODO
-	}
+//	@Test
+//	public void testProgramLoop() {
+//		fail("Not yet implemented"); // TODO
+//	}
+//
+//	@Test
+//	public void testStartProgram() {
+//		fail("Not yet implemented"); // TODO
+//	}
 
 	@Test
 	public void testLoadUsers() {
