@@ -127,11 +127,11 @@ public class NonProfit extends User
 			  answer.add(User.Command.EDITITEM);
 			  break;
 		  case VIEWMAINMENU:
-			  if(this.hasAuction()) {
+			  if(myExistingAuctionStatus) {
 				  answer.add(User.Command.EDITAUCTION);
 				  answer.add(User.Command.ADDITEM);
 				  answer.add(User.Command.VIEWITEM);
-				  answer.add(User.Command.VIEWAUCTION);
+//				  answer.add(User.Command.VIEWAUCTION);
 			  } else {
 				  answer.add(User.Command.ADDAUCTION);
 			  }
