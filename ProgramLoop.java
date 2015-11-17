@@ -123,12 +123,20 @@ public class ProgramLoop {
 	        		theUserList.add(new Employee(userName, User.UserType.EMPLOYEE));
 	        		break;
 	        	case "NPO":
-	        		String userNPOname = s.nextLine();	        		
-	        		int year = s.nextInt();	        		
-	        		int month = s.nextInt();
-	        		int day = s.nextInt();
-	        		s.nextLine(); //clears the line
-	        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.of(year, month, day), true));
+	        		String userNPOname = s.nextLine();	 
+	        		if(s.hasNextInt()) {
+		        		int year = s.nextInt();	        		
+		        		int month = s.nextInt();
+		        		int day = s.nextInt();
+		        		s.nextLine(); //clears the line
+
+		        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.of(year, month, day), true));
+	        		} else {
+		        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.now().minusYears(1), false));
+
+	        		}
+//	        		s.nextLine(); //clears the line
+//	        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.of(year, month, day), true));
 	        		break;
 	        	case "BIDDER":
         			theUserList.add(new Bidder(userName, User.UserType.BIDDER));
@@ -579,8 +587,10 @@ public class ProgramLoop {
 			{		
 				NonProfit tempNPOUser = (NonProfit) tempUser;
 				outputUsers.println(tempNPOUser.getNPOName());
-				LocalDate LastAuctionDate = tempNPOUser.getLastAuctionDate();
-				outputUsers.println(LastAuctionDate.getYear() + " " + LastAuctionDate.getMonthValue() + " " + LastAuctionDate.getDayOfMonth());
+				if(tempNPOUser.hasAuction()) {
+					LocalDate LastAuctionDate = tempNPOUser.getLastAuctionDate();
+					outputUsers.println(LastAuctionDate.getYear() + " " + LastAuctionDate.getMonthValue() + " " + LastAuctionDate.getDayOfMonth());
+				}
 			}
 		}
 		outputUsers.close();
