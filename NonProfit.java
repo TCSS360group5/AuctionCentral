@@ -7,19 +7,19 @@ import java.util.Scanner;
 
 public class NonProfit extends User
 {
-  private LocalDate myLastAuctionDate;
+//  private LocalDate myLastAuctionDate;
   // since we have this, maybe they don't need to see the calendar?
   // or maybe they should see to schedule
   private Auction myAuction;
   private String myNPOName;
-  private boolean myExistingAuctionStatus;
+//  private boolean myExistingAuctionStatus;
   
   // schedules an auction and enters auction info
   public NonProfit(String theUserName, UserType theUserType, String theNPOName, LocalDate theLastAuctionYear, boolean theAuctionStatus){
 	  super(theUserName, theUserType);
 	  myNPOName = theNPOName;
-	  myLastAuctionDate = theLastAuctionYear;
-	  myExistingAuctionStatus = theAuctionStatus;
+//	  myLastAuctionDate = theLastAuctionYear;
+//	  myExistingAuctionStatus = theAuctionStatus;
   }
   
   public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
@@ -70,11 +70,10 @@ public class NonProfit extends User
 			  answer.add(User.Command.EDITITEM);
 			  break;
 		  case VIEWMAINMENU:
-			  if(myExistingAuctionStatus) {
+			  if(myAuction != null) {
 				  answer.add(User.Command.EDITAUCTION);
 				  answer.add(User.Command.ADDITEM);
 				  answer.add(User.Command.VIEWITEM);
-//				  answer.add(User.Command.VIEWAUCTION);
 			  } else {
 				  answer.add(User.Command.ADDAUCTION);
 			  }		  
@@ -100,11 +99,11 @@ public class NonProfit extends User
 		  System.out.println("Your auction is scheduled for more than one calendar day. It has not been scheduled.");
 	  }
 	  else{
-		  myAuction = new Auction(myNPOName, super.getUserName(), startTime, endTime);
-		  if(theCalendar.addAuction(myAuction))
+		  Auction tempAuction = new Auction(myNPOName, super.getUserName(), startTime, endTime);
+		  if(theCalendar.addAuction(tempAuction))
 		  {
 			  System.out.println("Auction added!");
-			  this.myExistingAuctionStatus = true;
+			  myAuction = tempAuction;
 		  }
 		  else
 			  System.out.println("There was an error adding your auction.");
@@ -128,8 +127,26 @@ public class NonProfit extends User
 	  if(decision == 1)
 	  {
 		  startTime = getAuctionDateTimeFromUser(user_input);
-		  System.out.println("Please enter the duration (in hours) of the Auction");
-		  int duration = user_input.nextInt();
+		  int duration = 0;
+		  boolean keepGoing = true;
+		  do
+		  {
+			  System.out.println("Please enter the duration (in hours) of the Auction");
+			  duration = user_input.nextInt();
+			  if (duration < 1)
+			  {
+				  System.out.println("Must be at least 1 hour");
+			  } 
+			  else if (duration > 24)
+			  {
+				  System.out.println("Duration can only be up to 23 hours.");
+			  }
+			  else 
+			  {
+				  keepGoing = false;
+			  }
+		  } while (keepGoing);
+
 		  endTime = startTime.plusHours(duration);
 		  if(startTime.getDayOfMonth() != endTime.getDayOfMonth())
 		  {
@@ -177,11 +194,6 @@ private Item getItemDetailsFromUser(Scanner user_input)
 		  System.out.println("Item could not be added");
 	  }
   }
-  
-  public void setExistingActionStatus() 
-  {
-	  myExistingAuctionStatus = true;
-  }
    
   private int checkYear(Scanner user_input) 
   {
@@ -199,9 +211,14 @@ private Item getItemDetailsFromUser(Scanner user_input)
   public boolean check365(LocalDate theDate)
   {
 	  boolean answer = false;
-	  if(theDate.minusYears(1).isAfter(myLastAuctionDate))
+	  if (myAuction == null) 
 	  {
 		  answer = true;
+	  } else if(theDate.minusDays(365).isAfter(myAuction.getStartTime().toLocalDate()))
+	  {
+		  answer = true;
+	  } else {
+		  System.out.println("Your next auction must be 365 days after your last auction");
 	  }
 	  return answer;
   }
@@ -218,12 +235,15 @@ private Item getItemDetailsFromUser(Scanner user_input)
   
   public LocalDate getLastAuctionDate() 
   {
-	  return myLastAuctionDate;
-  }
-  
-  public void setLastAuctionDate(LocalDate theNewYear) 
-  {
-	  myLastAuctionDate = theNewYear;
+	  if (myAuction != null)
+	  {
+		  return myAuction.getStartTime().toLocalDate();
+	  } 
+	  else 
+	  {
+		  return LocalDate.now().minusYears(1);
+	  }
+	  
   }
   
   public Auction getAuction()
@@ -234,13 +254,12 @@ private Item getItemDetailsFromUser(Scanner user_input)
   public boolean setAuction(Auction theAuction)
   {
 	  myAuction = theAuction;
-	  myExistingAuctionStatus = true;
 	  return false;
   }
   
   public boolean hasAuction()
   {
-	  return myExistingAuctionStatus;
+	  return myAuction != null;
   }
   
   private LocalDateTime getAuctionDateTimeFromUser(Scanner theInput)
