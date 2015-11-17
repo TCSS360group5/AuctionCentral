@@ -11,6 +11,7 @@ public class NonProfit extends User
   // since we have this, maybe they don't need to see the calendar?
   // or maybe they should see to schedule
   private Auction myAuction;
+ 
   private String myNPOName;
 //  private boolean myExistingAuctionStatus;
   
@@ -98,7 +99,8 @@ public class NonProfit extends User
 	  {
 		  System.out.println("Your auction is scheduled for more than one calendar day. It has not been scheduled.");
 	  }
-	  else{
+	  else if (check365(startTime.toLocalDate()))
+  	  {
 		  Auction tempAuction = new Auction(myNPOName, super.getUserName(), startTime, endTime);
 		  if(theCalendar.addAuction(tempAuction))
 		  {
@@ -310,14 +312,7 @@ private Item getItemDetailsFromUser(Scanner user_input)
 			  System.out.println("Invalid minute. Please enter the Auction minute:");
 			  minutes = theInput.nextInt();
 		  } while(minutes > 59 || minutes < 0);
-	  }
-	  
-	  LocalDateTime answerDateTime = LocalDateTime.of(year, month, day, hour, minutes);
-	  if (!check365(answerDateTime.toLocalDate()))
-	  {
-		  answerDateTime = getAuctionDateTimeFromUser(theInput);
-	  }	  
-	  return answerDateTime;
-  }
-  
+	  }  
+	  return LocalDateTime.of(year, month, day, hour, minutes);
+  } 
 }
