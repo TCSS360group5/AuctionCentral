@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 public class NonProfit extends User
 {
-  private LocalDate myLastAuctionYear;
+  private LocalDate myLastAuctionDate;
   // since we have this, maybe they don't need to see the calendar?
   // or maybe they should see to schedule
   private Auction myAuction;
@@ -18,7 +18,7 @@ public class NonProfit extends User
   public NonProfit(String theUserName, UserType theUserType, String theNPOName, LocalDate theLastAuctionYear, boolean theAuctionStatus){
 	  super(theUserName, theUserType);
 	  myNPOName = theNPOName;
-	  myLastAuctionYear = theLastAuctionYear;
+	  myLastAuctionDate = theLastAuctionYear;
 	  myExistingAuctionStatus = theAuctionStatus;
   }
   
@@ -183,17 +183,27 @@ private Item getItemDetailsFromUser(Scanner user_input)
 	  myExistingAuctionStatus = true;
   }
    
-  private int implementYear(Scanner user_input) 
+  private int checkYear(Scanner user_input) 
   {
 	  int year;
 	  System.out.println("Please enter the Auction year:");
 	  year = user_input.nextInt();
-	  if (year <= myLastAuctionYear.getYear()) 
+	  if (year < LocalDate.now().getYear() || year > LocalDate.now().plusYears(1).getYear())
 	  {
-		  System.out.println("You already have an auction this year.");
-		  year = implementYear(user_input);
+		  System.out.println("Auctions can only be sheduled this year and next year.");
+		  year = checkYear(user_input);
 	  }
 	return year;
+  }
+  
+  public boolean check365(LocalDate theDate)
+  {
+	  boolean answer = false;
+	  if(theDate.minusYears(1).isAfter(myLastAuctionDate))
+	  {
+		  answer = true;
+	  }
+	  return answer;
   }
   
   public String getNPOName()
@@ -208,12 +218,12 @@ private Item getItemDetailsFromUser(Scanner user_input)
   
   public LocalDate getLastAuctionDate() 
   {
-	  return myLastAuctionYear;
+	  return myLastAuctionDate;
   }
   
   public void setLastAuctionDate(LocalDate theNewYear) 
   {
-	  myLastAuctionYear = theNewYear;
+	  myLastAuctionDate = theNewYear;
   }
   
   public Auction getAuction()
@@ -241,7 +251,7 @@ private Item getItemDetailsFromUser(Scanner user_input)
 	  int hour;
 	  int minutes;
 	  
-	  year = implementYear(theInput);				  
+	  year = checkYear(theInput);				  
 	  System.out.println("Please enter the Auction month:");
 	  month = theInput.nextInt();
 	  if(month > 12 || month < 1)
@@ -283,7 +293,12 @@ private Item getItemDetailsFromUser(Scanner user_input)
 		  } while(minutes > 59 || minutes < 0);
 	  }
 	  
-	  return LocalDateTime.of(year, month, day, hour, minutes);
+	  LocalDateTime answerDateTime = LocalDateTime.of(year, month, day, hour, minutes);
+	  if (!check365(answerDateTime.toLocalDate()))
+	  {
+		  answerDateTime = getAuctionDateTimeFromUser(theInput);
+	  }	  
+	  return answerDateTime;
   }
   
 }

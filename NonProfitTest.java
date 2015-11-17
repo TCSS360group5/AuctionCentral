@@ -12,27 +12,52 @@ public class NonProfitTest {
 
 	@Test
 	public void testExecuteCommand() {
-		fail("Not yet implemented");
+		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testNonProfit() {
-		fail("Not yet implemented");
+	public void testCheck365() {
+		
 	}
 
 	@Test
-	public void testGetLastAuctionYear() {
-		fail("Not yet implemented");
+	public void testSetExistingActionStatus() {
+		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testSetLastAuctionYear() {
-		fail("Not yet implemented");
+	public void testGetNPOName() {
+		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
-	public void testUser() {
-		fail("Not yet implemented");
+	public void testSetNPOName() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	@Test
+	public void testGetLastAuctionDate() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	@Test
+	public void testSetLastAuctionDate() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	@Test
+	public void testGetAuction() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	@Test
+	public void testSetAuction() {
+		fail("Not yet implemented"); // TODO
+	}
+
+	@Test
+	public void testHasAuction() {
+		fail("Not yet implemented"); // TODO
 	}
 
 }
