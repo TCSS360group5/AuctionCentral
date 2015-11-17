@@ -7,22 +7,43 @@ public class Employee extends User
 		super(theUsername, theUserType);
 	}
 
+
+  public ArrayList<Command> GetMenu(Command theCommand)
+  {
+		ArrayList<Command> answer = new ArrayList<Command>();
+		switch (theCommand) {
+		case VIEWAUCTIONS:
+			answer.add(User.Command.GOBACK);
+			break;
+		case VIEWCALENDAR:
+			answer.add(User.Command.GOBACK);
+			answer.add(User.Command.VIEWAUCTIONS);
+			break;
+		case VIEWMAINMENU:
+			answer.add(User.Command.VIEWCALENDAR);
+			break;
+		default:
+			break;
+		}
+		return answer;
+  }
+  
 public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
   {
 	ArrayList<Command> answer = new ArrayList<Command>();
 	switch (theCommand) {
-	case VIEWMAINAUCTIONS:
+	case VIEWAUCTIONS:
 		answer.add(User.Command.GOBACK);
 		break;
 	case VIEWCALENDAR:
 		answer.add(User.Command.GOBACK);
-		answer.add(User.Command.VIEWMAINAUCTIONS);
+		answer.add(User.Command.VIEWAUCTIONS);
 		break;
 	case VIEWMAINMENU:
 		answer.add(User.Command.VIEWCALENDAR);
-		//answer.add(User.Command.VIEWAUCTION);
 		break;
 	default:
+		System.out.println("Movement Command Not Recognized");
 		break;
 	}
 	return answer;
@@ -32,32 +53,11 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
 	{
 	  User.Command answer = null;
 		switch (theCurrentState)
-		 {
-		 	case VIEWCALENDAR:
-		 		answer = User.Command.VIEWMAINMENU;
-				break;
-		 	case VIEWONEAUCTION:
-		 		answer = User.Command.VIEWCALENDAR;
-		 		break;
-	 		case VIEWITEM:
-	 			answer = User.Command.VIEWONEAUCTION;
-	 			break;						
+		 {						
 	 		default:
+	 			System.out.println("Command Not Recognized");
 	 			break;						 
 		 }		
 		return answer;
-	}
-
-  // public void viewCurrentCalendarMonth()
-//   {
-//   }
-  
-  // public void viewSelectedCalendarMonth(String Month)
-//   {
-//   }
-  
-  // public void viewAuctionDetails(Date auction)
-//   {
-//   }
-  
+	}  
 }

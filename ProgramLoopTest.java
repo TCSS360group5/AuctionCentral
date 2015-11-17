@@ -8,6 +8,7 @@ public class ProgramLoopTest {
 
 	@Before
 	public void setUp() throws Exception {
+		
 	}
 
 	@Test

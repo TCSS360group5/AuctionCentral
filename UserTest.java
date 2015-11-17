@@ -1,7 +1,5 @@
 import static org.junit.Assert.*;
 
-import java.time.LocalDate;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +10,7 @@ public class UserTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		myNPO = new NonProfit("Billy", User.UserType.NPO, "BAuction", LocalDate.now().plusDays(5), true);
+		myNPO = new NonProfit("Billy", User.UserType.NPO, "BAuction");
 		myEmployee = new Employee("Betty", User.UserType.EMPLOYEE);
 		myBidder = new Bidder("Sam", User.UserType.BIDDER);
 	}

@@ -6,24 +6,50 @@ import java.util.Scanner;
 
 public class NonProfit extends User
 {
-  private LocalDate myLastAuctionYear;
-  // since we have this, maybe they don't need to see the calendar?
-  // or maybe they should see to schedule
   private Auction myAuction;
   private String myNPOName;
-  private boolean myExistingAuctionStatus;
-  //private String myUserName;
   
-  // schedules an auction and enters auction info
-  public NonProfit(String theUserName, UserType theUserType, String theNPOName, LocalDate theLastAuctionYear, boolean theAuctionStatus){
+  public NonProfit(String theUserName, UserType theUserType, String theNPOName){
 	  super(theUserName, theUserType);
 	  myNPOName = theNPOName;
-	  myLastAuctionYear = theLastAuctionYear;
-	  myExistingAuctionStatus = theAuctionStatus;
-	  //myUserName = theUserName;
   }
   
-  public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
+  public ArrayList<Command> GetMenu(Command theCommand)
+  {
+	  ArrayList<Command> answer = new ArrayList<Command>();
+	  switch (theCommand)
+	  {
+	  case VIEWMYAUCTION:
+		  System.out.println("\n" + myAuction.toString());
+		  answer.add(User.Command.GOBACK);
+		  answer.add(User.Command.EDITAUCTION);
+		  answer.add(User.Command.VIEWITEM);
+		  answer.add(User.Command.ADDITEM);
+		  break;
+	  case VIEWITEM:
+		  answer.add(User.Command.GOBACK);
+		  answer.add(User.Command.EDITITEM);
+		  break;
+	  case VIEWMAINMENU:
+		  if(canAddAuction()) {
+			  answer.add(User.Command.ADDAUCTION);			  
+		  } else {
+			  answer.add(User.Command.VIEWMYAUCTION);
+		  }
+	  break;
+		default:
+			System.out.println("Movement Command Not Recognized");
+			break;
+	  }
+	return answer;	  
+  }
+  
+  private boolean canAddAuction() {
+	// TODO Auto-generated method stub
+	return false;
+}
+
+public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
   {
 	  ArrayList<Command> answer = new ArrayList<Command>();
 	  int year;
@@ -39,7 +65,7 @@ public class NonProfit extends User
 	  Scanner user_input = new Scanner( System.in );
 	  switch (theCommand) {
 		  case ADDAUCTION:	  
-			  year = implementYear(user_input);				  
+			  year = checkYear(user_input);				  
 			  System.out.println("Please enter the Auction month:");
 			  month = user_input.nextInt();
 			  System.out.println("Please enter the Auction day:");
@@ -59,7 +85,6 @@ public class NonProfit extends User
 			  {
 				  System.out.println("Auction added!");
 				  myAuction = tempAuction;
-				  this.myExistingAuctionStatus = true;
 			  }
 			  else
 				  System.out.println("There was an error adding your auction.");
@@ -68,7 +93,7 @@ public class NonProfit extends User
 
 			  System.out.println("The current Auction details:");
 			  System.out.println(myAuction.toString());
-			  year = implementYear(user_input);				  
+			  year = checkYear(user_input);				  
 			  System.out.println("Please enter the Auction month:");
 			  month = user_input.nextInt();
 			  System.out.println("Please enter the Auction day:");
@@ -134,55 +159,26 @@ public class NonProfit extends User
 				  
 			  }
 			  break;
-		  case VIEWMYAUCTION:
-			  answer.add(User.Command.GOBACK);
-			  answer.add(User.Command.EDITAUCTION);
-			  answer.add(User.Command.VIEWITEM);
-			  answer.add(User.Command.ADDITEM);
-			  break;
-//		  case VIEWCALENDAR:
-//			  answer.add(User.Command.GOBACK);
-//			  answer.add(User.Command.VIEWAUCTION);
-//			  answer.add(User.Command.ADDAUCTION);
-//			  break;
-		  case VIEWITEM:
-			  answer.add(User.Command.GOBACK);
-			  answer.add(User.Command.EDITITEM);
-			  break;
-		  case VIEWMAINMENU:
-//			  answer.add(User.Command.VIEWCALENDAR);	// only employees should see calendar.
-			  if(myExistingAuctionStatus) {
-//				  answer.add(User.Command.EDITAUCTION);
-//				  answer.add(User.Command.ADDITEM);
-//				  answer.add(User.Command.VIEWITEM);
-				  answer.add(User.Command.VIEWMYAUCTION);
-			  } else {
-				  answer.add(User.Command.ADDAUCTION);
-			  }
-			  
-			  
-			  break;
 		  default:
 			  System.out.println("Command Not Recognized");
 			  break;	  
 	  }
-	  //user_input.close();
 	  return answer;
   }
-  
-  public void setExistingActionStatus() {
-	  myExistingAuctionStatus = true;
-  }
    
-  private int implementYear(Scanner user_input) 
+  private int checkYear(Scanner user_input) 
   {
 	  int year;
 	  System.out.println("Please enter the Auction year:");
 	  year = user_input.nextInt();
-	  if (year <= myLastAuctionYear.getYear()) 
+	  if (year < LocalDate.now().getYear()){
+		  System.out.println("Auctions must be in the future.");
+		  year = checkYear(user_input);
+	  }
+	  if (myAuction != null && year <= myAuction.getStartTime().getYear()) 
 	  {
 		  System.out.println("You already have an auction this year.");
-		  year = implementYear(user_input);
+		  year = checkYear(user_input);
 	  }
 	return year;
   }
@@ -196,17 +192,7 @@ public class NonProfit extends User
   {
 	  myNPOName = theNewName;
   }
-  
-  public LocalDate getLastAuctionDate() 
-  {
-	  return myLastAuctionYear;
-  }
-  
-  public void setLastAuctionDate(LocalDate theNewYear) 
-  {
-	  myLastAuctionYear = theNewYear;
-  }
-  
+   
   public Auction getAuction()
   {
 	  return myAuction;
@@ -215,9 +201,58 @@ public class NonProfit extends User
   public boolean setAuction(Auction theAuction)
   {
 	  myAuction = theAuction;
-	  myExistingAuctionStatus = true;
 	  return false;
   }
+  
+  public Command getMovementCommand(Command theCurrentState) {
+		User.Command answer = theCurrentState;
+		switch (theCurrentState) 
+		{
+		case ADDAUCTION:
+			break;
+		case ADDITEM:
+			break;
+		case BID:
+			break;
+		case EDITAUCTION:
+			break;
+		case EDITBID:
+			break;
+		case EDITITEM:
+			break;
+		case GOBACK:
+			User.Command moveState = this.goBackState(theCurrentState);
+			 if (moveState != null) 
+			 {
+				 answer = moveState;
+			 }			
+			 else 
+			 {
+				 System.out.println("Cannot go Back.");
+			 }
+			break;
+		case LOGIN:
+			break;
+		case VIEWAUCTIONS:
+			break;
+		case VIEWBIDS:
+			break;
+		case VIEWCALENDAR:
+			break;
+		case VIEWITEM:
+			break;
+		case VIEWMAINMENU:
+			break;
+		case VIEWMYAUCTION:
+			break;
+		case VIEWONEAUCTION:
+			break;
+		default:
+			break;		
+		}
+		
+		return answer;
+	}
   
   public User.Command goBackState(User.Command theCurrentState) 
 	{
@@ -242,9 +277,10 @@ public class NonProfit extends User
 		return answer;
 	}
   
-  public boolean hasAuction()
-  {
-	  return myExistingAuctionStatus;
-  }
+//  public boolean hasAuction()
+//  {
+//	  
+//	  return myExistingAuctionStatus;
+//  }
   
 }

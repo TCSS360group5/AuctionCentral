@@ -79,7 +79,7 @@ public class ProgramLoop {
 					String NPOname = myScanner.nextLine();
 					System.out.println("Your NPO is " + NPOname);
 					
-					myUser = new NonProfit(userName, User.UserType.NPO, NPOname, LocalDate.now().minusYears(1), hasExistingAuction(NPOname));
+					myUser = new NonProfit(userName, User.UserType.NPO, NPOname);
 
 				} 
 				else if (userType == 3)
@@ -124,11 +124,11 @@ public class ProgramLoop {
 	        		break;
 	        	case "NPO":
 	        		String userNPOname = s.nextLine();	        		
-	        		int year = s.nextInt();	        		
-	        		int month = s.nextInt();
-	        		int day = s.nextInt();
-	        		s.nextLine(); //clears the line
-	        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.of(year, month, day), true));
+//	        		int year = s.nextInt();	        		
+//	        		int month = s.nextInt();
+//	        		int day = s.nextInt();
+//	        		s.nextLine(); //clears the line
+	        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname));
 	        		break;
 	        	case "BIDDER":
         			theUserList.add(new Bidder(userName, User.UserType.BIDDER));
@@ -295,7 +295,7 @@ public class ProgramLoop {
 		//Scanner myScanner = new Scanner(System.in);
 		if(myUser.getUserType() == User.UserType.NPO)
 		{
-			if(((NonProfit)myUser).hasAuction() == true)
+			if(((NonProfit)myUser).getAuction() != null)
 			{
 				myCurrentAuction = ((NonProfit)myUser).getAuction();
 			}
@@ -346,7 +346,7 @@ public class ProgramLoop {
 				case GOBACK:
 					System.out.println("Go Back to Previous Menu");
 					break;
-				case VIEWMAINAUCTIONS:
+				case VIEWAUCTIONS:
 					System.out.println("View All Auctions");
 					break;
 				case VIEWITEM:
@@ -389,6 +389,9 @@ public class ProgramLoop {
 				 else if (commandInt <= currentCommands.size())
 				 {
 					 User.Command thisCommand = currentCommands.get(commandInt - 1);
+					 myCurrentState = myUser.getMovementCommand(myCurrentState);
+					 myUser.ExecuteCommand(thisCommand, myCalendar, myCurrentAuction, myCurrentItem);
+					 
 					 if (thisCommand == User.Command.VIEWCALENDAR)
 					 {
 						 myCurrentState = User.Command.VIEWCALENDAR;
@@ -400,15 +403,14 @@ public class ProgramLoop {
 						 myCurrentState = User.Command.VIEWMAINMENU;
 						 executeProgramLoop();
 					 } 
-//					 else if (thisCommand == User.Command.VIEWONEAUCTION)
-//					 {
-//						 myCurrentState = User.Command.VIEWONEAUCTION;						 
-//						 
-//					 } 
-					 else if (thisCommand == User.Command.VIEWCALENDARAUCTIONS)
+					 else if (thisCommand == User.Command.VIEWAUCTIONS)
 					 {
-						 myCurrentState = User.Command.VIEWCALENDARAUCTIONS;
+						 myCurrentState = User.Command.VIEWAUCTIONS;
 						 viewCalendarAuctions();
+					 }
+					 else if (thisCommand == User.Command.VIEWMYAUCTION)
+					 {
+						 myCurrentState = User.Command.VIEWMYAUCTION;
 					 }
 					 else if (thisCommand == User.Command.VIEWITEM)
 					 {
@@ -428,7 +430,7 @@ public class ProgramLoop {
 					 } 		
 					 else 
 					 {
-						 myUser.ExecuteCommand(thisCommand, myCalendar, myCurrentAuction, myCurrentItem);
+						 
 					 }	
 					 
 					 if(thisCommand.equals(User.Command.ADDAUCTION)) {
@@ -566,8 +568,8 @@ public class ProgramLoop {
 			{		
 				NonProfit tempNPOUser = (NonProfit) tempUser;
 				outputUsers.println(tempNPOUser.getNPOName());
-				LocalDate LastAuctionDate = tempNPOUser.getLastAuctionDate();
-				outputUsers.println(LastAuctionDate.getYear() + " " + LastAuctionDate.getMonthValue() + " " + LastAuctionDate.getDayOfMonth());
+				//LocalDate LastAuctionDate = tempNPOUser.getLastAuctionDate();
+				//outputUsers.println(LastAuctionDate.getYear() + " " + LastAuctionDate.getMonthValue() + " " + LastAuctionDate.getDayOfMonth());
 			}
 		}
 		outputUsers.close();

@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class User
 {
   public enum UserType {NPO, EMPLOYEE, BIDDER}
-  public enum Command {VIEWCALENDAR, VIEWMAINMENU, VIEWMAINAUCTIONS, VIEWITEM, VIEWMYAUCTION, VIEWCALENDARAUCTIONS,
+  public enum Command {VIEWCALENDAR, VIEWMAINMENU, VIEWITEM, VIEWMYAUCTION, VIEWAUCTIONS,
 	  VIEWONEAUCTION, ADDAUCTION, EDITAUCTION, ADDITEM, EDITITEM, GOBACK, BID, EDITBID, LOGIN, VIEWBIDS}
   
   private UserType myUserType;
@@ -44,5 +44,10 @@ public class User
   public String toString() {
 	  return myUserName + " " + myUserType.toString();
   }
+
+public Command getMovementCommand(Command theCurrentState) {
+	User.Command answer = theCurrentState;
+	return answer;
+}
   
 }

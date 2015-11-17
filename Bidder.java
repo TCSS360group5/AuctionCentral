@@ -37,7 +37,7 @@ public class Bidder extends User
 		ArrayList<Command> answer = new ArrayList<Command>();
 		Scanner user_input = new Scanner( System.in );
 		switch (theCommand) {
-			case VIEWMAINAUCTIONS:
+			case VIEWAUCTIONS:
 				answer.add(User.Command.GOBACK);
 				answer.add(User.Command.VIEWITEM);
 				break;
@@ -55,7 +55,7 @@ public class Bidder extends User
 				break;
 			case VIEWMAINMENU:
 				//answer.add(User.Command.VIEWCALENDAR);
-				answer.add(User.Command.VIEWMAINAUCTIONS);
+				answer.add(User.Command.VIEWAUCTIONS);
 				answer.add(User.Command.VIEWBIDS);
 				break;
 			case BID:
@@ -129,17 +129,21 @@ public class Bidder extends User
 	//	  }
 	
 	}
+	
+	public Command getMovementCommand(Command myCurrentState) {
+		return myCurrentState;
+	}
 
 	public User.Command goBackState(User.Command theCurrentState) 
 	{
 	  User.Command answer = null;
 		switch (theCurrentState)
 		 {
-		 	case VIEWMAINAUCTIONS:
+		 	case VIEWAUCTIONS:
 		 		answer = User.Command.VIEWMAINMENU;
 		 		break;
 	 		case VIEWITEM:
-	 			answer = User.Command.VIEWMAINAUCTIONS;
+	 			answer = User.Command.VIEWAUCTIONS;
 	 			break;						
 	 		default:
 	 			break;						 
