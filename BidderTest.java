@@ -43,13 +43,4 @@ public class BidderTest {
 	public void testBid() {
 		fail("Not yet implemented");
 	}
-
-	/**
-	 * Test method for {@link User#User(java.lang.String, User.UserType)}.
-	 */
-	@Test
-	public void testUser() {
-		fail("Not yet implemented");
-	}
-
 }

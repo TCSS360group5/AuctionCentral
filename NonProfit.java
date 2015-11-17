@@ -13,7 +13,6 @@ public class NonProfit extends User
   private Auction myAuction;
   private String myNPOName;
   private boolean myExistingAuctionStatus;
-  //private String myUserName;
   
   // schedules an auction and enters auction info
   public NonProfit(String theUserName, UserType theUserType, String theNPOName, LocalDate theLastAuctionYear, boolean theAuctionStatus){
@@ -21,7 +20,6 @@ public class NonProfit extends User
 	  myNPOName = theNPOName;
 	  myLastAuctionYear = theLastAuctionYear;
 	  myExistingAuctionStatus = theAuctionStatus;
-	  //myUserName = theUserName;
   }
   
   public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
@@ -30,15 +28,11 @@ public class NonProfit extends User
 	  LocalDateTime endTime;
 	  ArrayList<Command> answer = new ArrayList<Command>();
 	  int duration;
-	  String itemName;
-	  double minimumPrice;
-	  double sellingPrice;
-	  String description;
 	  
 	  Scanner user_input = new Scanner( System.in );
 	  switch (theCommand) {
 		  case ADDAUCTION:	  
-			  startTime = promptForInfo(user_input);
+			  startTime = getAuctionDateTimeFromUser(user_input);
 			  System.out.println("Please enter the duration (in hours) of the Auction");
 			  duration = user_input.nextInt();
 			  endTime = startTime.plusHours(duration);
@@ -59,7 +53,7 @@ public class NonProfit extends User
 			  break;
 		  case EDITAUCTION:
 			  System.out.println("The current Auction details:");
-			  System.out.println(myAuction.toString());
+			  System.out.println(myAuction.toString());			  
 			  System.out.println("Would you like to edit the auction? (Enter 0 to go back, 1 to edit)");
 			  int decision = user_input.nextInt();
 			  if(decision < 0 || decision > 1)
@@ -72,7 +66,7 @@ public class NonProfit extends User
 			  }
 			  if(decision == 1)
 			  {
-				  startTime = promptForInfo(user_input);
+				  startTime = getAuctionDateTimeFromUser(user_input);
 				  System.out.println("Please enter the duration (in hours) of the Auction");
 				  duration = user_input.nextInt();
 				  endTime = startTime.plusHours(duration);
@@ -100,40 +94,19 @@ public class NonProfit extends User
 			  System.out.println("What would you like to do next?");
 			  break;
 		  case ADDITEM:
-	  
-			  System.out.println("Please enter the Item name:");
-			  itemName = user_input.nextLine();
-			  System.out.println("Please enter the Minimum Bid:");
-			  minimumPrice = user_input.nextDouble();
-			  user_input.nextLine();
-			  System.out.println("Please enter the Item Description:");
-			  description = user_input.nextLine();
-			  try
-			  {
-				  theAuction.addItem(new Item(itemName, minimumPrice, description));
-			  } catch (Exception e) {
-				  System.out.println("Item could not be added");
-			  }
-			  
-//			  System.out.println("Current items: " + theAuction.getAuctionItems());
-			  
+			  Item tempItem = getItemDetailsFromUser(user_input);	
+			  addItemToAuction(theAuction, tempItem);
 			  break;
 		  case EDITITEM:
 			  System.out.println("The current Item details:");
 			  System.out.println(theItem.toString());
-			  System.out.println("Please enter the Item name:");
-			  itemName = user_input.nextLine();
-			  System.out.println("Please enter the Minimum Bid:");
-			  minimumPrice = user_input.nextDouble();
-			  user_input.nextLine();
-			  System.out.println("Please enter the Item Description:");
-			  description = user_input.nextLine();
-			  // there is a bug here.. console is not waiting for the user input
+
+			  Item tempEditItem = getItemDetailsFromUser(user_input);	
 			  
 			  try
 			  {
 				  theAuction.removeItem(theItem);
-				  theAuction.addItem(new Item(itemName, minimumPrice, description));
+				  theAuction.addItem(tempEditItem);
 			  } catch (Exception e) {
 				  
 			  }
@@ -154,13 +127,11 @@ public class NonProfit extends User
 			  answer.add(User.Command.EDITITEM);
 			  break;
 		  case VIEWMAINMENU:
-//			  answer.add(User.Command.VIEWCALENDAR);	// only employees should see calendar.
 			  if(this.hasAuction()) {
 				  answer.add(User.Command.EDITAUCTION);
 				  answer.add(User.Command.ADDITEM);
 				  answer.add(User.Command.VIEWITEM);
 				  answer.add(User.Command.VIEWAUCTION);
-//				  answer.add(User.Command.EDITITEM);
 			  } else {
 				  answer.add(User.Command.ADDAUCTION);
 			  }
@@ -171,11 +142,33 @@ public class NonProfit extends User
 			  System.out.println("Command Not Recognized");
 			  break;	  
 	  }
-	  //user_input.close();
 	  return answer;
   }
   
-  public void setExistingActionStatus() {
+  private Item getItemDetailsFromUser(Scanner user_input) 
+  {
+	  System.out.println("Please enter the Item name:");
+	  String itemName = user_input.nextLine();
+	  System.out.println("Please enter the Minimum Bid:");
+	  double minimumPrice = user_input.nextDouble();
+	  user_input.nextLine();
+	  System.out.println("Please enter the Item Description:");
+	  String description = user_input.nextLine();
+	  return new Item(itemName, minimumPrice, description);
+  }
+  
+  private void addItemToAuction(Auction theAuction, Item theItem)
+  {
+	  try
+	  {
+		  theAuction.addItem(theItem);
+	  } catch (Exception e) {
+		  System.out.println("Item could not be added");
+	  }
+  }
+  
+  public void setExistingActionStatus() 
+  {
 	  myExistingAuctionStatus = true;
   }
    
@@ -229,7 +222,7 @@ public class NonProfit extends User
 	  return myExistingAuctionStatus;
   }
   
-  private LocalDateTime promptForInfo(Scanner theInput)
+  private LocalDateTime getAuctionDateTimeFromUser(Scanner theInput)
   {
 	  int year;
 	  int month;

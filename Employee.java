@@ -1,5 +1,8 @@
 import java.util.ArrayList;
-
+/*
+ * This class represents an Auction Central Employee and gives the
+ *  functionality to move around the menus.
+ */
 public class Employee extends User
 {
 
@@ -27,17 +30,4 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
 	}
 	return answer;
   }
-
-  // public void viewCurrentCalendarMonth()
-//   {
-//   }
-  
-  // public void viewSelectedCalendarMonth(String Month)
-//   {
-//   }
-  
-  // public void viewAuctionDetails(Date auction)
-//   {
-//   }
-  
 }
