@@ -124,19 +124,15 @@ public class ProgramLoop {
 	        		break;
 	        	case "NPO":
 	        		String userNPOname = s.nextLine();	 
-	        		if(s.hasNextInt()) {
+	        		if(s.hasNextInt()) {		// if in the user file there is a date saved, it means the NPO has an auction
 		        		int year = s.nextInt();	        		
 		        		int month = s.nextInt();
 		        		int day = s.nextInt();
 		        		s.nextLine(); //clears the line
-
 		        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.of(year, month, day), true));
-	        		} else {
+	        		} else {					// this NPO doesn't have an auction saved, last parameter is set appropriately
 		        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.now().minusYears(1), false));
-
 	        		}
-//	        		s.nextLine(); //clears the line
-//	        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.of(year, month, day), true));
 	        		break;
 	        	case "BIDDER":
         			theUserList.add(new Bidder(userName, User.UserType.BIDDER));
@@ -495,10 +491,24 @@ public class ProgramLoop {
 		 		myCurrentState = User.Command.VIEWMAINMENU;
 				break;
 		 	case VIEWAUCTION:
-		 		myCurrentState = User.Command.VIEWCALENDAR;
+//		 		myCurrentState = User.Command.VIEWCALENDAR;
+		 		
+		 		
+		 		if(myUser.getUserType().equals(User.UserType.NPO)) {
+		 			myCurrentState = User.Command.VIEWMAINMENU;
+		 		} else {
+		 			myCurrentState = User.Command.VIEWCALENDAR;
+		 		}
 		 		break;
 	 		case VIEWITEM:
-	 			myCurrentState = User.Command.VIEWAUCTION;
+	 			
+		 		if(myUser.getUserType().equals(User.UserType.NPO)) {
+		 			myCurrentState = User.Command.VIEWMAINMENU;
+		 		} else {
+		 			myCurrentState = User.Command.VIEWAUCTION;
+		 		}
+	 			
+//	 			myCurrentState = User.Command.VIEWAUCTION;
 	 			break;						
 	 		default:
 	 			System.out.println("Cannot Go Back");
