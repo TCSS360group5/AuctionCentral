@@ -34,7 +34,6 @@ public class NonProfit extends User
 	  int duration;
 	  String itemName;
 	  double minimumPrice;
-	  double sellingPrice;
 	  String description;
 	  
 	  Scanner user_input = new Scanner( System.in );

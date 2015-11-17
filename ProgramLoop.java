@@ -301,7 +301,7 @@ public class ProgramLoop {
 			}
 		}
 		myHomePageMessage = "\nAuctionCentral " + myUser.getUserType() + myHomePageMessageEnd;
-		System.out.println(myHomePageMessage);
+		//System.out.println(myHomePageMessage);
 		boolean notQuit = true;
 		
 		
@@ -309,6 +309,7 @@ public class ProgramLoop {
 		Item currentItem = null;
 		do
 		{
+			System.out.println(menuTitle());
 			 ArrayList<User.Command> currentCommands = myUser.ExecuteCommand(myCurrentState, myCalendar, currentAuction, currentItem);
 			 System.out.println("0) Quit");
 			 //print out available commands
@@ -372,7 +373,7 @@ public class ProgramLoop {
 				 System.out.println("Enter a Number");
 			 }
 			 
-			 boolean addAuction = false;
+			 //boolean addAuction = false;
 			 
 			 if (validCommand)
 			 {
@@ -415,7 +416,7 @@ public class ProgramLoop {
 					 
 					 if(thisCommand.equals(User.Command.ADDAUCTION)) {
 							Collection<ArrayList<Auction>> auctions =myCalendar.myAuctionByDateList.values();
-							Iterator it = auctions.iterator();
+							Iterator<ArrayList<Auction>> it = auctions.iterator();
 							myAuctionList.clear();
 							while(it.hasNext()) {
 								ArrayList<Auction> a = (ArrayList<Auction>) it.next();
@@ -474,11 +475,9 @@ public class ProgramLoop {
 				break;
 		 	case VIEWAUCTION:
 		 		myCurrentState = User.Command.VIEWCALENDAR;
-		 		System.out.println("Calendar Menu");
 		 		break;
 	 		case VIEWITEM:
 	 			myCurrentState = User.Command.VIEWAUCTION;
-	 			System.out.println("Auction Menu");
 	 			break;						
 	 		default:
 	 			System.out.println("Cannot Go Back");
@@ -522,7 +521,7 @@ public class ProgramLoop {
 			if (userAnswer > 0) {
 				myCurrentState = User.Command.VIEWAUCTION;
 				myCurrentAuction = myAuctionList.get(userAnswer - 1);
-				System.out.println(myCurrentAuction.toString());
+				System.out.println(myCurrentAuction.toString() + "\n");
 			}
 		}		
 	}
@@ -574,6 +573,51 @@ public class ProgramLoop {
 		outputUsers.close();
 	}
 	
+	private String menuTitle() 
+	{
+		String answerString = "";
+	
+		switch (myCurrentState)
+		 {
+	 	case VIEWCALENDAR:
+	 		answerString = "Calendar Menu";
+			break;
+	 	case VIEWAUCTION:
+	 		answerString = "Auction Menu";
+	 		break;
+ 		case VIEWITEM:
+ 			answerString = "Item Menu";
+ 			break;			
+		case VIEWMAINMENU:
+			answerString = myHomePageMessage;
+			break;
+		case ADDAUCTION:
+			answerString = "1 Menu";
+			break;
+		case ADDITEM:
+			answerString = "2 Menu";
+			break;
+		case BID:
+			answerString = "3 Menu";
+			break;
+		case EDITAUCTION:
+			answerString = "4 Menu";
+			break;
+		case EDITBID:
+			answerString = "5 Menu";
+			break;
+		case EDITITEM:
+			answerString = "6 Menu";
+			break;
+		case VIEWBIDS:
+			answerString = "7 Menu";
+			break;
+		default:
+			answerString = "8 Menu";
+			break;
+		 }
+		return answerString;
+	}
 	
 	/**
 	 * Outputs the existing auctions to the auctions.txt file.
@@ -587,7 +631,7 @@ public class ProgramLoop {
 		Collection<ArrayList<Auction>> auctionLists = auctionMap.values();
 		theAuctionList.clear();
 		
-		Iterator it = auctionLists.iterator();
+		Iterator<ArrayList<Auction>> it = auctionLists.iterator();
 		while(it.hasNext()) {
 			ArrayList<Auction> auctionList = (ArrayList<Auction>) it.next();
 			for(int i = 0; i < auctionList.size(); i++) {
