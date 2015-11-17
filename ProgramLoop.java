@@ -416,6 +416,10 @@ public class ProgramLoop {
 					 else 
 					 {
 						 myUser.ExecuteCommand(thisCommand, myCalendar, myCurrentAuction, myCurrentItem);
+						 if(myUser.getUserType() == User.UserType.NPO && thisCommand == User.Command.ADDAUCTION)
+						 {
+							 myCurrentAuction = ((NonProfit)myUser).getAuction();
+						 }
 					 }	
 					 
 					 // neccessary to transfer the newest auction that was added to the Calendar to our local AuctionList

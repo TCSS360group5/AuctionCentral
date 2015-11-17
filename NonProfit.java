@@ -41,7 +41,7 @@ public class NonProfit extends User
 			  break;
 		  case ADDITEM:
 			  Item tempItem = getItemDetailsFromUser(user_input);	
-			  addItemToAuction(theAuction, tempItem);
+			  addItemToAuction(myAuction, tempItem);
 			  break;
 		  case EDITITEM:
 			  System.out.println("The current Item details:");
