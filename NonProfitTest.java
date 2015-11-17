@@ -13,15 +13,18 @@ Auction currentAuction;
 Auction OverAYearAgoAuction;
 Auction AYearAgoAuction;
 Auction LessThanAYearAgoAuction;
+LocalDateTime OverAYearAgo;
+LocalDateTime AYearAgo;
+LocalDateTime LessThanAYearAgo;
 	
 	@Before
 	public void setUp() throws Exception {
-		myNPO = new NonProfit("Billy", User.UserType.NPO, "BAuction", LocalDate.now().plusDays(5), true);
+		myNPO = new NonProfit("Billy", User.UserType.NPO, "BAuction", LocalDate.now().minusDays(365), true);
 		LocalDateTime now = LocalDateTime.now();
 		
-		LocalDateTime OverAYearAgo = now.minusDays(366);
-		LocalDateTime AYearAgo = now.minusDays(365);
-		LocalDateTime LessThanAYearAgo = now.minusDays(364);
+		 OverAYearAgo = now.minusDays(366);
+		 AYearAgo = now.minusDays(365);
+		 LessThanAYearAgo = now.minusDays(364);
 		OverAYearAgoAuction = new Auction(myNPO.getNPOName(), myNPO.getUserName(), OverAYearAgo, OverAYearAgo.plusHours(2));
 		AYearAgoAuction = new Auction(myNPO.getNPOName(), myNPO.getUserName(), AYearAgo, AYearAgo.plusHours(2));;
 		LessThanAYearAgoAuction = new Auction(myNPO.getNPOName(), myNPO.getUserName(), LessThanAYearAgo, LessThanAYearAgo.plusHours(2));;
@@ -34,19 +37,19 @@ Auction LessThanAYearAgoAuction;
 
 	@Test
 	public void testCheck365OverAYear() {		
-		myNPO.setAuction(OverAYearAgoAuction);		
+		myNPO.setLastAuctionDate(OverAYearAgo.toLocalDate());		
 		assertTrue(myNPO.check365(LocalDate.now()));
 	}
 	
 	@Test
 	public void testCheck365OneYear() {		
-		myNPO.setAuction(AYearAgoAuction);
+		myNPO.setLastAuctionDate(AYearAgo.toLocalDate());	
 		assertFalse(myNPO.check365(LocalDate.now()));
 	}
 	
 	@Test
 	public void testCheck365LessThanOneYear() {		
-		myNPO.setAuction(LessThanAYearAgoAuction);
+		myNPO.setLastAuctionDate(LessThanAYearAgo.toLocalDate());	
 		assertFalse(myNPO.check365(LocalDate.now()));
 	}
 
