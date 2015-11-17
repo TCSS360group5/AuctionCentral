@@ -1,21 +1,44 @@
 import java.util.ArrayList;
 
+/**
+ * 
+ *
+ */
 public class User
 {
-  public enum UserType {NPO, EMPLOYEE, BIDDER}
-  public enum Command {VIEWCALENDAR, VIEWMAINMENU, VIEWAUCTION, VIEWITEM,
+  /**
+ * 
+ * This enum represents what kind of user the user is.
+ */
+public enum UserType {NPO, EMPLOYEE, BIDDER}
+  /**
+ * These are the different menu options that a user might select.
+ *
+ */
+public enum Command {VIEWCALENDAR, VIEWMAINMENU, VIEWAUCTION, VIEWITEM,
 	  ADDAUCTION, EDITAUCTION, ADDITEM, EDITITEM, GOBACK, BID, EDITBID, LOGIN, VIEWBIDS}
   
   private UserType myUserType;
   private String myUserName;
   
-  public User(String theUserName, UserType theUserType)
+  /**
+ * @param theUserName
+ * @param theUserType
+ */
+public User(String theUserName, UserType theUserType)
   {
 	  myUserName = theUserName;
 	  myUserType = theUserType;
   }
   
-  public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
+  /**
+ * @param theCommand
+ * @param theCalendar
+ * @param theAuction
+ * @param theItem
+ * @return
+ */
+public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
   {
 	  ArrayList<Command> answer = new ArrayList<Command>();
 	  answer.add(User.Command.LOGIN);
@@ -23,20 +46,35 @@ public class User
   }
 
   
-  public UserType getUserType(){
+  /**
+ * @return
+ */
+public UserType getUserType(){
 	  return myUserType;
   }
-  public String getUserName(){
+  /**
+ * @return
+ */
+public String getUserName(){
 	  return myUserName;
   }
-  public void setUserType(UserType theUserType){
+  /**
+ * @param theUserType
+ */
+public void setUserType(UserType theUserType){
 	  myUserType = theUserType;
   }
-  public void setUserName(String theUsername){
+  /**
+ * @param theUsername
+ */
+public void setUserName(String theUsername){
 	  myUserName = theUsername;
   }
 
-  public String toString() {
+  /* (non-Javadoc)
+ * @see java.lang.Object#toString()
+ */
+public String toString() {
 	  return myUserName + " " + myUserType.toString();
   }
   
