@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,71 +26,78 @@ public class NonProfit extends User
   
   public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
   {
+	  LocalDateTime startTime;
+	  LocalDateTime endTime;
 	  ArrayList<Command> answer = new ArrayList<Command>();
-	  int year;
-	  int month;
-	  int day;
-	  int hour;
-	  int minutes;
 	  int duration;
 	  String itemName;
 	  double minimumPrice;
+	  double sellingPrice;
 	  String description;
 	  
 	  Scanner user_input = new Scanner( System.in );
 	  switch (theCommand) {
 		  case ADDAUCTION:	  
-			  year = implementYear(user_input);				  
-			  System.out.println("Please enter the Auction month:");
-			  month = user_input.nextInt();
-			  System.out.println("Please enter the Auction day:");
-			  day = user_input.nextInt();
-			  System.out.println("Please enter the Auction hour:");
-			  hour = user_input.nextInt();
-			  System.out.println("Please enter the Auction minute:");
-			  minutes = user_input.nextInt();
+			  startTime = promptForInfo(user_input);
 			  System.out.println("Please enter the duration (in hours) of the Auction");
 			  duration = user_input.nextInt();
-			  myAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), 
-					  LocalDateTime.of(year, month, day, hour+duration, minutes));
-			  if(theCalendar.addAuction(myAuction))
+			  endTime = startTime.plusHours(duration);
+			  if(startTime.getDayOfMonth() != endTime.getDayOfMonth())
 			  {
-				  System.out.println("Auction added!");
-				  this.myExistingAuctionStatus = true;
+				  System.out.println("Your auction is scheduled for more than one calendar day. It has not been scheduled.");
 			  }
-			  else
-				  System.out.println("There was an error adding your auction.");
+			  else{
+				  myAuction = new Auction(myNPOName, super.getUserName(), startTime, endTime);
+				  if(theCalendar.addAuction(myAuction))
+				  {
+					  System.out.println("Auction added!");
+					  this.myExistingAuctionStatus = true;
+				  }
+				  else
+					  System.out.println("There was an error adding your auction.");
+			  }
 			  break;
 		  case EDITAUCTION:
-
 			  System.out.println("The current Auction details:");
 			  System.out.println(myAuction.toString());
-			  year = implementYear(user_input);				  
-			  System.out.println("Please enter the Auction month:");
-			  month = user_input.nextInt();
-			  System.out.println("Please enter the Auction day:");
-			  day = user_input.nextInt();
-			  System.out.println("Please enter the Auction hour:");
-			  hour = user_input.nextInt();
-			  System.out.println("Please enter the Auction minute:");
-			  minutes = user_input.nextInt();
-			  System.out.println("Please enter the duration (in hours) of the Auction");
-			  duration = user_input.nextInt();
-			  
-			  List<Item> auctionItems = myAuction.getAuctionItems();
-			  Auction newAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes), auctionItems);
-			  theCalendar.removeAuction(myAuction);
-			  if(theCalendar.addAuction(newAuction))
+			  System.out.println("Would you like to edit the auction? (Enter 0 to go back, 1 to edit)");
+			  int decision = user_input.nextInt();
+			  if(decision < 0 || decision > 1)
 			  {
-				  myAuction = newAuction;
-				  System.out.println("Auction has been edited.");
+				  do
+				  {
+					  System.out.println("Invalid input. Would you like to edit the auction? (Enter 0 to go back, 1 to edit)");
+					  decision = user_input.nextInt();
+				  } while(decision < 0 || decision > 1);
 			  }
-			  else
+			  if(decision == 1)
 			  {
-				  theCalendar.addAuction(myAuction);
-				  System.out.println("There was an error. Your auction has not been edited.");
+				  startTime = promptForInfo(user_input);
+				  System.out.println("Please enter the duration (in hours) of the Auction");
+				  duration = user_input.nextInt();
+				  endTime = startTime.plusHours(duration);
+				  if(startTime.getDayOfMonth() != endTime.getDayOfMonth())
+				  {
+					  System.out.println("Your auction is scheduled for more than one calendar day. It has not been scheduled.");
+				  }
+				  else
+				  {
+					  List<Item> auctionItems = myAuction.getAuctionItems();
+					  Auction newAuction = new Auction(myNPOName, super.getUserName(), startTime, endTime, auctionItems);
+					  theCalendar.removeAuction(myAuction);
+					  if(theCalendar.addAuction(newAuction))
+					  {
+						  myAuction = newAuction;
+						  System.out.println("Auction has been edited.");
+					  }
+					  else
+					  {
+						  theCalendar.addAuction(myAuction);
+						  System.out.println("There was an error. Your auction has not been edited.");
+					  }
+				  }
 			  }
-			  System.out.println("\n What would you like to do next?");
+			  System.out.println("What would you like to do next?");
 			  break;
 		  case ADDITEM:
 	  
@@ -147,7 +155,7 @@ public class NonProfit extends User
 			  break;
 		  case VIEWMAINMENU:
 //			  answer.add(User.Command.VIEWCALENDAR);	// only employees should see calendar.
-			  if(myExistingAuctionStatus) {
+			  if(this.hasAuction()) {
 				  answer.add(User.Command.EDITAUCTION);
 				  answer.add(User.Command.ADDITEM);
 				  answer.add(User.Command.VIEWITEM);
@@ -219,6 +227,59 @@ public class NonProfit extends User
   public boolean hasAuction()
   {
 	  return myExistingAuctionStatus;
+  }
+  
+  private LocalDateTime promptForInfo(Scanner theInput)
+  {
+	  int year;
+	  int month;
+	  int day;
+	  int hour;
+	  int minutes;
+	  
+	  year = implementYear(theInput);				  
+	  System.out.println("Please enter the Auction month:");
+	  month = theInput.nextInt();
+	  if(month > 12 || month < 1)
+	  {
+		  do
+		  {
+			  System.out.println("Invalid month. Please enter the Auction month:");
+			  month = theInput.nextInt();
+		  } while(month > 12 || month < 1);
+	  }
+	  System.out.println("Please enter the Auction day:");
+	  day = theInput.nextInt();
+	  if(day > (Month.of(month).length(((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0)))) || day < 1)
+	  {
+		  do
+		  {
+			  System.out.println("Invalid day. Please enter the Auction day:");
+			  day = theInput.nextInt();
+		  } while(day > (Month.of(month).length(((year % 400 == 0) || (year % 4 == 0 && year % 100 != 0)))) || day < 1);
+	  }
+	  System.out.println("Please enter the Auction hour:");
+	  hour = theInput.nextInt();
+	  if(hour > 23 || hour < 0)
+	  {
+		  do
+		  {
+			  System.out.println("Invalid hour. Please enter the Auction hour:");
+			  hour = theInput.nextInt();
+		  } while(hour > 23 || hour < 0);
+	  }
+	  System.out.println("Please enter the Auction minute:");
+	  minutes = theInput.nextInt();
+	  if(minutes > 59 || minutes < 0)
+	  {
+		  do
+		  {
+			  System.out.println("Invalid minute. Please enter the Auction minute:");
+			  minutes = theInput.nextInt();
+		  } while(minutes > 59 || minutes < 0);
+	  }
+	  
+	  return LocalDateTime.of(year, month, day, hour, minutes);
   }
   
 }
