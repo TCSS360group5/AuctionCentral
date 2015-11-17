@@ -51,8 +51,10 @@ public class NonProfit extends User
 			  {
 				  theAuction.removeItem(theItem);
 				  theAuction.addItem(tempEditItem);
+				  System.out.println("Edited Item details:");
+				  System.out.println(tempEditItem.toString());
 			  } catch (Exception e) {
-				  
+				  theAuction.addItem(theItem);
 			  }
 			  break;
 		  case VIEWAUCTION:
@@ -163,6 +165,8 @@ public class NonProfit extends User
 			  {
 				  myAuction = newAuction;
 				  System.out.println("Auction has been edited.");
+				  System.out.println("Edited Auction Details:");
+				  System.out.println(myAuction.toString());
 			  }
 			  else
 			  {

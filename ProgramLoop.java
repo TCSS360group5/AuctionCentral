@@ -193,12 +193,13 @@ public class ProgramLoop {
 					{
 						for (int k = 0; k < NumBids; k++) 
 						{
-							String Bidder = s.nextLine();
+							String Bidder = s.next();
 							Double theBid = s.nextDouble();
 							User theUser = FindUser(Bidder);
 							if (theUser != null)
 							{
 								bidList.put(theUser, theBid);
+								((Bidder)theUser).addBid(oneItem, theBid);
 							} 
 							else 
 							{

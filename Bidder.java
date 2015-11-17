@@ -136,6 +136,12 @@ public class Bidder extends User
 		return answer;
 	}
 	
+	// used for file loading
+	public void addBid(Item theItem, double theBid)
+	{
+		myBids.put(theItem, theBid);
+	}
+	
 	/**
 	 * @param user_input
 	 * @param theItem
