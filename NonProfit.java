@@ -34,7 +34,6 @@ public class NonProfit extends User
 	  int duration;
 	  String itemName;
 	  double minimumPrice;
-	  //double sellingPrice;
 	  String description;
 	  
 	  Scanner user_input = new Scanner( System.in );
@@ -81,16 +80,17 @@ public class NonProfit extends User
 			  System.out.println("Please enter the duration (in hours) of the Auction");
 			  duration = user_input.nextInt();
 			  
-			  List<Item> auctionItems = theAuction.getAuctionItems();
-			  myAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes), auctionItems);
-			  theCalendar.removeAuction(theAuction);
-			  if(theCalendar.addAuction(myAuction))
+			  List<Item> auctionItems = myAuction.getAuctionItems();
+			  Auction newAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), LocalDateTime.of(year, month, day, hour+duration, minutes), auctionItems);
+			  theCalendar.removeAuction(myAuction);
+			  if(theCalendar.addAuction(newAuction))
 			  {
+				  myAuction = newAuction;
 				  System.out.println("Auction has been edited.");
 			  }
 			  else
 			  {
-				  theCalendar.addAuction(theAuction);
+				  theCalendar.addAuction(myAuction);
 				  System.out.println("There was an error. Your auction has not been edited.");
 			  }
 			  System.out.println("\n What would you like to do next?");

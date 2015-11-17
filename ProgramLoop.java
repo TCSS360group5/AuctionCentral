@@ -451,7 +451,8 @@ public class ProgramLoop {
 					 System.out.println("Please enter a valid selection.");
 				 }
 			 }
-		} while (notQuit);		
+		} while (notQuit);	
+	
 	}
 	
 		
@@ -482,55 +483,6 @@ public class ProgramLoop {
 				System.out.println(myCurrentItem.toString());
 			}
 	 	}		
-	}
-	
-	private String menuTitle() 
-	{
-		String answerString = "";
-	
-		switch (myCurrentState)
-		 {
-	 	case VIEWCALENDAR:
-	 		answerString = "Calendar Menu";
-			break;
-	 	case VIEWMAINAUCTIONS:
-	 		answerString = "Auction Menu";
-	 		break;
-	 	case VIEWCALENDARAUCTIONS:
-	 		answerString = "Auction Menu";
-	 		break;
- 		case VIEWITEM:
- 			answerString = "Item Menu";
- 			break;			
-		case VIEWMAINMENU:
-			answerString = myHomePageMessage;
-			break;
-		case ADDAUCTION:
-			answerString = "1 Menu";
-			break;
-		case ADDITEM:
-			answerString = "2 Menu";
-			break;
-		case BID:
-			answerString = "3 Menu";
-			break;
-		case EDITAUCTION:
-			answerString = "4 Menu";
-			break;
-		case EDITBID:
-			answerString = "5 Menu";
-			break;
-		case EDITITEM:
-			answerString = "6 Menu";
-			break;
-		case VIEWBIDS:
-			answerString = "7 Menu";
-			break;
-		default:
-			answerString = "8 Menu";
-			break;
-		 }
-		return answerString;
 	}
 	
 	private void viewCalendarAuctions() 
@@ -568,7 +520,7 @@ public class ProgramLoop {
 			if (userAnswer > 0) {
 				myCurrentState = User.Command.VIEWONEAUCTION;
 				myCurrentAuction = myAuctionList.get(userAnswer - 1);
-				System.out.println(myCurrentAuction.toString());
+				System.out.println(myCurrentAuction.toString() + "\n");
 			}
 		}		
 	}
@@ -621,6 +573,51 @@ public class ProgramLoop {
 		outputUsers.close();
 	}
 	
+	private String menuTitle() 
+	{
+		String answerString = "";
+	
+		switch (myCurrentState)
+		 {
+	 	case VIEWCALENDAR:
+	 		answerString = "Calendar Menu";
+			break;
+	 	case VIEWMYAUCTION:
+	 		answerString = "Auction Menu";
+	 		break;
+ 		case VIEWITEM:
+ 			answerString = "Item Menu";
+ 			break;			
+		case VIEWMAINMENU:
+			answerString = myHomePageMessage;
+			break;
+		case ADDAUCTION:
+			answerString = "1 Menu";
+			break;
+		case ADDITEM:
+			answerString = "2 Menu";
+			break;
+		case BID:
+			answerString = "3 Menu";
+			break;
+		case EDITAUCTION:
+			answerString = "4 Menu";
+			break;
+		case EDITBID:
+			answerString = "5 Menu";
+			break;
+		case EDITITEM:
+			answerString = "6 Menu";
+			break;
+		case VIEWBIDS:
+			answerString = "7 Menu";
+			break;
+		default:
+			answerString = "8 Menu";
+			break;
+		 }
+		return answerString;
+	}
 	
 	/**
 	 * Outputs the existing auctions to the auctions.txt file.
