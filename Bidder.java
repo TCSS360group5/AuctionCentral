@@ -58,11 +58,13 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
 			answer.add(User.Command.VIEWBIDS);
 			break;
 		case BID:
+			System.out.println("Please Enter a Bid:");
 			bidOnItem(user_input, theItem);
 			break;
 		case EDITBID:
 			System.out.println("This is the previous Bid: $");
 			System.out.println(myBids.get(theItem).toString());
+			System.out.println("Please Enter a new Bid:");
 			bidOnItem(user_input, theItem);
 			break;
 		case VIEWBIDS:
@@ -81,15 +83,30 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
 					System.out.println(i + ") Item Name: " + entry.getKey().getItemName() + " Your bid: " + entry.getValue());
 					bidsToEdit.add(entry.getKey());
 				}
-				System.out.println("Which would you like to edit?");
-				int auctionNum = myScanner.nextInt();
-				if(auctionNum > bidsToEdit.size())
+				System.out.println("Would you like to edit a bid? (Enter 0 to exit this menu, 1 to edit a bid)");
+				int decision = myScanner.nextInt();
+				if(decision < 0 || decision > 1)
 				{
-					System.out.println("Invalid bid.");
+					do
+					{
+						System.out.println("Invalid input. Would you like to edit the auction? (Enter 0 to go back, 1 to edit)");
+						decision = user_input.nextInt();
+					} while(decision < 0 || decision > 1);
 				}
-				else
+				if(decision == 1)
 				{
-					bidOnItem(myScanner, bidsToEdit.get(auctionNum - 1));
+					System.out.println("Enter the number of the bid you would like to edit.");
+					int auctionNum = myScanner.nextInt();
+					if(auctionNum > bidsToEdit.size())
+					{
+						System.out.println("Invalid bid.");
+					}
+					else
+					{
+						System.out.println("Previous bid: " + bidsToEdit.get(auctionNum - 1).getBids().get(this));
+						System.out.println("Please Enter a new Bid:");
+						bidOnItem(myScanner, bidsToEdit.get(auctionNum - 1));
+					}
 				}
 			}
 			break;
@@ -100,13 +117,12 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
 }
 
 private void bidOnItem(Scanner user_input,Item theItem) {
-	double bid;
-	System.out.println("Please Enter a Bid:");
-	bid = user_input.nextDouble();
+	double bid = user_input.nextDouble();
 	if (theItem.getStartingBid() > bid) {
 		System.out.println("Bid is below minimum bid for this item.");
 	}else {
 		myBids.put(theItem, bid);
+		theItem.bidOnItem(this, bid);
 		System.out.println("Bid entered.");
 	}
 	

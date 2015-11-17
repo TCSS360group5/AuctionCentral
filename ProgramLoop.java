@@ -335,7 +335,7 @@ public class ProgramLoop {
 					System.out.println("Bid");
 					break;
 				case EDITAUCTION:
-					System.out.println("Edit Auction");
+					System.out.println("View/Edit My Auction");
 					break;
 				case EDITBID:
 					System.out.println("Edit Bid");
@@ -350,7 +350,11 @@ public class ProgramLoop {
 					System.out.println("View Auctions");
 					break;
 				case VIEWITEM:
-					System.out.println("View/Edit Items");
+					 if(myUser.getUserType().equals(User.UserType.BIDDER)) {
+						 System.out.println("View Items");
+					 } else {
+						 System.out.println("View/Edit Items");
+					 }
 					break;
 				case VIEWBIDS:
 					System.out.println("View Bids");
@@ -450,6 +454,7 @@ public class ProgramLoop {
 				{
 					System.out.print(theItemIndex + ") ");
 					System.out.println(theItem.getItemName());
+					theItemIndex++;
 				}
 				System.out.println("");
 				int userAnswer = 0;
@@ -457,6 +462,14 @@ public class ProgramLoop {
 				{
 					System.out.println("Enter the number of an item to view/edit its details.\nEnter 0 to go back.");
 					userAnswer = getNumberFromUser();
+				}
+				if(userAnswer < 0 || userAnswer > theItems.size())
+				{
+					do
+					{
+						System.out.println("Invalid answer. Enter the number of an item to view/edit its details.\nEnter 0 to go back.");
+						userAnswer = getNumberFromUser();
+					} while(userAnswer < 0 || userAnswer > theItems.size());
 				}
 				if (userAnswer > 0) {
 					myCurrentState = User.Command.VIEWITEM;
