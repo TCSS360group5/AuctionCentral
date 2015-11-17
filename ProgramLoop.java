@@ -301,7 +301,7 @@ public class ProgramLoop {
 			}
 		}
 		myHomePageMessage = "\nAuctionCentral " + myUser.getUserType() + myHomePageMessageEnd;
-		System.out.println(myHomePageMessage);
+		//System.out.println(myHomePageMessage);
 		boolean notQuit = true;
 		
 		
@@ -309,6 +309,7 @@ public class ProgramLoop {
 		Item currentItem = null;
 		do
 		{
+			 System.out.println(menuTitle());
 			 ArrayList<User.Command> currentCommands = myUser.ExecuteCommand(myCurrentState, myCalendar, currentAuction, currentItem);
 			 System.out.println("0) Quit");
 			 //print out available commands
@@ -345,15 +346,20 @@ public class ProgramLoop {
 				case GOBACK:
 					System.out.println("Go Back to Previous Menu");
 					break;
-				case VIEWAUCTION:
-					System.out.println("View Auctions");
+				case VIEWMAINAUCTIONS:
+					System.out.println("View All Auctions");
 					break;
 				case VIEWITEM:
 					System.out.println("View/Edit Items");
 					break;
 				case VIEWBIDS:
 					System.out.println("View Bids");
+					break;
+				case VIEWMYAUCTION:
+					System.out.println("View My Auction");
+					break;
 				default:
+					System.out.println("View needs updating");
 					break;						 
 				 }				 
 			 }
@@ -372,7 +378,7 @@ public class ProgramLoop {
 				 System.out.println("Enter a Number");
 			 }
 			 
-			 boolean addAuction = false;
+			 //boolean addAuction = false;
 			 
 			 if (validCommand)
 			 {
@@ -382,7 +388,6 @@ public class ProgramLoop {
 				 } 
 				 else if (commandInt <= currentCommands.size())
 				 {
-					 //System.out.println("You selected " + commandInt);	
 					 User.Command thisCommand = currentCommands.get(commandInt - 1);
 					 if (thisCommand == User.Command.VIEWCALENDAR)
 					 {
@@ -393,20 +398,33 @@ public class ProgramLoop {
 					 else if (thisCommand == User.Command.VIEWMAINMENU)
 					 {
 						 myCurrentState = User.Command.VIEWMAINMENU;
-						 executeProgramLoop();//theScanner);
+						 executeProgramLoop();
 					 } 
-					 else if (thisCommand == User.Command.VIEWAUCTION)
+//					 else if (thisCommand == User.Command.VIEWONEAUCTION)
+//					 {
+//						 myCurrentState = User.Command.VIEWONEAUCTION;						 
+//						 
+//					 } 
+					 else if (thisCommand == User.Command.VIEWCALENDARAUCTIONS)
 					 {
-						 myCurrentState = User.Command.VIEWAUCTION;						 
+						 myCurrentState = User.Command.VIEWCALENDARAUCTIONS;
 						 viewCalendarAuctions();
-					 } 
+					 }
 					 else if (thisCommand == User.Command.VIEWITEM)
 					 {
 						 viewItems();
 					 }					 
 					 else if (thisCommand == User.Command.GOBACK)
 					 {
-						 goBackState();						 
+						 User.Command moveState = myUser.goBackState(myCurrentState);
+						 if (moveState != null) 
+						 {
+							 myCurrentState = moveState;
+						 }			
+						 else 
+						 {
+							 System.out.println("Cannot go Back.");
+						 }
 					 } 		
 					 else 
 					 {
@@ -414,17 +432,17 @@ public class ProgramLoop {
 					 }	
 					 
 					 if(thisCommand.equals(User.Command.ADDAUCTION)) {
-							Collection<ArrayList<Auction>> auctions =myCalendar.myAuctionByDateList.values();
-							Iterator it = auctions.iterator();
-							myAuctionList.clear();
-							while(it.hasNext()) {
-								ArrayList<Auction> a = (ArrayList<Auction>) it.next();
-								for(int j = 0; j < a.size(); j++) {
-									Auction auction = a.get(j);
-//									System.out.println("AUCTION " + auction);
-									myAuctionList.add(auction);
-								}
+						Collection<ArrayList<Auction>> auctions =myCalendar.myAuctionByDateList.values();
+						Iterator<ArrayList<Auction>> it = auctions.iterator();
+						myAuctionList.clear();
+						while(it.hasNext()) {
+							ArrayList<Auction> a = (ArrayList<Auction>) it.next();
+							for(int j = 0; j < a.size(); j++) {
+								Auction auction = a.get(j);
+//								System.out.println("AUCTION " + auction);
+								myAuctionList.add(auction);
 							}
+						}
 					 }
 					 
 				 } 
@@ -438,6 +456,7 @@ public class ProgramLoop {
 	
 		
 	private void viewItems() {
+		System.out.println("Item List View");
 		 List<Item> theItems = myCurrentAuction.getAuctionItems();
 		 int theItemIndex = 1;
 		 if (theItems == null || theItems.size() == 0) {
@@ -450,45 +469,72 @@ public class ProgramLoop {
 					System.out.print(theItemIndex + ") ");
 					System.out.println(theItem.getItemName());
 				}
-				System.out.println("");
-				int userAnswer = 0;
-				if (myAuctionList.size() > 0) 
-				{
-					System.out.println("Enter the number of an item to view/edit its details.\nEnter 0 to go back.");
-					userAnswer = getNumberFromUser();
-				}
-				if (userAnswer > 0) {
-					myCurrentState = User.Command.VIEWITEM;
-					myCurrentItem = theItems.get(userAnswer - 1);
-					System.out.println(myCurrentItem.toString());
-				}
-		 }		
+			System.out.println("");
+			int userAnswer = 0;
+			if (myAuctionList.size() > 0) 
+			{
+				System.out.println("Enter the number of an item to view/edit its details.\nEnter 0 to go back.");
+				userAnswer = getNumberFromUser();
+			}
+			if (userAnswer > 0) {
+				myCurrentState = User.Command.VIEWITEM;
+				myCurrentItem = theItems.get(userAnswer - 1);
+				System.out.println(myCurrentItem.toString());
+			}
+	 	}		
 	}
-
 	
-	private void goBackState() {
+	private String menuTitle() 
+	{
+		String answerString = "";
+	
 		switch (myCurrentState)
 		 {
-		 	case VIEWCALENDAR:
-		 		myCurrentState = User.Command.VIEWMAINMENU;
-				break;
-		 	case VIEWAUCTION:
-		 		myCurrentState = User.Command.VIEWCALENDAR;
-		 		System.out.println("Calendar Menu");
-		 		break;
-	 		case VIEWITEM:
-	 			myCurrentState = User.Command.VIEWAUCTION;
-	 			System.out.println("Auction Menu");
-	 			break;						
-	 		default:
-	 			System.out.println("Cannot Go Back");
-	 			break;						 
-		 }		
+	 	case VIEWCALENDAR:
+	 		answerString = "Calendar Menu";
+			break;
+	 	case VIEWMAINAUCTIONS:
+	 		answerString = "Auction Menu";
+	 		break;
+	 	case VIEWCALENDARAUCTIONS:
+	 		answerString = "Auction Menu";
+	 		break;
+ 		case VIEWITEM:
+ 			answerString = "Item Menu";
+ 			break;			
+		case VIEWMAINMENU:
+			answerString = myHomePageMessage;
+			break;
+		case ADDAUCTION:
+			answerString = "1 Menu";
+			break;
+		case ADDITEM:
+			answerString = "2 Menu";
+			break;
+		case BID:
+			answerString = "3 Menu";
+			break;
+		case EDITAUCTION:
+			answerString = "4 Menu";
+			break;
+		case EDITBID:
+			answerString = "5 Menu";
+			break;
+		case EDITITEM:
+			answerString = "6 Menu";
+			break;
+		case VIEWBIDS:
+			answerString = "7 Menu";
+			break;
+		default:
+			answerString = "8 Menu";
+			break;
+		 }
+		return answerString;
 	}
-
 	
-	private void viewCalendarAuctions() {
-		
+	private void viewCalendarAuctions() 
+	{		
 		myAuctionList.clear();
 		Map<LocalDate, ArrayList<Auction>> theAuctionList = myCalendar.displayCurrentMonth();
 		if (theAuctionList.size() == 0)
@@ -520,7 +566,7 @@ public class ProgramLoop {
 				userAnswer = getNumberFromUser();
 			}
 			if (userAnswer > 0) {
-				myCurrentState = User.Command.VIEWAUCTION;
+				myCurrentState = User.Command.VIEWONEAUCTION;
 				myCurrentAuction = myAuctionList.get(userAnswer - 1);
 				System.out.println(myCurrentAuction.toString());
 			}
@@ -547,7 +593,8 @@ public class ProgramLoop {
 	 * @param theUserList
 	 * @param theAuctionList
 	 */
-	public static void outputUsers(File theUserFile, ArrayList<User> theUserList) {
+	public static void outputUsers(File theUserFile, ArrayList<User> theUserList) 
+	{
 		PrintStream outputUsers = null;		// to write users to file
 		try 
 		{
@@ -581,13 +628,13 @@ public class ProgramLoop {
 	 * @param theAuctionFile
 	 * @param theAuctionList
 	 */
-	public static void outputAuctions(File theAuctionFile, ArrayList<Auction> theAuctionList) {
-		
+	public static void outputAuctions(File theAuctionFile, ArrayList<Auction> theAuctionList) 
+	{		
 		Map<LocalDate, ArrayList<Auction>> auctionMap = myCalendar.myAuctionByDateList;
 		Collection<ArrayList<Auction>> auctionLists = auctionMap.values();
 		theAuctionList.clear();
 		
-		Iterator it = auctionLists.iterator();
+		Iterator<ArrayList<Auction>> it = auctionLists.iterator();
 		while(it.hasNext()) {
 			ArrayList<Auction> auctionList = (ArrayList<Auction>) it.next();
 			for(int i = 0; i < auctionList.size(); i++) {

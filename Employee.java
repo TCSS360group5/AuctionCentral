@@ -11,12 +11,12 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
   {
 	ArrayList<Command> answer = new ArrayList<Command>();
 	switch (theCommand) {
-	case VIEWAUCTION:
+	case VIEWMAINAUCTIONS:
 		answer.add(User.Command.GOBACK);
 		break;
 	case VIEWCALENDAR:
 		answer.add(User.Command.GOBACK);
-		answer.add(User.Command.VIEWAUCTION);
+		answer.add(User.Command.VIEWMAINAUCTIONS);
 		break;
 	case VIEWMAINMENU:
 		answer.add(User.Command.VIEWCALENDAR);
@@ -27,6 +27,26 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
 	}
 	return answer;
   }
+
+	public User.Command goBackState(User.Command theCurrentState) 
+	{
+	  User.Command answer = null;
+		switch (theCurrentState)
+		 {
+		 	case VIEWCALENDAR:
+		 		answer = User.Command.VIEWMAINMENU;
+				break;
+		 	case VIEWONEAUCTION:
+		 		answer = User.Command.VIEWCALENDAR;
+		 		break;
+	 		case VIEWITEM:
+	 			answer = User.Command.VIEWONEAUCTION;
+	 			break;						
+	 		default:
+	 			break;						 
+		 }		
+		return answer;
+	}
 
   // public void viewCurrentCalendarMonth()
 //   {

@@ -46,7 +46,7 @@ public class ItemTest {
 		
 		//User bidderToTest = new User("brendo", User.UserType.BIDDER);
 		Item itemToTest = new Item("Chair", 25, "nice flashy chair");
-		int numBids = itemToTest.getBids().size();
+		//int numBids = itemToTest.getBids().size();
 		itemToTest.bidOnItem(bidderToTest, theNextBid);
 		itemToTest.getBids().get(bidderToTest);
 		assertTrue(itemToTest.getBids().get(bidderToTest).doubleValue() == theNextBid);			

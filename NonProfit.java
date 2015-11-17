@@ -34,7 +34,7 @@ public class NonProfit extends User
 	  int duration;
 	  String itemName;
 	  double minimumPrice;
-	  double sellingPrice;
+	  //double sellingPrice;
 	  String description;
 	  
 	  Scanner user_input = new Scanner( System.in );
@@ -51,12 +51,15 @@ public class NonProfit extends User
 			  minutes = user_input.nextInt();
 			  System.out.println("Please enter the duration (in hours) of the Auction");
 			  duration = user_input.nextInt();
-			  
-			  myAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), 
+			  Auction tempAuction = new Auction(myNPOName, super.getUserName(), LocalDateTime.of(year, month, day, hour, minutes), 
 					  LocalDateTime.of(year, month, day, hour+duration, minutes));
-			  if(theCalendar.addAuction(myAuction))
+			  System.out.println(tempAuction);
+			  
+			  
+			  if(theCalendar.addAuction(tempAuction))
 			  {
 				  System.out.println("Auction added!");
+				  myAuction = tempAuction;
 				  this.myExistingAuctionStatus = true;
 			  }
 			  else
@@ -131,17 +134,17 @@ public class NonProfit extends User
 				  
 			  }
 			  break;
-		  case VIEWAUCTION:
+		  case VIEWMYAUCTION:
 			  answer.add(User.Command.GOBACK);
 			  answer.add(User.Command.EDITAUCTION);
 			  answer.add(User.Command.VIEWITEM);
 			  answer.add(User.Command.ADDITEM);
 			  break;
-		  case VIEWCALENDAR:
-			  answer.add(User.Command.GOBACK);
-			  answer.add(User.Command.VIEWAUCTION);
-			  answer.add(User.Command.ADDAUCTION);
-			  break;
+//		  case VIEWCALENDAR:
+//			  answer.add(User.Command.GOBACK);
+//			  answer.add(User.Command.VIEWAUCTION);
+//			  answer.add(User.Command.ADDAUCTION);
+//			  break;
 		  case VIEWITEM:
 			  answer.add(User.Command.GOBACK);
 			  answer.add(User.Command.EDITITEM);
@@ -149,11 +152,10 @@ public class NonProfit extends User
 		  case VIEWMAINMENU:
 //			  answer.add(User.Command.VIEWCALENDAR);	// only employees should see calendar.
 			  if(myExistingAuctionStatus) {
-				  answer.add(User.Command.EDITAUCTION);
-				  answer.add(User.Command.ADDITEM);
-				  answer.add(User.Command.VIEWITEM);
-				  answer.add(User.Command.VIEWAUCTION);
-//				  answer.add(User.Command.EDITITEM);
+//				  answer.add(User.Command.EDITAUCTION);
+//				  answer.add(User.Command.ADDITEM);
+//				  answer.add(User.Command.VIEWITEM);
+				  answer.add(User.Command.VIEWMYAUCTION);
 			  } else {
 				  answer.add(User.Command.ADDAUCTION);
 			  }
@@ -216,6 +218,29 @@ public class NonProfit extends User
 	  myExistingAuctionStatus = true;
 	  return false;
   }
+  
+  public User.Command goBackState(User.Command theCurrentState) 
+	{
+	  User.Command answer = null;
+		switch (theCurrentState)
+		 {
+		 	case VIEWCALENDAR:
+		 		answer = User.Command.VIEWMAINMENU;
+				break;
+		 	case VIEWMYAUCTION:
+		 		answer = User.Command.VIEWCALENDAR;
+		 		System.out.println("Calendar Menu");
+		 		break;
+	 		case VIEWITEM:
+	 			answer = User.Command.VIEWMYAUCTION;
+	 			System.out.println("Auction Menu");
+	 			break;						
+	 		default:
+	 			//System.out.println("Cannot Go Back");
+	 			break;						 
+		 }		
+		return answer;
+	}
   
   public boolean hasAuction()
   {

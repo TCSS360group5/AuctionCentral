@@ -3,8 +3,8 @@ import java.util.ArrayList;
 public class User
 {
   public enum UserType {NPO, EMPLOYEE, BIDDER}
-  public enum Command {VIEWCALENDAR, VIEWMAINMENU, VIEWAUCTION, VIEWITEM,
-	  ADDAUCTION, EDITAUCTION, ADDITEM, EDITITEM, GOBACK, BID, EDITBID, LOGIN, VIEWBIDS}
+  public enum Command {VIEWCALENDAR, VIEWMAINMENU, VIEWMAINAUCTIONS, VIEWITEM, VIEWMYAUCTION, VIEWCALENDARAUCTIONS,
+	  VIEWONEAUCTION, ADDAUCTION, EDITAUCTION, ADDITEM, EDITITEM, GOBACK, BID, EDITBID, LOGIN, VIEWBIDS}
   
   private UserType myUserType;
   private String myUserName;
@@ -35,6 +35,11 @@ public class User
   public void setUserName(String theUsername){
 	  myUserName = theUsername;
   }
+  
+  public User.Command goBackState(User.Command theCurrentState) 
+	{
+	  return null;
+	}
 
   public String toString() {
 	  return myUserName + " " + myUserType.toString();
