@@ -52,38 +52,21 @@ public class Bidder extends User
 	 */
 
 	@Override
-	public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar,
+	public boolean ExecuteCommand(Command theCommand, Calendar theCalendar,
 			Auction theAuction, Item theItem) {
-		ArrayList<Command> answer = new ArrayList<Command>();
+		boolean answer = false;
 		Scanner user_input = new Scanner( System.in );
 		switch (theCommand) {
-			case VIEWAUCTIONS:
-				answer.add(User.Command.GOBACK);
-				answer.add(User.Command.VIEWITEM);
-				break;
-			case VIEWITEM:
-				answer.add(User.Command.GOBACK);
-				if(myBids.containsKey(theItem)) {
-					answer.add(User.Command.EDITBID);
-				} else {
-					answer.add(User.Command.BID);
-				}				
-				break;
-			case VIEWMAINMENU:
-				answer.add(User.Command.VIEWAUCTIONS);
-				answer.add(User.Command.VIEWBIDS);
-				break;
 			case BID:
-
-				answer.add(User.Command.VIEWCALENDAR);
-				answer.add(User.Command.VIEWBIDS);
 				bidOnItem(user_input, theItem);
+				answer = true;
 				break;
 			case EDITBID:
 				System.out.println("This is the previous Bid: $");
 				System.out.println(myBids.get(theItem).toString());
 				System.out.println("Please Enter a new Bid:");
 				bidOnItem(user_input, theItem);
+				answer = true;
 				break;
 			case VIEWBIDS:
 				Scanner myScanner = new Scanner(System.in);
@@ -111,6 +94,7 @@ public class Bidder extends User
 						bidOnItem(myScanner, bidsToEdit.get(auctionNum - 1));
 					}
 				}
+				answer = true;
 				break;
 			default:
 				break;
@@ -131,22 +115,72 @@ public class Bidder extends User
 		}	
 	}
 	
-	public Command getMovementCommand(Command myCurrentState) {
-		return myCurrentState;
+	public ArrayList<Command> GetMenu(Command theCurrentState, Item theItem) {
+		ArrayList<Command> answer = new ArrayList<Command>();
+		switch (theCurrentState)
+		 {
+			case VIEWBIDDERAUCTIONS:
+				answer.add(User.Command.GOBACK);
+				answer.add(User.Command.VIEWITEM);
+				break;
+			case VIEWITEM:
+				answer.add(User.Command.GOBACK);
+				if(myBids.containsKey(theItem)) {
+					answer.add(User.Command.EDITBID);
+				} else {
+					answer.add(User.Command.BID);
+				}				
+				break;
+			case VIEWMAINMENU:
+				answer.add(User.Command.VIEWBIDDERAUCTIONS);
+				answer.add(User.Command.VIEWBIDS);
+				break;
+			case BID:
+				answer.add(User.Command.VIEWCALENDAR);
+				answer.add(User.Command.VIEWBIDS);
+				break;
+			default:
+				break;
+		 }
+		return answer;
+	}
+	
+	@Override
+	public User.Command goForwardState(User.Command theCurrentState, User.Command theCurrentCommand)
+	{
+		User.Command answer = theCurrentState;
+		if (theCurrentCommand == User.Command.VIEWMAINMENU)
+		 {
+			 answer = User.Command.VIEWMAINMENU;
+		 } 
+		 else if (theCurrentCommand == User.Command.VIEWBIDDERAUCTIONS)
+		 {
+			 //this should be uncommented when implemented:
+			 //answer = User.Command.VIEWBIDDERAUCTIONS;
+			 System.out.println("Auctions for Bidders not implemented yet.");
+		 }
+		 else if (theCurrentCommand == User.Command.VIEWMYAUCTION)
+		 {
+			 answer = User.Command.VIEWMYAUCTION;
+		 }				 
+		return answer;
 	}
 
+
+	@Override
 	public User.Command goBackState(User.Command theCurrentState) 
 	{
 	  User.Command answer = null;
 		switch (theCurrentState)
 		 {
-		 	case VIEWAUCTIONS:
+		 	case VIEWBIDDERAUCTIONS:
 		 		answer = User.Command.VIEWMAINMENU;
 		 		break;
 	 		case VIEWITEM:
-	 			answer = User.Command.VIEWAUCTIONS;
+	 			answer = User.Command.VIEWBIDDERAUCTIONS;
 	 			break;						
 	 		default:
+	 			System.out.println("Cannot Go Back");
 	 			break;						 
 		 }		
 		return answer;

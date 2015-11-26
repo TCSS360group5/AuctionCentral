@@ -17,7 +17,7 @@ public class NonProfit extends User
 	  myLastAuctionDate = theLastAuctionDate;
   }
   
-  public ArrayList<Command> GetMenu(Command theCommand)
+  public ArrayList<Command> GetMenu(Command theCommand, Item theItem)
   {
 	  ArrayList<Command> answer = new ArrayList<Command>();
 	  switch (theCommand)
@@ -41,55 +41,110 @@ public class NonProfit extends User
 		  }
 	  break;
 		default:
-			System.out.println("Movement Command Not Recognized");
+			System.out.println("Menu Command Not Recognized");
 			break;
 	  }
 	return answer;	  
   }
-  
-  private boolean canAddAuction() {
-	// TODO Auto-generated method stub
-	return false;
-}
 
-public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
+
+  public boolean ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
   {
-	  ArrayList<Command> answer = new ArrayList<Command>();
-	  
+	  //ArrayList<Command> answer = new ArrayList<Command>();
+	  boolean answer = false;
 	  Scanner user_input = new Scanner( System.in );
 	  switch (theCommand) {
 		  case ADDAUCTION:	  
 			  addAuction(user_input, theCalendar);
+			  answer = true;
 			  break;
-		  case EDITAUCTION:
-			  System.out.println("The current Auction details:");
-			  System.out.println(myAuction.toString());					  
-			  editAuction(user_input, theCalendar);			  
+		  case EDITAUCTION:				  
+			  editAuction(user_input, theCalendar);	
+			  answer = true;
 			  break;
 		  case ADDITEM:
 			  Item tempItem = getItemDetailsFromUser(user_input);	
 			  addItemToAuction(myAuction, tempItem);
+			  answer = true;
 			  break;
 		  case EDITITEM:
-			  System.out.println("The current Item details:");
-			  System.out.println(theItem.toString());
-			  Item tempEditItem = getItemDetailsFromUser(user_input);				  
-			  try
-			  {
-				  theAuction.removeItem(theItem);
-				  theAuction.addItem(tempEditItem);
-				  System.out.println("Edited Item details:");
-				  System.out.println(tempEditItem.toString());
-			  } catch (Exception e) {
-				  theAuction.addItem(theItem);
-			  }
+			  editItem(theItem, user_input, theAuction);
+			  answer = true;
 			  break;
 		  default:
-			  System.out.println("Command Not Recognized");
+			  //System.out.println("Command Not Recognized");
+			  answer = false;
 			  break;	  
 	  }
 	  return answer;
   }
+  
+  @Override
+	public User.Command goForwardState(User.Command theCurrentState, User.Command theCurrentCommand)
+	{
+		User.Command answer = theCurrentState;
+//		switch (theCurrentCommand)
+//		{
+//		case VIEWCALENDAR :
+//			answer = User.Command.VIEWCALENDAR;
+//			break;
+//		default:
+//			break;		
+//		}
+		if (theCurrentCommand == User.Command.VIEWCALENDAR)
+		 {
+			answer = User.Command.VIEWCALENDAR;
+		 } 
+		 else if (theCurrentCommand == User.Command.VIEWMAINMENU)
+		 {
+			 answer = User.Command.VIEWMAINMENU;
+		 } 
+		 else if (theCurrentCommand == User.Command.VIEWMYAUCTION)
+		 {
+			 answer = User.Command.VIEWMYAUCTION;
+		 }				 
+		return answer;
+	}
+   
+  @Override
+  public User.Command goBackState(User.Command theCurrentState) 
+	{
+	  User.Command answer = null;
+		switch (theCurrentState)
+		 {
+		 	case VIEWMYAUCTION:
+		 		answer = User.Command.VIEWMAINMENU;
+		 		break;
+	 		case VIEWITEM:
+	 			answer = User.Command.VIEWMYAUCTION;
+	 			break;						
+	 		default:
+	 			System.out.println("Cannot Go Back");
+	 			break;						 
+		 }		
+		return answer;
+	}
+
+	private void editItem(Item theItem, Scanner user_input, Auction theAuction)
+	{
+		System.out.println("The current Item details:");
+		  System.out.println(theItem.toString());
+		  Item tempEditItem = getItemDetailsFromUser(user_input);				  
+		  try
+		  {
+			  theAuction.removeItem(theItem);
+			  theAuction.addItem(tempEditItem);
+			  System.out.println("Edited Item details:");
+			  System.out.println(tempEditItem.toString());
+		  } catch (Exception e) {
+			  theAuction.addItem(theItem);
+		  }
+	}
+	
+	  
+	private boolean canAddAuction() {	
+		return (myAuction == null);
+	}
   
   private void addAuction(Scanner user_input, Calendar theCalendar)
   {
@@ -119,6 +174,8 @@ public ArrayList<Command> ExecuteCommand(Command theCommand, Calendar theCalenda
   
   private void editAuction(Scanner user_input, Calendar theCalendar) 
   {
+	  System.out.println("The current Auction details:");
+	  System.out.println(myAuction.toString());	
 	  LocalDateTime startTime;
 	  LocalDateTime endTime;
 	  System.out.println("Would you like to edit the auction? (Enter 0 to go back, 1 to edit)");
@@ -269,79 +326,6 @@ public Auction getAuction()
 	  myAuction = theAuction;
 	  return false;
   }
-  
-  public Command getMovementCommand(Command theCurrentState) {
-		User.Command answer = theCurrentState;
-		switch (theCurrentState) 
-		{
-		case ADDAUCTION:
-			break;
-		case ADDITEM:
-			break;
-		case BID:
-			break;
-		case EDITAUCTION:
-			break;
-		case EDITBID:
-			break;
-		case EDITITEM:
-			break;
-		case GOBACK:
-			User.Command moveState = this.goBackState(theCurrentState);
-			 if (moveState != null) 
-			 {
-				 answer = moveState;
-			 }			
-			 else 
-			 {
-				 System.out.println("Cannot go Back.");
-			 }
-			break;
-		case LOGIN:
-			break;
-		case VIEWAUCTIONS:
-			break;
-		case VIEWBIDS:
-			break;
-		case VIEWCALENDAR:
-			break;
-		case VIEWITEM:
-			break;
-		case VIEWMAINMENU:
-			break;
-		case VIEWMYAUCTION:
-			break;
-		case VIEWONEAUCTION:
-			break;
-		default:
-			break;		
-		}
-		
-		return answer;
-	}
-  
-  public User.Command goBackState(User.Command theCurrentState) 
-	{
-	  User.Command answer = null;
-		switch (theCurrentState)
-		 {
-		 	case VIEWCALENDAR:
-		 		answer = User.Command.VIEWMAINMENU;
-				break;
-		 	case VIEWMYAUCTION:
-		 		answer = User.Command.VIEWCALENDAR;
-		 		System.out.println("Calendar Menu");
-		 		break;
-	 		case VIEWITEM:
-	 			answer = User.Command.VIEWMYAUCTION;
-	 			System.out.println("Auction Menu");
-	 			break;						
-	 		default:
-	 			//System.out.println("Cannot Go Back");
-	 			break;						 
-		 }		
-		return answer;
-	}
   
 //  public boolean hasAuction()
 //  {
