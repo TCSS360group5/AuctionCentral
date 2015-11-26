@@ -1,3 +1,4 @@
+package model;
 /*
  * This class creates a Calendar that can be used by main to schedule and hold auctions.
  */
@@ -11,16 +12,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-public class Calendar
+public class CalendarModel
 {
-	public Map<LocalDate, ArrayList<Auction>> myAuctionByDateList;
+	public Map<LocalDate, ArrayList<AuctionModel>> myAuctionByDateList;
   
 	/**
 	 * Creates a new Calendar with a Map to store Auctions.
 	 */
-	public Calendar()
+	public CalendarModel()
 	{
-		myAuctionByDateList = new HashMap<LocalDate, ArrayList<Auction>>();
+		myAuctionByDateList = new HashMap<LocalDate, ArrayList<AuctionModel>>();
 	}
 	
 	/**
@@ -30,7 +31,7 @@ public class Calendar
 	 * @param theAuction the Auction to be added.
 	 * @return whether or not the auction was added.
 	 */
-	public boolean addAuction(Auction theAuction)
+	public boolean addAuction(AuctionModel theAuction)
 	{
 		LocalDate auctionDate = theAuction.getStartTime().toLocalDate();
 		LocalDateTime auctionStart = theAuction.getStartTime();
@@ -45,7 +46,7 @@ public class Calendar
 			}
 			else
 			{
-				ArrayList<Auction> addList = new ArrayList<Auction>();
+				ArrayList<AuctionModel> addList = new ArrayList<AuctionModel>();
 				addList.add(theAuction);
 				myAuctionByDateList.put(auctionDate, addList);
 				return true;
@@ -79,7 +80,7 @@ public class Calendar
 	private boolean checkFutureAuctions()
 	{
 		int count = 0;
-		for(Entry<LocalDate, ArrayList<Auction>> entry : myAuctionByDateList.entrySet())
+		for(Entry<LocalDate, ArrayList<AuctionModel>> entry : myAuctionByDateList.entrySet())
 		{
 			if(entry.getKey().isAfter(LocalDate.now()))
 			{
@@ -122,20 +123,20 @@ public class Calendar
 		 
 		if(myAuctionByDateList.containsKey(theAuctionDate))
 		{
-			ArrayList<Auction> dayOfAuctions = myAuctionByDateList.get(theAuctionDate);
+			ArrayList<AuctionModel> dayOfAuctions = myAuctionByDateList.get(theAuctionDate);
 			count += dayOfAuctions.size();
 		}	
 		for(int i = 1; i <=3; i++)
 		{
 			if(myAuctionByDateList.containsKey(theAuctionDate.plusDays(i)))
 			{
-				ArrayList<Auction> dayAuctions = myAuctionByDateList.get(theAuctionDate.plusDays(i));
+				ArrayList<AuctionModel> dayAuctions = myAuctionByDateList.get(theAuctionDate.plusDays(i));
 				System.out.println();
 				count += dayAuctions.size();
 			}
 			if(myAuctionByDateList.containsKey(theAuctionDate.minusDays(i)))
 			{
-				ArrayList<Auction> dayAuctions = myAuctionByDateList.get(theAuctionDate.minusDays(i));
+				ArrayList<AuctionModel> dayAuctions = myAuctionByDateList.get(theAuctionDate.minusDays(i));
 				count += dayAuctions.size();
 			}
 		}
@@ -153,17 +154,17 @@ public class Calendar
 	 * @param theAuction the Auction to be added
 	 * @return whether or not the critera metioned in the above description are met.
 	 */
-	private boolean checkAuctionsForDay(Auction theAuction)
+	private boolean checkAuctionsForDay(AuctionModel theAuction)
 	{
 		LocalDate auctionDate = theAuction.getStartTime().toLocalDate();
 		LocalDateTime auctionStart = theAuction.getStartTime();
 		LocalDateTime auctionEnd = theAuction.getEndTime();
 		  
-		ArrayList<Auction> dayAuctions = myAuctionByDateList.get(auctionDate);
+		ArrayList<AuctionModel> dayAuctions = myAuctionByDateList.get(auctionDate);
 	
 		if(dayAuctions.size() < 2)
 		{
-			Auction firstAuction = dayAuctions.get(0);
+			AuctionModel firstAuction = dayAuctions.get(0);
 			if(auctionStart.isBefore(firstAuction.getStartTime()))
 			{
 				// at least 2 hours between actions
@@ -213,7 +214,7 @@ public class Calendar
 	 * @param auctionMinuteEnd the new Auction minute end.
 	 * @return whether or not the Auction was edited.
 	 */
-	public boolean editAuctionDateTime(Auction theAuction,int month, int day, int year,
+	public boolean editAuctionDateTime(AuctionModel theAuction,int month, int day, int year,
 			int auctionHourStart, int auctionMinuteStart,
 			int auctionHourEnd, int auctionMinuteEnd)
 	{
@@ -223,8 +224,8 @@ public class Calendar
 		LocalDateTime oldStart = theAuction.getStartTime();
 		LocalDateTime oldEnd = theAuction.getEndTime();
 	
-		ArrayList<Auction> oldList = myAuctionByDateList.get(oldStart.toLocalDate());
-		ArrayList<Auction> removeFrom = oldList;
+		ArrayList<AuctionModel> oldList = myAuctionByDateList.get(oldStart.toLocalDate());
+		ArrayList<AuctionModel> removeFrom = oldList;
 		removeFrom.remove(theAuction);
 		  
 		myAuctionByDateList.replace(oldStart.toLocalDate(), removeFrom);
@@ -250,7 +251,7 @@ public class Calendar
 	 * 
 	 * @return sorted by date map of auctions for the current month.
 	 */
-	public Map<LocalDate, ArrayList<Auction>> displayCurrentMonth()
+	public Map<LocalDate, ArrayList<AuctionModel>> displayCurrentMonth()
 	{
 		return displayChosenMonth(LocalDate.now().getMonth().getValue());
 	}
@@ -261,11 +262,11 @@ public class Calendar
 	 * @param theMonth the month to get a map for.
 	 * @return sorted by date map of auctions for the entered month.
 	 */
-	public Map<LocalDate, ArrayList<Auction>> displayChosenMonth(int theMonth)
+	public Map<LocalDate, ArrayList<AuctionModel>> displayChosenMonth(int theMonth)
 	{
-		Map<LocalDate, ArrayList<Auction>> returnMap = new TreeMap<LocalDate,ArrayList<Auction>>();
+		Map<LocalDate, ArrayList<AuctionModel>> returnMap = new TreeMap<LocalDate,ArrayList<AuctionModel>>();
 		Month chosenMonth = Month.of(theMonth);
-		for(Entry<LocalDate, ArrayList<Auction>> entry : myAuctionByDateList.entrySet())
+		for(Entry<LocalDate, ArrayList<AuctionModel>> entry : myAuctionByDateList.entrySet())
 		{
 			if(entry.getKey().getMonth() == chosenMonth)
 			{
@@ -284,9 +285,9 @@ public class Calendar
 	 * @param auctionDate the Auction date.
 	 * @return the chosen Auction.
 	 */
-	public Auction viewAuction(String auctionName, LocalDate auctionDate)
+	public AuctionModel viewAuction(String auctionName, LocalDate auctionDate)
 	{
-		ArrayList<Auction> dayAuctions = myAuctionByDateList.get(auctionDate);
+		ArrayList<AuctionModel> dayAuctions = myAuctionByDateList.get(auctionDate);
 		if(dayAuctions.size() == 0)
 		{
 			return dayAuctions.get(0);
@@ -295,7 +296,7 @@ public class Calendar
 		{
 			for(int i = 0; i < dayAuctions.size(); i++)
 			{
-				Auction auction = dayAuctions.get(i);
+				AuctionModel auction = dayAuctions.get(i);
 				if(auction.getAuctionName().equals(auctionName))
 				{
 					return auction;
@@ -310,10 +311,10 @@ public class Calendar
 	 * 
 	 * @param theAuction the Auction to be removed.
 	 */
-	public void removeAuction(Auction theAuction) 
+	public void removeAuction(AuctionModel theAuction) 
 	{
 		LocalDate date = theAuction.getStartTime().toLocalDate();
-		ArrayList<Auction> removeDay = myAuctionByDateList.get(date);
+		ArrayList<AuctionModel> removeDay = myAuctionByDateList.get(date);
 		  
 		if(removeDay.size() == 1)
 		{
@@ -334,12 +335,12 @@ public class Calendar
 	 */
 	public String toString(LocalDate theDate) 
 	{
-		Map<LocalDate, ArrayList<Auction>> displayMap = displayChosenMonth(theDate.getMonthValue());
+		Map<LocalDate, ArrayList<AuctionModel>> displayMap = displayChosenMonth(theDate.getMonthValue());
 		StringBuilder answer = new StringBuilder();
-		for (Map.Entry<LocalDate,ArrayList<Auction>> entry : displayMap.entrySet()) 
+		for (Map.Entry<LocalDate,ArrayList<AuctionModel>> entry : displayMap.entrySet()) 
 		{
 			answer.append(entry.getKey());
-			ArrayList<Auction> Auctions = entry.getValue();
+			ArrayList<AuctionModel> Auctions = entry.getValue();
 			for (int i = 0; i < Auctions.size(); i++)
 			{
 				answer.append(i + " " + Auctions.get(i).toString());
@@ -356,13 +357,13 @@ public class Calendar
 	public String toString()
 	{
 		// returns a sorted treemap
-		Map<LocalDate, ArrayList<Auction>> displayMap = displayCurrentMonth();
+		Map<LocalDate, ArrayList<AuctionModel>> displayMap = displayCurrentMonth();
 		StringBuilder sb = new StringBuilder();
 		int i = 1;
-		for(Entry<LocalDate, ArrayList<Auction>> entry : displayMap.entrySet())
+		for(Entry<LocalDate, ArrayList<AuctionModel>> entry : displayMap.entrySet())
 		{
 			LocalDate date = entry.getKey();
-			ArrayList<Auction> dayAuctions = entry.getValue();
+			ArrayList<AuctionModel> dayAuctions = entry.getValue();
 			sb.append(i + ": " + date.getMonth().toString() + " " + date.getDayOfMonth() + ", " + date.getYear() + "\n");
 			  
 			char title = 'a';

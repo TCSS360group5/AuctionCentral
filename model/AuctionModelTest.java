@@ -1,3 +1,4 @@
+package model;
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
@@ -13,10 +14,10 @@ import org.junit.Test;
  * @author Cox Family
  *
  */
-public class AuctionTest {
+public class AuctionModelTest {
 
-	Auction testAuction;
-	Auction testAuctionWithItems;
+	AuctionModel testAuction;
+	AuctionModel testAuctionWithItems;
 	
 	/**
 	 * @throws java.lang.Exception
@@ -24,7 +25,7 @@ public class AuctionTest {
 	@Before
 	public void setUp() throws Exception {
 		LocalDateTime now = LocalDateTime.now();
-		testAuction = new Auction("My Org Name", "steve", now.plusDays(2), now.plusDays(2).plusHours(2));
+		testAuction = new AuctionModel("My Org Name", "steve", now.plusDays(2), now.plusDays(2).plusHours(2));
 	}
 
 //	/**
@@ -45,11 +46,11 @@ public class AuctionTest {
 
 
 	/**
-	 * Test method for {@link Auction#addItem(Item)}.
+	 * Test method for {@link AuctionModel#addItem(ItemModel)}.
 	 */
 	@Test
 	public void testAddItem() {
-		Item myItem = new Item("Puppy", 120, "Happy puppy ready for a new home");
+		ItemModel myItem = new ItemModel("Puppy", 120, "Happy puppy ready for a new home");
 		int beforeAuctionSize = testAuction.getAuctionItems().size();
 		testAuction.addItem(myItem);
 		int afterAuctionSize = testAuction.getAuctionItems().size();

@@ -1,38 +1,34 @@
+package view;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
+
+import model.*;
+
+
 
 /**
  * @author Group 5
  * The bidder class represents the bidders that use our system and produces
  * the menus and allows the bidder to bid and edit his bid.
  */
-public class Bidder extends User
+public class BidderController extends UserController
 {
-  private Map<Item, Double> myBids;
+	private BidderModel myBidderModel;
+	  
+    public BidderController(UserModel theModel) {
+		super("Bidder");
+		myBidderModel = (BidderModel) theModel;
+	}
 
 	/**
-	 * @param theUserName
-	 * @param theUserType  This is an enum of one of the three user types.
-	 * 
-	 * This creates a bidder.
-	 */
-	public Bidder(String theUserName, UserType theUserType)
-	  {
-		  super(theUserName, theUserType);
-		  myBids = new HashMap<Item, Double>();
-	  }
-	  
-    /**
      * This function accepts the item and the bid and then puts the bid in the item.
      * 
 	 * @param theItem
 	 * @param theBid
 	 * @return if fail return false, also print to console why failed.
 	 */
-	public boolean bid(Item theItem, double theBid){
+	public boolean bid(ItemModel theItem, double theBid){
 		  boolean answer = false;
 		  boolean allDone = false;
 		  if (theItem.getStartingBid() > theBid) {
@@ -40,8 +36,8 @@ public class Bidder extends User
 			  System.out.println("Bid does not meet minimum bid for this item.");
 		  }
 		  if (!allDone) {
-			  myBids.put(theItem, theBid);
-			  theItem.bidOnItem(this, theBid);
+			  myBidderModel.addBid(theItem, theBid);
+			  theItem.bidOnItem(myBidderModel, theBid);
 			  answer = true;
 		  }	  	  
 		return answer;
@@ -52,8 +48,8 @@ public class Bidder extends User
 	 */
 
 	@Override
-	public boolean ExecuteCommand(Command theCommand, Calendar theCalendar,
-			Auction theAuction, Item theItem) {
+	public boolean ExecuteCommand(Command theCommand, CalendarModel theCalendar,
+			AuctionModel theAuction, ItemModel theItem) {
 		boolean answer = false;
 		Scanner user_input = new Scanner( System.in );
 		switch (theCommand) {
@@ -63,22 +59,22 @@ public class Bidder extends User
 				break;
 			case EDITBID:
 				System.out.println("This is the previous Bid: $");
-				System.out.println(myBids.get(theItem).toString());
+				System.out.println(myBidderModel.getBids().get(theItem).toString());
 				System.out.println("Please Enter a new Bid:");
 				bidOnItem(user_input, theItem);
 				answer = true;
 				break;
 			case VIEWBIDS:
 				Scanner myScanner = new Scanner(System.in);
-				if(myBids.size() == 0)
+				if(myBidderModel.getBids().size() == 0)
 				{
 					System.out.println("You have not placed any bids yet.");
 				}
 				else{
-					ArrayList<Item> bidsToEdit = new ArrayList<Item>();
+					ArrayList<ItemModel> bidsToEdit = new ArrayList<ItemModel>();
 					System.out.println("Bids you have placed:");
 					int i = 1;
-					for(Entry<Item, Double> entry : myBids.entrySet())
+					for(Entry<ItemModel, Double> entry : myBidderModel.getBids().entrySet())
 					{
 						System.out.println(i + ") Item Name: " + entry.getKey().getItemName() + " Your bid: " + entry.getValue());
 						bidsToEdit.add(entry.getKey());
@@ -103,41 +99,42 @@ public class Bidder extends User
 	}
 	
 
-	private void bidOnItem(Scanner user_input,Item theItem) {
+	private void bidOnItem(Scanner user_input, ItemModel theItem) {
 		double bid;
 		System.out.println("Please Enter a Bid:");
 		bid = user_input.nextDouble();
 		if (theItem.getStartingBid() > bid) {
 			System.out.println("Bid is below minimum bid for this item.");
 		}else {
-			myBids.put(theItem, bid);
+			myBidderModel.getBids().put(theItem, bid);
 			System.out.println("Bid entered.");
 		}	
 	}
 	
-	public ArrayList<Command> GetMenu(Command theCurrentState, Item theItem) {
+	@Override
+	public ArrayList<Command> GetMenu(Command theCurrentState, ItemModel theItem, UserModel theUser) {
 		ArrayList<Command> answer = new ArrayList<Command>();
 		switch (theCurrentState)
 		 {
 			case VIEWBIDDERAUCTIONS:
-				answer.add(User.Command.GOBACK);
-				answer.add(User.Command.VIEWITEM);
+				answer.add(UserController.Command.GOBACK);
+				answer.add(UserController.Command.VIEWITEM);
 				break;
 			case VIEWITEM:
-				answer.add(User.Command.GOBACK);
-				if(myBids.containsKey(theItem)) {
-					answer.add(User.Command.EDITBID);
+				answer.add(UserController.Command.GOBACK);
+				if(myBidderModel.getBids().containsKey(theItem)) {
+					answer.add(UserController.Command.EDITBID);
 				} else {
-					answer.add(User.Command.BID);
+					answer.add(UserController.Command.BID);
 				}				
 				break;
 			case VIEWMAINMENU:
-				answer.add(User.Command.VIEWBIDDERAUCTIONS);
-				answer.add(User.Command.VIEWBIDS);
+				answer.add(UserController.Command.VIEWBIDDERAUCTIONS);
+				answer.add(UserController.Command.VIEWBIDS);
 				break;
 			case BID:
-				answer.add(User.Command.VIEWCALENDAR);
-				answer.add(User.Command.VIEWBIDS);
+				answer.add(UserController.Command.VIEWCALENDAR);
+				answer.add(UserController.Command.VIEWBIDS);
 				break;
 			default:
 				break;
@@ -146,48 +143,43 @@ public class Bidder extends User
 	}
 	
 	@Override
-	public User.Command goForwardState(User.Command theCurrentState, User.Command theCurrentCommand)
+	public UserController.Command goForwardState(UserController.Command theCurrentState, UserController.Command theCurrentCommand)
 	{
-		User.Command answer = theCurrentState;
-		if (theCurrentCommand == User.Command.VIEWMAINMENU)
+		UserController.Command answer = theCurrentState;
+		if (theCurrentCommand == UserController.Command.VIEWMAINMENU)
 		 {
-			 answer = User.Command.VIEWMAINMENU;
+			 answer = UserController.Command.VIEWMAINMENU;
 		 } 
-		 else if (theCurrentCommand == User.Command.VIEWBIDDERAUCTIONS)
+		 else if (theCurrentCommand == UserController.Command.VIEWBIDDERAUCTIONS)
 		 {
 			 //this should be uncommented when implemented:
 			 //answer = User.Command.VIEWBIDDERAUCTIONS;
 			 System.out.println("Auctions for Bidders not implemented yet.");
 		 }
-		 else if (theCurrentCommand == User.Command.VIEWMYAUCTION)
+		 else if (theCurrentCommand == UserController.Command.VIEWMYAUCTION)
 		 {
-			 answer = User.Command.VIEWMYAUCTION;
+			 answer = UserController.Command.VIEWMYAUCTION;
 		 }				 
 		return answer;
 	}
 
 
 	@Override
-	public User.Command goBackState(User.Command theCurrentState) 
+	public UserController.Command goBackState(UserController.Command theCurrentState) 
 	{
-	  User.Command answer = null;
+	  UserController.Command answer = null;
 		switch (theCurrentState)
 		 {
 		 	case VIEWBIDDERAUCTIONS:
-		 		answer = User.Command.VIEWMAINMENU;
+		 		answer = UserController.Command.VIEWMAINMENU;
 		 		break;
 	 		case VIEWITEM:
-	 			answer = User.Command.VIEWBIDDERAUCTIONS;
+	 			answer = UserController.Command.VIEWBIDDERAUCTIONS;
 	 			break;						
 	 		default:
 	 			System.out.println("Cannot Go Back");
 	 			break;						 
 		 }		
 		return answer;
-	}
-
-	public void addBid(Item theItem, double theBid)
-	{
-		myBids.put(theItem, theBid);
 	}
 }

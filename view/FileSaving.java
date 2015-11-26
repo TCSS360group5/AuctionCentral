@@ -1,3 +1,4 @@
+package view;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
@@ -12,6 +13,14 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Map.Entry;
 
+import model.AuctionModel;
+import model.BidderModel;
+import model.CalendarModel;
+import model.EmployeeModel;
+import model.ItemModel;
+import model.NonProfitModel;
+import model.UserModel;
+
 
 public class FileSaving {
 
@@ -25,24 +34,24 @@ public class FileSaving {
 		//if the file doesn't exist, it creates it
 		if (!(new File(myUserFileString).isFile())) 
 		{
-			outputUsers(new File(myUserFileString), new ArrayList<User>());
+			outputUsers(new File(myUserFileString), new ArrayList<UserModel>());
 		}
 		if (!(new File(myAuctionFileString).isFile())) 
 		{
-			outputAuctions(new File(myAuctionFileString), new ArrayList<Auction>(), new Calendar());
+			outputAuctions(new File(myAuctionFileString), new ArrayList<AuctionModel>(), new CalendarModel());
 		}
 		
 		myUserFile = new File(myUserFileString);
 		myAuctionFile = new File(myAuctionFileString);
 	}
 	
-	protected void loadAll(ArrayList<User> myUserList, ArrayList<Auction> myAuctionList, Calendar myCalendar) 
+	protected void loadAll(ArrayList<UserModel> myUserList, ArrayList<AuctionModel> myAuctionList, CalendarModel myCalendar) 
 	{	
 				loadUsers(myUserFile, myUserList);
 				loadAuctions(myUserList, myAuctionFile, myAuctionList, myCalendar);
 	}
 	
-	protected void saveAll(ArrayList<User> myUserList, ArrayList<Auction> myAuctionList, Calendar myCalendar) 
+	protected void saveAll(ArrayList<UserModel> myUserList, ArrayList<AuctionModel> myAuctionList, CalendarModel myCalendar) 
 	{
 		outputUsers(myUserFile, myUserList);
 		outputAuctions(myAuctionFile, myAuctionList, myCalendar);		
@@ -54,7 +63,7 @@ public class FileSaving {
 	 * @param theFile the file being read
 	 * @param theUserList the list that the users from the file are loading into
 	 */
-	public static void loadUsers(File theFile, ArrayList<User> theUserList) 
+	public static void loadUsers(File theFile, ArrayList<UserModel> theUserList) 
 	{
 		try 
 		{
@@ -64,7 +73,7 @@ public class FileSaving {
 	        	String userType = s.nextLine();
 	        	switch(userType) {
 	        	case "EMPLOYEE":
-	        		theUserList.add(new Employee(userName, User.UserType.EMPLOYEE));
+	        		theUserList.add(new EmployeeModel(userName, UserModel.UserType.EMPLOYEE));
 	        		break;
 	        	case "NPO":
 	        		String userNPOname = s.nextLine();	 
@@ -73,14 +82,14 @@ public class FileSaving {
 		        		int month = s.nextInt();
 		        		int day = s.nextInt();
 		        		s.nextLine(); //clears the line
-		        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.of(year, month, day)));
+		        		theUserList. add(new NonProfitModel(userName, UserModel.UserType.NPO, userNPOname, LocalDate.of(year, month, day)));
 	        		} else {					// this NPO doesn't have an auction saved, last parameter is set appropriately
-		        		theUserList. add(new NonProfit(userName, User.UserType.NPO, userNPOname, LocalDate.now().minusYears(1)));
+		        		theUserList. add(new NonProfitModel(userName, UserModel.UserType.NPO, userNPOname, LocalDate.now().minusYears(1)));
 	        		}
 
 	        		break;
 	        	case "BIDDER":
-        			theUserList.add(new Bidder(userName, User.UserType.BIDDER));
+        			theUserList.add(new BidderModel(userName, UserModel.UserType.BIDDER));
 	        	}
 	        }
 	        s.close();
@@ -98,7 +107,7 @@ public class FileSaving {
 	 * @param theAuctionList the list the auctions will be loaded into
 	 * @param theCalendar the main calendar for this program
 	 */
-	public void loadAuctions(ArrayList<User> myUserList, File theAuctionFile, ArrayList<Auction> theAuctionList, Calendar theCalendar) {
+	public void loadAuctions(ArrayList<UserModel> myUserList, File theAuctionFile, ArrayList<AuctionModel> theAuctionList, CalendarModel theCalendar) {
 		try 
 		{
 	        Scanner s = new Scanner(theAuctionFile);
@@ -115,7 +124,7 @@ public class FileSaving {
 		        String userName = s.nextLine();
 		        int NumItems = s.nextInt();
 		        s.nextLine();
-		        List<Item> ItemList = new ArrayList<Item>();
+		        List<ItemModel> ItemList = new ArrayList<ItemModel>();
 				for (int j = 0; j < NumItems; j++)
 				{
 					String ItemName = s.nextLine();
@@ -123,9 +132,9 @@ public class FileSaving {
 					s.nextLine();
 					String Description = s.nextLine();
 					
-					Item oneItem = new Item(ItemName, StartingBid, Description);
+					ItemModel oneItem = new ItemModel(ItemName, StartingBid, Description);
 					
-					Map<User, Double> bidList = new HashMap<User, Double>();
+					Map<UserModel, Double> bidList = new HashMap<UserModel, Double>();
 					int NumBids = s.nextInt();
 					if (NumBids > 0)
 					{
@@ -133,11 +142,11 @@ public class FileSaving {
 						{
 							String Bidder = s.next();
 							Double theBid = s.nextDouble();
-							User theUser = FindUser(Bidder, myUserList);
+							UserModel theUser = FindUser(Bidder, myUserList);
 							if (theUser != null)
 							{
 								bidList.put(theUser, theBid);
-								((Bidder)theUser).addBid(oneItem, theBid);
+								((BidderModel)theUser).addBid(oneItem, theBid);
 							} 
 							else 
 							{
@@ -152,11 +161,11 @@ public class FileSaving {
 						s.nextLine();
 					}
 				}			
-		        Auction newAuction = new Auction(orgName, userName, LocalDateTime.of(year, month, day, startHour, startMinute), 
+		        AuctionModel newAuction = new AuctionModel(orgName, userName, LocalDateTime.of(year, month, day, startHour, startMinute), 
 		        		LocalDateTime.of(year, month, day, endHour, endMinute), ItemList);
 		        theAuctionList.add(newAuction);
-		        User userToAdd = FindUserByNPOName(orgName, myUserList);
-		        ((NonProfit)userToAdd).setAuction(newAuction);
+		        UserModel userToAdd = FindUserByNPOName(orgName, myUserList);
+		        ((NonProfitModel)userToAdd).setAuction(newAuction);
 		        theCalendar.addAuction(newAuction);
 		        
 		        if(s.hasNextLine()) 			// bug fix for input mismatch exceptions
@@ -179,7 +188,7 @@ public class FileSaving {
 	 * @param theUserFile the file of users
 	 * @param theUserList the list of users
 	 */
-	public static void outputUsers(File theUserFile, ArrayList<User> theUserList) 
+	public static void outputUsers(File theUserFile, ArrayList<UserModel> theUserList) 
 	{
 		PrintStream outputUsers = null;		// to write users to file
 		try 
@@ -193,12 +202,12 @@ public class FileSaving {
 		
 		for(int i = 0; i < theUserList.size(); i++) 
 		{
-			User tempUser = theUserList.get(i);
+			UserModel tempUser = theUserList.get(i);
 			outputUsers.println(tempUser.getUserName());
 			outputUsers.println(tempUser.getUserType());
-			if (tempUser.getUserType() == User.UserType.NPO)
+			if (tempUser.getUserType() == UserModel.UserType.NPO)
 			{		
-				NonProfit tempNPOUser = (NonProfit) tempUser;
+				NonProfitModel tempNPOUser = (NonProfitModel) tempUser;
 				outputUsers.println(tempNPOUser.getNPOName());
 				if(tempNPOUser.hasAuction()) {
 					LocalDate LastAuctionDate = tempNPOUser.getLastAuctionDate();
@@ -215,15 +224,15 @@ public class FileSaving {
 	 * @param theAuctionFile the file of auctions
 	 * @param theAuctionList the list of auctions
 	 */
-	public static void outputAuctions(File theAuctionFile, ArrayList<Auction> theAuctionList, Calendar myCalendar) 
+	public static void outputAuctions(File theAuctionFile, ArrayList<AuctionModel> theAuctionList, CalendarModel myCalendar) 
 	{		
-		Map<LocalDate, ArrayList<Auction>> auctionMap = myCalendar.myAuctionByDateList;
-		Collection<ArrayList<Auction>> auctionLists = auctionMap.values();
+		Map<LocalDate, ArrayList<AuctionModel>> auctionMap = myCalendar.myAuctionByDateList;
+		Collection<ArrayList<AuctionModel>> auctionLists = auctionMap.values();
 		theAuctionList.clear();
 		
-		Iterator<ArrayList<Auction>> it = auctionLists.iterator();
+		Iterator<ArrayList<AuctionModel>> it = auctionLists.iterator();
 		while(it.hasNext()) {
-			ArrayList<Auction> auctionList = (ArrayList<Auction>) it.next();
+			ArrayList<AuctionModel> auctionList = (ArrayList<AuctionModel>) it.next();
 			for(int i = 0; i < auctionList.size(); i++) {
 				theAuctionList.add(auctionList.get(i));
 			}
@@ -242,7 +251,7 @@ public class FileSaving {
 		
 		for(int i = 0; i < theAuctionList.size(); i++)
 		{
-			Auction auction = theAuctionList.get(i);
+			AuctionModel auction = theAuctionList.get(i);
 			outputAuctions.println(auction.getAuctionOrg()); 
 			outputAuctions.println(auction.getStartTime().getMonthValue()); 
 			outputAuctions.println(auction.getStartTime().getDayOfMonth());
@@ -250,7 +259,7 @@ public class FileSaving {
 			outputAuctions.println(auction.getStartTime().getHour() + " " + auction.getStartTime().getMinute());
 			outputAuctions.println(auction.getEndTime().getHour() + " " + auction.getEndTime().getMinute());			
 			outputAuctions.println(auction.getUserName());
-			List<Item> ItemList = auction.getAuctionItems();
+			List<ItemModel> ItemList = auction.getAuctionItems();
 			int ItemListSize;
 			if (ItemList != null)
 			{
@@ -258,14 +267,14 @@ public class FileSaving {
 				outputAuctions.println(ItemListSize);
 				for (int j = 0; j < ItemListSize; j++)
 				{
-					Item oneItem = ItemList.get(j);
+					ItemModel oneItem = ItemList.get(j);
 				
-					outputAuctions.println(oneItem.myItemName);
-					outputAuctions.println(oneItem.myStartingBid);
-					outputAuctions.println(oneItem.myDescription);				
-					Map<User, Double> bidList = oneItem.getBids();
+					outputAuctions.println(oneItem.getItemName());
+					outputAuctions.println(oneItem.getStartingBid());
+					outputAuctions.println(oneItem.getDescription());				
+					Map<UserModel, Double> bidList = oneItem.getBids();
 					outputAuctions.println(bidList.size());
-					for (Entry<User, Double> entry: bidList.entrySet()) 
+					for (Entry<UserModel, Double> entry: bidList.entrySet()) 
 					{
 						outputAuctions.println(entry.getKey().getUserName());
 						outputAuctions.println(entry.getValue());
@@ -283,14 +292,14 @@ public class FileSaving {
 	 * @param NPOName the name of the organization
 	 * @return the user with that NPO name
 	 */
-	private User FindUserByNPOName(String NPOName, ArrayList<User> myUserList)
+	private UserModel FindUserByNPOName(String NPOName, ArrayList<UserModel> myUserList)
 	{
-		User answerUser = null;
-		for (User theUser: myUserList)
+		UserModel answerUser = null;
+		for (UserModel theUser: myUserList)
 		{
-			if(theUser.getUserType() == User.UserType.NPO)
+			if(theUser.getUserType() == UserModel.UserType.NPO)
 			{
-				if(((NonProfit)theUser).getNPOName().equals(NPOName))
+				if(((NonProfitModel)theUser).getNPOName().equals(NPOName))
 					{
 						answerUser = theUser;
 					}
@@ -305,10 +314,10 @@ public class FileSaving {
 	 * @param theUserName the user name being searched for
 	 * @return a user if one exists, null otherwise
 	 */
-	protected User FindUser(String theUserName, ArrayList<User> myUserList)
+	protected UserModel FindUser(String theUserName, ArrayList<UserModel> myUserList)
 	{
-		User answerUser = null;
-		for (User theUser: myUserList)
+		UserModel answerUser = null;
+		for (UserModel theUser: myUserList)
 		{
 			if (theUser.getUserName().compareTo(theUserName) == 0)
 			{

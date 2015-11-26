@@ -1,17 +1,18 @@
+package model;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class Item
+public class ItemModel
 {
   String myItemName;
   String myDescription;
   double mySellingPrice;
   double myStartingBid;
-  Map<User, Double> myBids;
+  Map<UserModel, Double> myBids;
   double myHighestBid;
   
-  public Item(String theItemName, double theStartingBid, String theDescription)
+  public ItemModel(String theItemName, double theStartingBid, String theDescription)
   {
 	  myBids = new HashMap<>();
 	  myItemName = theItemName;
@@ -59,23 +60,23 @@ public class Item
 	  return myDescription;
   }
   
-  public Map<User, Double> getBids()
+  public Map<UserModel, Double> getBids()
   {
 	  //LIST ALL BIDS
 	  return myBids;
   }
   
-  public void setBids(Map<User, Double> theBids)
+  public void setBids(Map<UserModel, Double> theBids)
   {
 	  myBids = theBids;
   }
   
-  public void bidOnItem(User user, double bid)
+  public void bidOnItem(UserModel user, double bid)
   {
 	  	  myBids.put(user, bid);
   }
   
-  public void updateBid(User user, double newBid)
+  public void updateBid(UserModel user, double newBid)
   {
 	 myBids.put(user, newBid);
   }
@@ -94,7 +95,7 @@ public class Item
 	  answer.append("Description: " + myDescription + "\n");
 	  answer.append("Starting Bid: " + myStartingBid + "\n");
 	  answer.append("Selling Price: " + mySellingPrice + "\n");
-	  for (Entry<User, Double> entry : myBids.entrySet()) 
+	  for (Entry<UserModel, Double> entry : myBids.entrySet()) 
 	  {
 		  answer.append(entry.getKey() + " " + entry.getValue() + "\n");
 	  }

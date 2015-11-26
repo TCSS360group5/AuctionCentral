@@ -1,3 +1,4 @@
+package view;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -5,39 +6,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class NonProfit extends User
+import model.*;
+
+public class NonProfitController extends UserController
 {
-  private LocalDate myLastAuctionDate;
-  private Auction myAuction; 
-  private String myNPOName;
+//  private LocalDate myLastAuctionDate;
+//  private Auction myAuction; 
+//  private String myNPOName;
+	private NonProfitModel myNonProfitModel;
   
-  public NonProfit(String theUserName, UserType theUserType, String theNPOName, LocalDate theLastAuctionDate){
-	  super(theUserName, theUserType);
-	  myNPOName = theNPOName;
-	  myLastAuctionDate = theLastAuctionDate;
+  public NonProfitController(UserModel theModel){
+	  super("Non Profit");
+	  myNonProfitModel = (NonProfitModel) theModel;
   }
   
-  public ArrayList<Command> GetMenu(Command theCommand, Item theItem)
+  @Override
+  public ArrayList<Command> GetMenu(Command theCommand, ItemModel theItem, UserModel theUser)
   {
 	  ArrayList<Command> answer = new ArrayList<Command>();
 	  switch (theCommand)
 	  {
 	  case VIEWMYAUCTION:
-		  System.out.println("\n" + myAuction.toString());
-		  answer.add(User.Command.GOBACK);
-		  answer.add(User.Command.EDITAUCTION);
-		  answer.add(User.Command.VIEWITEM);
-		  answer.add(User.Command.ADDITEM);
+		  System.out.println("\n" + ((NonProfitModel)theUser).getAuction().toString());
+		  answer.add(UserController.Command.GOBACK);
+		  answer.add(UserController.Command.EDITAUCTION);
+		  answer.add(UserController.Command.VIEWITEM);
+		  answer.add(UserController.Command.ADDITEM);
 		  break;
 	  case VIEWITEM:
-		  answer.add(User.Command.GOBACK);
-		  answer.add(User.Command.EDITITEM);
+		  answer.add(UserController.Command.GOBACK);
+		  answer.add(UserController.Command.EDITITEM);
 		  break;
 	  case VIEWMAINMENU:
-		  if(canAddAuction()) {
-			  answer.add(User.Command.ADDAUCTION);			  
+		  if(myNonProfitModel.canAddAuction()) {
+			  answer.add(UserController.Command.ADDAUCTION);			  
 		  } else {
-			  answer.add(User.Command.VIEWMYAUCTION);
+			  answer.add(UserController.Command.VIEWMYAUCTION);
 		  }
 	  break;
 		default:
@@ -47,8 +51,8 @@ public class NonProfit extends User
 	return answer;	  
   }
 
-
-  public boolean ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
+@Override
+  public boolean ExecuteCommand(Command theCommand, CalendarModel theCalendar, AuctionModel theAuction, ItemModel theItem)
   {
 	  //ArrayList<Command> answer = new ArrayList<Command>();
 	  boolean answer = false;
@@ -63,8 +67,8 @@ public class NonProfit extends User
 			  answer = true;
 			  break;
 		  case ADDITEM:
-			  Item tempItem = getItemDetailsFromUser(user_input);	
-			  addItemToAuction(myAuction, tempItem);
+			  ItemModel tempItem = getItemDetailsFromUser(user_input);	
+			 addItemToAuction(myNonProfitModel.getAuction(), tempItem);
 			  answer = true;
 			  break;
 		  case EDITITEM:
@@ -80,43 +84,39 @@ public class NonProfit extends User
   }
   
   @Override
-	public User.Command goForwardState(User.Command theCurrentState, User.Command theCurrentCommand)
+	public UserController.Command goForwardState(UserController.Command theCurrentState, UserController.Command theCurrentCommand)
 	{
-		User.Command answer = theCurrentState;
-//		switch (theCurrentCommand)
-//		{
-//		case VIEWCALENDAR :
-//			answer = User.Command.VIEWCALENDAR;
-//			break;
-//		default:
-//			break;		
-//		}
-		if (theCurrentCommand == User.Command.VIEWCALENDAR)
+		UserController.Command answer = theCurrentState;
+		if (theCurrentCommand == UserController.Command.VIEWMAINMENU)
 		 {
-			answer = User.Command.VIEWCALENDAR;
+			 answer = UserController.Command.VIEWMAINMENU;
 		 } 
-		 else if (theCurrentCommand == User.Command.VIEWMAINMENU)
+		else if (theCurrentCommand == UserController.Command.VIEWMYAUCTION)
 		 {
-			 answer = User.Command.VIEWMAINMENU;
+			answer = UserController.Command.VIEWMYAUCTION;
 		 } 
-		 else if (theCurrentCommand == User.Command.VIEWMYAUCTION)
-		 {
-			 answer = User.Command.VIEWMYAUCTION;
-		 }				 
+//		else if (theCurrentCommand == UserController.Command.ADDAUCTION)
+//		 {
+//			answer = UserController.Command.ADDAUCTION;
+//		 } 
+//		 else if (theCurrentCommand == UserController.Command.EDITAUCTION)
+//		 {
+//			 answer = UserController.Command.EDITAUCTION;
+//		 }				 
 		return answer;
 	}
    
   @Override
-  public User.Command goBackState(User.Command theCurrentState) 
+  public UserController.Command goBackState(UserController.Command theCurrentState) 
 	{
-	  User.Command answer = null;
+	  UserController.Command answer = null;
 		switch (theCurrentState)
 		 {
 		 	case VIEWMYAUCTION:
-		 		answer = User.Command.VIEWMAINMENU;
+		 		answer = UserController.Command.VIEWMAINMENU;
 		 		break;
 	 		case VIEWITEM:
-	 			answer = User.Command.VIEWMYAUCTION;
+	 			answer = UserController.Command.VIEWMYAUCTION;
 	 			break;						
 	 		default:
 	 			System.out.println("Cannot Go Back");
@@ -125,11 +125,11 @@ public class NonProfit extends User
 		return answer;
 	}
 
-	private void editItem(Item theItem, Scanner user_input, Auction theAuction)
+	private void editItem(ItemModel theItem, Scanner user_input, AuctionModel theAuction)
 	{
 		System.out.println("The current Item details:");
 		  System.out.println(theItem.toString());
-		  Item tempEditItem = getItemDetailsFromUser(user_input);				  
+		  ItemModel tempEditItem = getItemDetailsFromUser(user_input);				  
 		  try
 		  {
 			  theAuction.removeItem(theItem);
@@ -140,13 +140,8 @@ public class NonProfit extends User
 			  theAuction.addItem(theItem);
 		  }
 	}
-	
-	  
-	private boolean canAddAuction() {	
-		return (myAuction == null);
-	}
   
-  private void addAuction(Scanner user_input, Calendar theCalendar)
+  private void addAuction(Scanner user_input, CalendarModel theCalendar)
   {
 	  LocalDateTime startTime;
 	  LocalDateTime endTime;
@@ -155,27 +150,33 @@ public class NonProfit extends User
 	  System.out.println("Please enter the duration (in hours) of the Auction");
 	  duration = user_input.nextInt();
 	  endTime = startTime.plusHours(duration);
+	  boolean auctionCanBeAdded = false;
 	  if(startTime.getDayOfMonth() != endTime.getDayOfMonth())
 	  {
 		  System.out.println("Your auction is scheduled for more than one calendar day. It has not been scheduled.");
 	  }
-	  else if (check365(startTime.toLocalDate()))
-  	  {
-		  Auction tempAuction = new Auction(myNPOName, super.getUserName(), startTime, endTime);
+	  else {
+		  try {
+			  myNonProfitModel.check365(startTime.toLocalDate());
+			  auctionCanBeAdded = true;
+		  } catch (AuctionException e){
+			  System.out.println(e.getExceptionString());
+		  }
+	  }
+  	  if (auctionCanBeAdded){
+		  AuctionModel tempAuction = new AuctionModel(myNonProfitModel.getNPOName(), myNonProfitModel.getUserName(), startTime, endTime);
 		  if(theCalendar.addAuction(tempAuction))
 		  {
 			  System.out.println("Auction added!");
-			  myAuction = tempAuction;
+			  myNonProfitModel.setAuction(tempAuction);
 		  }
-		  else
-			  System.out.println("There was an error adding your auction.");
 	  }
   }
   
-  private void editAuction(Scanner user_input, Calendar theCalendar) 
+  private void editAuction(Scanner user_input, CalendarModel theCalendar) 
   {
 	  System.out.println("The current Auction details:");
-	  System.out.println(myAuction.toString());	
+	  System.out.println(myNonProfitModel.getAuction().toString());	
 	  LocalDateTime startTime;
 	  LocalDateTime endTime;
 	  System.out.println("Would you like to edit the auction? (Enter 0 to go back, 1 to edit)");
@@ -218,19 +219,19 @@ public class NonProfit extends User
 		  }
 		  else
 		  {
-			  List<Item> auctionItems = myAuction.getAuctionItems();
-			  Auction newAuction = new Auction(myNPOName, super.getUserName(), startTime, endTime, auctionItems);
-			  theCalendar.removeAuction(myAuction);
+			  List<ItemModel> auctionItems = myNonProfitModel.getAuction().getAuctionItems();
+			  AuctionModel newAuction = new AuctionModel(myNonProfitModel.getNPOName(), myNonProfitModel.getUserName(), startTime, endTime, auctionItems);
+			  theCalendar.removeAuction(myNonProfitModel.getAuction());
 			  if(theCalendar.addAuction(newAuction))
 			  {
-				  myAuction = newAuction;
+				  myNonProfitModel.setAuction(newAuction);
 				  System.out.println("Auction has been edited.");
 				  System.out.println("Edited Auction Details:");
-				  System.out.println(myAuction.toString());
+				  System.out.println(myNonProfitModel.getAuction().toString());
 			  }
 			  else
 			  {
-				  theCalendar.addAuction(myAuction);
+				  theCalendar.addAuction(myNonProfitModel.getAuction());
 				  System.out.println("There was an error. Your auction has not been edited.");
 			  }
 		  }
@@ -239,7 +240,7 @@ public class NonProfit extends User
 	
 }
 
-private Item getItemDetailsFromUser(Scanner user_input) 
+private ItemModel getItemDetailsFromUser(Scanner user_input) 
   {
 	  System.out.println("Please enter the Item name:");
 	  String itemName = user_input.nextLine();
@@ -248,10 +249,10 @@ private Item getItemDetailsFromUser(Scanner user_input)
 	  user_input.nextLine();
 	  System.out.println("Please enter the Item Description:");
 	  String description = user_input.nextLine();
-	  return new Item(itemName, minimumPrice, description);
+	  return new ItemModel(itemName, minimumPrice, description);
   }
   
-  private void addItemToAuction(Auction theAuction, Item theItem)
+  private void addItemToAuction(AuctionModel theAuction, ItemModel theItem)
   {
 	  try
 	  {
@@ -260,82 +261,82 @@ private Item getItemDetailsFromUser(Scanner user_input)
 		  System.out.println("Item could not be added");
 	  }
   }
-   
-  private int checkYear(Scanner user_input) 
-  {
-	  int year;
-	  System.out.println("Please enter the Auction year:");
-	  year = user_input.nextInt();
-	  if (year < LocalDate.now().getYear() || year > LocalDate.now().plusYears(1).getYear())
-	  {
-		  System.out.println("Auctions can only be sheduled this year and next year.");
-		  year = checkYear(user_input);
-	  }
-	return year;
-  }
+//   
+//  private int checkYear(Scanner user_input) 
+//  {
+//	  int year;
+//	  System.out.println("Please enter the Auction year:");
+//	  year = user_input.nextInt();
+//	  if (year < LocalDate.now().getYear() || year > LocalDate.now().plusYears(1).getYear())
+//	  {
+//		  System.out.println("Auctions can only be sheduled this year and next year.");
+//		  year = checkYear(user_input);
+//	  }
+//	return year;
+//  }
+//  
+//  public boolean check365(LocalDate theDate)
+//  {
+//	  boolean answer = false;
+//	  if(theDate.minusDays(365).isAfter(myLastAuctionDate))
+//	  {
+//		  answer = true;
+//	  } else {
+//		  System.out.println("Your next auction must be 365 days after your last auction");
+//	  }
+//	  return answer;
+//  }
   
-  public boolean check365(LocalDate theDate)
-  {
-	  boolean answer = false;
-	  if(theDate.minusDays(365).isAfter(myLastAuctionDate))
-	  {
-		  answer = true;
-	  } else {
-		  System.out.println("Your next auction must be 365 days after your last auction");
-	  }
-	  return answer;
-  }
+//  public String getNPOName()
+//  {
+//	  return myNPOName;
+//  }
+//  
+//  public void setNPOName(String theNewName)
+//  {
+//	  myNPOName = theNewName;
+//  }
+//  
+//  public LocalDate getCurrentAuctionDate() 
+//  {
+//	  if (myAuction != null)
+//	  {
+//		  return myAuction.getStartTime().toLocalDate();
+//	  } 
+//	  else 
+//	  {
+//		  return null;
+//	  }	  
+//  }
   
-  public String getNPOName()
-  {
-	  return myNPOName;
-  }
-  
-  public void setNPOName(String theNewName)
-  {
-	  myNPOName = theNewName;
-  }
-  
-  public LocalDate getCurrentAuctionDate() 
-  {
-	  if (myAuction != null)
-	  {
-		  return myAuction.getStartTime().toLocalDate();
-	  } 
-	  else 
-	  {
-		  return null;
-	  }	  
-  }
-  
-  public LocalDate getLastAuctionDate() {
-	return myLastAuctionDate;
-  }
-  
-  public void setLastAuctionDate(LocalDate myLastAuctionDate) {
-	this.myLastAuctionDate = myLastAuctionDate;
-  }
-
-public Auction getAuction()
-  {
-	  return myAuction;
-  }
-  
-  public boolean setAuction(Auction theAuction)
-  {
-	  myAuction = theAuction;
-	  return false;
-  }
+//  public LocalDate getLastAuctionDate() {
+//	return myLastAuctionDate;
+//  }
+//  
+//  public void setLastAuctionDate(LocalDate myLastAuctionDate) {
+//	this.myLastAuctionDate = myLastAuctionDate;
+//  }
+//
+//public Auction getAuction()
+//  {
+//	  return myAuction;
+//  }
+//  
+//  public boolean setAuction(Auction theAuction)
+//  {
+//	  myAuction = theAuction;
+//	  return false;
+//  }
   
 //  public boolean hasAuction()
 //  {
 //	  
 //	  return myExistingAuctionStatus;
 //  }
-  public boolean hasAuction()
-  {
-	  return myAuction != null;
-  }
+//  public boolean hasAuction()
+//  {
+//	  return myAuction != null;
+//  }
   
   private LocalDateTime getAuctionDateTimeFromUser(Scanner theInput)
   {
@@ -345,7 +346,26 @@ public Auction getAuction()
 	  int hour;
 	  int minutes;
 	  
-	  year = checkYear(theInput);				  
+	  boolean yearNotValid = true;
+	  do
+	  {
+		  System.out.println("Please enter the Auction year:");
+		  year = theInput.nextInt();
+		  if (year < LocalDate.now().getYear() || year > LocalDate.now().plusYears(1).getYear())
+		  {
+			  System.out.println("Auctions can only be sheduled this year and next year.");
+		  } else {
+			  try
+			  {
+				  myNonProfitModel.checkYear(year);
+				  yearNotValid = false;
+			  } catch (AuctionException e)
+			  {
+				  System.out.println(e.getExceptionString());
+			  }
+		  }
+	  } while (yearNotValid);
+				  
 	  System.out.println("Please enter the Auction month:");
 	  month = theInput.nextInt();
 	  if(month > 12 || month < 1)

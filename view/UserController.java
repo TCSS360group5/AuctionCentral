@@ -1,16 +1,18 @@
+package view;
 import java.util.ArrayList;
+
+import model.AuctionModel;
+import model.CalendarModel;
+import model.ItemModel;
+import model.UserModel;
 
 /**
  * 
  *
  */
-public class User
+public class UserController
 {
-  /**
- * 
- * This enum represents what kind of user the user is.
- */
-public enum UserType {NPO, EMPLOYEE, BIDDER}
+
   /**
  * These are the different menu options that a user might select.
  *
@@ -18,8 +20,6 @@ public enum UserType {NPO, EMPLOYEE, BIDDER}
 public enum Command {VIEWCALENDAR, VIEWMAINMENU, VIEWITEM, VIEWMYAUCTION, VIEWAUCTIONDETAILS, VIEWEDITITEM,
 	  ADDAUCTION, EDITAUCTION, ADDITEM, EDITITEM, GOBACK, BID, EDITBID, LOGIN, VIEWBIDS, VIEWBIDDERAUCTIONS}
   
-  private UserType myUserType;
-  private String myUserName;
   private String myHomePageMessage;
   
 	private static final String myHomePageMessageEnd = " Homepage\n"
@@ -30,10 +30,8 @@ public enum Command {VIEWCALENDAR, VIEWMAINMENU, VIEWITEM, VIEWMYAUCTION, VIEWAU
  * @param theUserName
  * @param theUserType
  */
-public User(String theUserName, UserType theUserType)
+public UserController(String theUserType)
   {
-	  myUserName = theUserName;
-	  myUserType = theUserType;
 	  myHomePageMessage = "\nAuctionCentral " + theUserType + myHomePageMessageEnd;
   }
 
@@ -131,57 +129,32 @@ public User(String theUserName, UserType theUserType)
  * @param theItem
  * @return
  */
-public boolean ExecuteCommand(Command theCommand, Calendar theCalendar, Auction theAuction, Item theItem)
+public boolean ExecuteCommand(Command theCommand, CalendarModel theCalendar, AuctionModel theAuction, ItemModel theItem)
   {
 	  boolean answer = false;
 	  //System.out.println("Command Not Recognized");
 	  return answer;
   }
 
-  
-	  /**
-	 * @return
-	 */
-	public UserType getUserType(){
-		  return myUserType;
-	  }
-	  /**
-	 * @return
-	 */
-	public String getUserName(){
-		  return myUserName;
-	  }
-	  /**
-	 * @param theUserType
-	 */
-	public void setUserType(UserType theUserType){
-		  myUserType = theUserType;
-	  }
-	  /**
-	 * @param theUsername
-	 */
-	public void setUserName(String theUsername){
-		  myUserName = theUsername;
-	  }
 	
-	public User.Command goForwardState(User.Command theCurrentState, User.Command theCurrentCommand)
+	public UserController.Command goForwardState(UserController.Command theCurrentState, UserController.Command theCurrentCommand)
 	{
-		User.Command answer = theCurrentState;
-		if (theCurrentCommand == User.Command.VIEWCALENDAR)
+		UserController.Command answer = theCurrentState;
+		if (theCurrentCommand == UserController.Command.VIEWCALENDAR)
 		 {
-			answer = User.Command.VIEWCALENDAR;
+			answer = UserController.Command.VIEWCALENDAR;
 		 } 
-		 else if (theCurrentCommand == User.Command.VIEWMAINMENU)
+		 else if (theCurrentCommand == UserController.Command.VIEWMAINMENU)
 		 {
-			 answer = User.Command.VIEWMAINMENU;
+			 answer = UserController.Command.VIEWMAINMENU;
 		 } 		 
 		return answer;
 	}
 	
-	public User.Command getNextState(User.Command theCurrentState, User.Command theCurrentCommand)
+	public UserController.Command getNextState(UserController.Command theCurrentState, UserController.Command theCurrentCommand)
 	{
-		User.Command answer = theCurrentState;
-		if (theCurrentCommand == User.Command.GOBACK)
+		UserController.Command answer = theCurrentState;
+		if (theCurrentCommand == UserController.Command.GOBACK)
 		{
 			answer = goBackState(theCurrentState);
 		} else {
@@ -190,16 +163,16 @@ public boolean ExecuteCommand(Command theCommand, Calendar theCalendar, Auction 
 		return answer;
 	}
 	  
-	  public User.Command goBackState(User.Command theCurrentState) 
+	  public UserController.Command goBackState(UserController.Command theCurrentState) 
 		{
-		  User.Command answer = theCurrentState;
+		  UserController.Command answer = theCurrentState;
 			switch (theCurrentState)
 			 {			
-				case VIEWCALENDAR:
-					answer = User.Command.VIEWMAINMENU;
-					break;
+//				case VIEWCALENDAR:
+//					answer = UserController.Command.VIEWMAINMENU;
+//					break;
 				case VIEWAUCTIONDETAILS:
-					answer = User.Command.VIEWCALENDAR;
+					answer = UserController.Command.VIEWCALENDAR;
 					break;
 		 		default:
 		 			System.out.println("Cannot Go Back");
@@ -208,26 +181,20 @@ public boolean ExecuteCommand(Command theCommand, Calendar theCalendar, Auction 
 			return answer;
 		}
 	
-	  /* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
-	public String toString() {
-		  return myUserName + " " + myUserType.toString();
-	  }
-	
-	  public ArrayList<Command> GetMenu(Command theCommand, Item theItem)
+	  public ArrayList<Command> GetMenu(Command theCommand, ItemModel theItem, UserModel theUser)
 	  {
 			ArrayList<Command> answer = new ArrayList<Command>();
 			switch (theCommand) {
 			case VIEWAUCTIONDETAILS:
-				answer.add(User.Command.GOBACK);
+				answer.add(UserController.Command.GOBACK);
 				break;
-			case VIEWCALENDAR:
-				answer.add(User.Command.GOBACK);
-				answer.add(User.Command.VIEWAUCTIONDETAILS);
-				break;
+			//CALENDAR has its own menu	
+//			case VIEWCALENDAR:
+//				answer.add(UserController.Command.GOBACK);
+//				answer.add(UserController.Command.VIEWAUCTIONDETAILS);
+//				break;
 			case VIEWMAINMENU:
-				answer.add(User.Command.VIEWCALENDAR);
+				answer.add(UserController.Command.VIEWCALENDAR);
 				break;
 			default:
 				System.out.println("Menu Not Recognized");

@@ -1,10 +1,11 @@
+package model;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
-public class Auction
+public class AuctionModel
 {
-  public List<Item> myInventory;
+  public List<ItemModel> myInventory;
   public String myOrgName;
   public String myAuctionName;
   
@@ -15,7 +16,7 @@ public class Auction
   String myUserName;
   
   //create auction constructor
-  public Auction(String theOrgName, String theUserName, LocalDateTime theStartTime, LocalDateTime theEndTime)
+  public AuctionModel(String theOrgName, String theUserName, LocalDateTime theStartTime, LocalDateTime theEndTime)
   {
 	  this(theOrgName, theUserName, theStartTime, theEndTime, null);
   }
@@ -26,7 +27,7 @@ public class Auction
   }
 
 //create another auction constructor with same inventory list - copy constructor?
-  public Auction(String theOrgName, String theUserName, LocalDateTime theStartTime, LocalDateTime theEndTime, List<Item> theInventory)
+  public AuctionModel(String theOrgName, String theUserName, LocalDateTime theStartTime, LocalDateTime theEndTime, List<ItemModel> theInventory)
   {
 	  myOrgName = theOrgName;  
 	  myUserName = theUserName;
@@ -39,7 +40,7 @@ public class Auction
 	  }
 	  else 
 	  {
-		  myInventory = new ArrayList<Item>();
+		  myInventory = new ArrayList<ItemModel>();
 	  }
   }
   
@@ -58,20 +59,20 @@ public class Auction
   }
   
   //return the list of auction items
-  public List<Item> getAuctionItems()
+  public List<ItemModel> getAuctionItems()
   {
     return myInventory;
   }
   
   //add item to auction inventory list
-  public boolean addItem(Item theItem)
+  public boolean addItem(ItemModel theItem)
   {
 	  myInventory.add(theItem);
 	  return true;
   }
   
   //remove item
-  public boolean removeItem(Item theItem) {
+  public boolean removeItem(ItemModel theItem) {
 	  myInventory.remove(theItem);
 	  return true;
   }

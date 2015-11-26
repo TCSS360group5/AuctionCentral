@@ -1,10 +1,11 @@
+package model;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
 
-public class EmployeeTest {
+public class EmployeeModelTest {
 
 	@Before
 	public void setUp() throws Exception {
