@@ -77,27 +77,6 @@ public class AuctionModel
 	  return true;
   }
   
-  //edit the item name
-//  public boolean editItemName(Item theItem, String theNewName)
-//  {
-//	  myInventory.get(myInventory.indexOf(theItem)).setItemName(theNewName);
-//	  return true;
-//  }
-  
-  //edit the starting bid of the item
-//  public boolean editItemStartingBid(Item theItem, double theStartingBid)
-//  {
-//	  myInventory.get(myInventory.indexOf(theItem)).setStartingBid(theStartingBid);
-//	  return true;
-//  }
-  
-  //method to edit item's description
-//  public boolean editItemDescription(Item theItem, String theDescription)
-//  {
-//	  myInventory.get(myInventory.indexOf(theItem)).setDescription(theDescription);
-//	  return true;
-//  }
- 
   //get auction name
   public String getAuctionName()
   {
@@ -141,9 +120,9 @@ public class AuctionModel
 	  return myUserName;
   }
   
-  public void setUserName(String theUserName) {
-	  myUserName = theUserName;
-  }
+//  public void setUserName(String theUserName) {
+//	  myUserName = theUserName;
+//  }
   
   public String toStringSimple(){
 	  StringBuilder answer = new StringBuilder();

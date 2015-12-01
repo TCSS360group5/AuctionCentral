@@ -31,34 +31,65 @@ public class CalendarModel
 	 * @param theAuction the Auction to be added.
 	 * @return whether or not the auction was added.
 	 */
-	public boolean addAuction(AuctionModel theAuction)
+	public void addAuction(AuctionModel theAuction) throws AuctionException
 	{
 		LocalDate auctionDate = theAuction.getStartTime().toLocalDate();
 		LocalDateTime auctionStart = theAuction.getStartTime();
 		LocalDateTime auctionEnd = theAuction.getEndTime();
 		
+		boolean futureAuctions = checkFutureAuctions();
+		boolean ninetyDays = checkNinetyDays(auctionStart);
+		boolean weekCheck = checkWeek(auctionDate);
+		boolean timeCheck = checkTimes(auctionStart, auctionEnd);
+		
 		// checking business rules
-		if(checkFutureAuctions() && checkNinetyDays(auctionStart) && checkWeek(auctionDate) && checkTimes(auctionStart, auctionEnd))
+		if(futureAuctions && ninetyDays && weekCheck && timeCheck)
 		{
 			if(myAuctionByDateList.containsKey(auctionDate))
 			{
-				return checkAuctionsForDay(theAuction);
+				checkAuctionsForDay(theAuction);
 			}
 			else
 			{
 				ArrayList<AuctionModel> addList = new ArrayList<AuctionModel>();
 				addList.add(theAuction);
 				myAuctionByDateList.put(auctionDate, addList);
-				return true;
 			}
 		}
 		else
 		{
-			return false;
+			determineError(futureAuctions, ninetyDays, weekCheck, timeCheck);
 		}
 		 
 	}
-	  
+	
+	/**
+	 * Determines which exception to throw.
+	 * @param theFutureAuctions
+	 * @param theNinetyDays
+	 * @param theWeekCheck
+	 * @param theTimeCheck
+	 * @throws AuctionException
+	 */
+	private void determineError(boolean theFutureAuctions, boolean theNinetyDays, boolean theWeekCheck, boolean theTimeCheck) throws AuctionException
+	{
+		if(!theFutureAuctions)
+		{
+			throw new AuctionException("The number of future auctions is currently at capacity.");
+		}
+		else if(!theNinetyDays)
+		{
+			throw new AuctionException("Auctions may not be scheduled more than 90 days from the current date.");
+		}
+		else if(!theWeekCheck)
+		{
+			throw new AuctionException("There are already 5 auctions scheduled within the week of your auction.");
+		}
+		else if(!theTimeCheck)
+		{
+			throw new AuctionException("Auction end is before the beginning.");
+		}
+	}
 	/**
 	 * Checks to see if the auction starts and ends on the same calendar day (Not a business rule, but it's
 	 * convenient for our program), as well as if the auction start is before the auction end.
@@ -154,7 +185,7 @@ public class CalendarModel
 	 * @param theAuction the Auction to be added
 	 * @return whether or not the critera metioned in the above description are met.
 	 */
-	private boolean checkAuctionsForDay(AuctionModel theAuction)
+	private void checkAuctionsForDay(AuctionModel theAuction) throws AuctionException
 	{
 		LocalDate auctionDate = theAuction.getStartTime().toLocalDate();
 		LocalDateTime auctionStart = theAuction.getStartTime();
@@ -172,11 +203,10 @@ public class CalendarModel
 				{
 					dayAuctions.add(theAuction);
 					myAuctionByDateList.replace(auctionDate, dayAuctions);
-					return true;
 				}	
 				else
 				{
-					return false;
+					throw new AuctionException("Auctions must have at least 2 hours between them.");
 				}
 			}
 			else
@@ -186,18 +216,17 @@ public class CalendarModel
 				{
 					dayAuctions.add(theAuction);
 					myAuctionByDateList.replace(auctionDate, dayAuctions);
-					return true;
 				}
 				else
 				{
-					return false;
+					throw new AuctionException("Auctions must have at least 2 hours between them.");
 				}
 			}
 		}
 		// 2 auctions already scheduled for the day
 		else
 		{
-			return false;
+			throw new AuctionException("There are already 2 auctions scheduled for this day.");
 		}
 	}
 	
@@ -214,6 +243,7 @@ public class CalendarModel
 	 * @param auctionMinuteEnd the new Auction minute end.
 	 * @return whether or not the Auction was edited.
 	 */
+	/*
 	public boolean editAuctionDateTime(AuctionModel theAuction,int month, int day, int year,
 			int auctionHourStart, int auctionMinuteStart,
 			int auctionHourEnd, int auctionMinuteEnd)
@@ -244,7 +274,7 @@ public class CalendarModel
 		}
 		  
 		  
-	}
+	}*/
 	  
 	/**
 	 * Returns a sorted (by date) map of auctions for the current month.
@@ -253,7 +283,7 @@ public class CalendarModel
 	 */
 	public Map<LocalDate, ArrayList<AuctionModel>> displayCurrentMonth()
 	{
-		return displayChosenMonth(LocalDate.now().getMonth().getValue());
+		return displayChosenMonth(LocalDate.now());
 	}
 	
 	/**
@@ -262,13 +292,12 @@ public class CalendarModel
 	 * @param theMonth the month to get a map for.
 	 * @return sorted by date map of auctions for the entered month.
 	 */
-	public Map<LocalDate, ArrayList<AuctionModel>> displayChosenMonth(int theMonth)
+	public Map<LocalDate, ArrayList<AuctionModel>> displayChosenMonth(LocalDate theMonth)
 	{
 		Map<LocalDate, ArrayList<AuctionModel>> returnMap = new TreeMap<LocalDate,ArrayList<AuctionModel>>();
-		Month chosenMonth = Month.of(theMonth);
 		for(Entry<LocalDate, ArrayList<AuctionModel>> entry : myAuctionByDateList.entrySet())
 		{
-			if(entry.getKey().getMonth() == chosenMonth)
+			if(entry.getKey().equals(theMonth))
 			{
 				returnMap.put(entry.getKey(), entry.getValue());
 			}
@@ -276,6 +305,25 @@ public class CalendarModel
 		  
 		return returnMap;
 		  
+	}
+	
+	/**
+	 * Gets a Map of all future Auctions.
+	 * @return Map of all future Auctions.
+	 */
+	public Map<LocalDate, ArrayList<AuctionModel>> getAllFutureAuctions()
+	{
+		LocalDate yesterday = LocalDate.now().minusDays(1);
+		Map<LocalDate, ArrayList<AuctionModel>> returnMap = new TreeMap<LocalDate,ArrayList<AuctionModel>>();
+		for(Entry<LocalDate, ArrayList<AuctionModel>> entry : myAuctionByDateList.entrySet())
+		{
+			if(entry.getKey().isAfter(yesterday))
+			{
+				returnMap.put(entry.getKey(), entry.getValue());
+			}
+		}
+		
+		return returnMap;
 	}
 	  
 	/**
@@ -335,7 +383,7 @@ public class CalendarModel
 	 */
 	public String toString(LocalDate theDate) 
 	{
-		Map<LocalDate, ArrayList<AuctionModel>> displayMap = displayChosenMonth(theDate.getMonthValue());
+		Map<LocalDate, ArrayList<AuctionModel>> displayMap = displayChosenMonth(theDate);
 		StringBuilder answer = new StringBuilder();
 		for (Map.Entry<LocalDate,ArrayList<AuctionModel>> entry : displayMap.entrySet()) 
 		{
@@ -380,6 +428,3 @@ public class CalendarModel
 	}
   
 }
-
-	
-

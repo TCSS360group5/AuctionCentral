@@ -1,79 +1,72 @@
+/**
+ * 
+ */
 package model;
+
 import static org.junit.Assert.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Test methods for the BidderModel class.
  * 
- */
-
-/**
- * @author Cox Family
+ * @author Shannon
  *
  */
 public class BidderModelTest {
-	
-	BidderModel myBidder;
+	BidderModel myTestBidder;
 
 	/**
 	 * @throws java.lang.Exception
+	 * 
+	 * @author Shannon
 	 */
 	@Before
 	public void setUp() throws Exception {
-		myBidder = new BidderModel("charlie", UserModel.UserType.BIDDER);
-	}
-
-//	/**
-//	 * Test method for {@link Bidder#ExecuteCommand(User.Command, Calendar, Auction, Item)}.
-//	 */
-//	@Test
-//	public void testExecuteCommand() {
-//		fail("Not yet implemented");
-//	}
-
-	/**
-	 * Test method for {@link BidderModel#Bidder(java.lang.String, UserModel.UserType)}.
-	 */
-	@Test
-	public void testBidder() {
-		myBidder = new BidderModel("steve", UserModel.UserType.BIDDER);
-		assertEquals(myBidder.getUserName(), "steve");
-		assertEquals(myBidder.getUserType(), UserModel.UserType.BIDDER);
+		myTestBidder = new BidderModel("Shannon", UserModel.UserType.BIDDER);
 	}
 
 	/**
-	 * Test method for {@link BidderModel#bid(ItemModel, double)}.
+	 * Test method for {@link model.BidderModel#BidderModel(java.lang.String, model.UserModel.UserType)}.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
-	public void testBidAddedOne() {
-		ItemModel testItem = new ItemModel("vase", 20, "puple vase");
-		int bidsBefore = testItem.getBids().size();
-		//myBidder.bid(testItem, 25);
-		int bidsAfter = testItem.getBids().size();
-		assertTrue((bidsBefore + 1) == bidsAfter);
+	public void testBidderModel() {
+		assertEquals(myTestBidder.getUserName(), "Shannon");
+		assertEquals(myTestBidder.getUserType(), UserModel.UserType.BIDDER);
 	}
-	
+
 	/**
-	 * Test method for {@link BidderModel#bid(ItemModel, double)}.
+	 * Test method for {@link model.BidderModel#getBids()}.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
-	public void testBidAddedValue() {
-		ItemModel testItem = new ItemModel("vase", 20, "puple vase");
-		//myBidder.bid(testItem, 25);
-		Double bidAmount = testItem.getBids().get(myBidder);
-		assertTrue(bidAmount == 25);
+	public void testGetBids() {
+		Map<ItemModel, Double> bids = new HashMap<>();
+		ItemModel item = new ItemModel("laptop", 200, "Dell");
+		bids.put(item, 250.00);
+		myTestBidder.addBid(item, 250);
+		assertEquals(myTestBidder.getBids(), bids);
 	}
-	
+
 	/**
-	 * Test method for {@link BidderModel#bid(ItemModel, double)}.
+	 * Test method for {@link model.BidderModel#addBid(model.ItemModel, double)}.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
-	public void testBidBidTooLow() {
-		ItemModel testItem = new ItemModel("vase", 20, "puple vase");
-		int bidsBefore = testItem.getBids().size();
-		//myBidder.bid(testItem, 19);
-		int bidsAfter = testItem.getBids().size();
-		assertTrue(bidsBefore == bidsAfter);
+	public void testAddBid() {
+		Map<ItemModel, Double> bids = new HashMap<>();
+		ItemModel item = new ItemModel("laptop", 200, "Dell");
+		bids.put(item, 250.00);
+		myTestBidder.addBid(item, 250);
+		assertEquals(myTestBidder.getBids(), bids);
 	}
+
 }
