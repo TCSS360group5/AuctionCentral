@@ -1,6 +1,9 @@
 package model;
 import static org.junit.Assert.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,6 +25,8 @@ public class ItemModelTest {
 	
 	/**
 	 * @throws java.lang.Exception
+	 * 
+	 * @author Brendan, Shannon
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -31,19 +36,30 @@ public class ItemModelTest {
 
 	/**
 	 * Test method for {@link ItemModel#Item(java.lang.String, double, java.lang.String)}.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
 	public void testItemConstructor() {
 		assertEquals(myTestItem.getItemName(), "Shirt");
 	}
 
-	@Test
-	public void testItemBidAddedOneBid() {
-		myTestItem.bidOnItem(myTestBidder, theNextBid);
-		myTestItem.getBids().get(myTestBidder);
-		assertTrue(myTestItem.getBids().get(myTestBidder).doubleValue() == theNextBid);			
-	}
+//	/**
+//	 * Test method for adding one bid
+//	 * 
+//	 * @author Shannon
+//	 */
+//	@Test
+//	public void testItemBidAddedOneBid() {
+//		myTestItem.bidOnItem(myTestBidder, theNextBid);
+//		assertEquals(myTestItem.getBids().get(myTestBidder).doubleValue(), theNextBid, 0);			
+//	}
 	
+	/**
+	 * Test method for making sure the bids are updated when the item is bidded on.
+	 * 
+	 * @author 
+	 */
 	@Test
 	public void testItemBidBidChanged() {
 		int numBids = myTestItem.getBids().size();
@@ -54,26 +70,36 @@ public class ItemModelTest {
 
 	/**
 	 * Test method for {@link ItemModel#getBids()}.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
 	public void testGetBids() {
-		fail("Not yet implemented");
+		myTestItem.bidOnItem(myTestBidder, theNextBid);
+		Map<UserModel, Double> bids = new HashMap<>();
+		bids.put(myTestBidder, theNextBid);
+		assertEquals(myTestItem.getBids(), bids);
 	}
 
 	/**
 	 * Test method for {@link ItemModel#bidOnItem(UserModel, double)}.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
 	public void testBidOnItem() {
-		fail("Not yet implemented");
+		myTestItem.bidOnItem(myTestBidder, theNextBid);
+		assertEquals(myTestItem.getBids().get(myTestBidder).doubleValue(), theNextBid, 0);	
 	}
 
 	/**
 	 * Test method for {@link ItemModel#updateBid(UserModel, double)}.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
 	public void testUpdateBid() {
-		fail("Not yet implemented");
+		myTestItem.updateBid(myTestBidder, 50);
+		assertEquals(myTestItem.getBids().get(myTestBidder).doubleValue(), 50, 0);
 	}
-
 }
