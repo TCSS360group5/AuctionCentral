@@ -57,7 +57,6 @@ public UserController(String theUserType)
 			answerString ="All Upcomming Auctions";
 			break;
 		default:
-			//System.out.println("need to add menu title");
 			break;
 		
 		 }
@@ -132,7 +131,6 @@ public UserController(String theUserType)
 public boolean ExecuteCommand(Command theCommand, CalendarModel theCalendar, AuctionModel theAuction, ItemModel theItem)
   {
 	  boolean answer = false;
-	  //System.out.println("Command Not Recognized");
 	  return answer;
   }
 
@@ -168,16 +166,13 @@ public boolean ExecuteCommand(Command theCommand, CalendarModel theCalendar, Auc
 		  UserController.Command answer = theCurrentState;
 			switch (theCurrentState)
 			 {			
-//				case VIEWCALENDAR:
-//					answer = UserController.Command.VIEWMAINMENU;
-//					break;
 				case VIEWAUCTIONDETAILS:
 					answer = UserController.Command.VIEWCALENDAR;
 					break;
 		 		default:
 		 			System.out.println("Cannot Go Back");
 		 			break;						 
-			 }		
+			 }
 			return answer;
 		}
 	
@@ -189,10 +184,6 @@ public boolean ExecuteCommand(Command theCommand, CalendarModel theCalendar, Auc
 				answer.add(UserController.Command.GOBACK);
 				break;
 			//CALENDAR has its own menu	
-//			case VIEWCALENDAR:
-//				answer.add(UserController.Command.GOBACK);
-//				answer.add(UserController.Command.VIEWAUCTIONDETAILS);
-//				break;
 			case VIEWMAINMENU:
 				answer.add(UserController.Command.VIEWCALENDAR);
 				break;

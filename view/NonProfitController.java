@@ -10,9 +10,6 @@ import model.*;
 
 public class NonProfitController extends UserController
 {
-//  private LocalDate myLastAuctionDate;
-//  private Auction myAuction; 
-//  private String myNPOName;
 	private NonProfitModel myNonProfitModel;
   
   public NonProfitController(UserModel theModel){
@@ -261,82 +258,7 @@ private ItemModel getItemDetailsFromUser(Scanner user_input)
 		  System.out.println("Item could not be added");
 	  }
   }
-//   
-//  private int checkYear(Scanner user_input) 
-//  {
-//	  int year;
-//	  System.out.println("Please enter the Auction year:");
-//	  year = user_input.nextInt();
-//	  if (year < LocalDate.now().getYear() || year > LocalDate.now().plusYears(1).getYear())
-//	  {
-//		  System.out.println("Auctions can only be sheduled this year and next year.");
-//		  year = checkYear(user_input);
-//	  }
-//	return year;
-//  }
-//  
-//  public boolean check365(LocalDate theDate)
-//  {
-//	  boolean answer = false;
-//	  if(theDate.minusDays(365).isAfter(myLastAuctionDate))
-//	  {
-//		  answer = true;
-//	  } else {
-//		  System.out.println("Your next auction must be 365 days after your last auction");
-//	  }
-//	  return answer;
-//  }
-  
-//  public String getNPOName()
-//  {
-//	  return myNPOName;
-//  }
-//  
-//  public void setNPOName(String theNewName)
-//  {
-//	  myNPOName = theNewName;
-//  }
-//  
-//  public LocalDate getCurrentAuctionDate() 
-//  {
-//	  if (myAuction != null)
-//	  {
-//		  return myAuction.getStartTime().toLocalDate();
-//	  } 
-//	  else 
-//	  {
-//		  return null;
-//	  }	  
-//  }
-  
-//  public LocalDate getLastAuctionDate() {
-//	return myLastAuctionDate;
-//  }
-//  
-//  public void setLastAuctionDate(LocalDate myLastAuctionDate) {
-//	this.myLastAuctionDate = myLastAuctionDate;
-//  }
-//
-//public Auction getAuction()
-//  {
-//	  return myAuction;
-//  }
-//  
-//  public boolean setAuction(Auction theAuction)
-//  {
-//	  myAuction = theAuction;
-//	  return false;
-//  }
-  
-//  public boolean hasAuction()
-//  {
-//	  
-//	  return myExistingAuctionStatus;
-//  }
-//  public boolean hasAuction()
-//  {
-//	  return myAuction != null;
-//  }
+
   
   private LocalDateTime getAuctionDateTimeFromUser(Scanner theInput)
   {
