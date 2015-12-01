@@ -13,7 +13,7 @@ import org.junit.Test;
  */
 
 /**
- * @author Cox Family
+ * Tests for the AuctionModel class.
  *
  */
 public class AuctionModelTest {
@@ -24,6 +24,7 @@ public class AuctionModelTest {
 	
 	/**
 	 * @throws java.lang.Exception
+	 * @author Shannon
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -36,6 +37,7 @@ public class AuctionModelTest {
 	
 	/**
 	 * Test method for {@link Auction#Auction(java.lang.String, java.lang.String, java.time.LocalDateTime, java.time.LocalDateTime, java.util.List)}.
+	 * @author Shannon
 	 */
 	@Test
 	public void testAuctionModelCopyConstructorWithItems() {
@@ -44,11 +46,19 @@ public class AuctionModelTest {
 		assertEquals(testAuctionWithItems.getAuctionItems().get(0).getItemName(), inventory.get(0).getItemName());
 	}
 
+	/**
+	 * 
+	 * @author Shannon
+	 */
 	@Test
 	public void testGetAuctionOrg() {
 		assertEquals(testAuction.getAuctionOrg(), "My Org Name");
 	}
 	
+	/**
+	 * 
+	 * @author Shannon
+	 */
 	@Test
 	public void testSetAuctionOrg() {
 		testAuction.setAuctionOrg("Cats");
@@ -57,6 +67,8 @@ public class AuctionModelTest {
 	
 	/**
 	 * Test method for {@link AuctionModel#addItem(ItemModel)}.
+	 * 
+	 * @author 
 	 */
 	@Test
 	public void testAddItem() {
@@ -69,6 +81,8 @@ public class AuctionModelTest {
 
 	/**
 	 * Test method for {@link Auction#getStartTime()}.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
 	public void testGetStartTime() {
@@ -77,6 +91,8 @@ public class AuctionModelTest {
 
 	/**
 	 * Test method for {@link Auction#setStartTime(java.time.LocalDateTime)}.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
 	public void testSetStartTime() {
@@ -86,6 +102,8 @@ public class AuctionModelTest {
 
 	/**
 	 * Test method for {@link Auction#getEndTime()}.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
 	public void testGetEndTime() {
@@ -94,6 +112,8 @@ public class AuctionModelTest {
 
 	/**
 	 * Test method for {@link Auction#setEndTime(java.time.LocalDateTime)}.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
 	public void testSetEndTime() {
@@ -103,6 +123,8 @@ public class AuctionModelTest {
 
 	/**
 	 * Test method for {@link Auction#setAuctionDate(java.time.LocalDateTime, java.time.LocalDateTime)}.
+	 *
+	 * @author Shannon
 	 */
 	@Test
 	public void testSetAuctionDate() {
@@ -111,11 +133,19 @@ public class AuctionModelTest {
 		assertEquals(testAuction.getEndTime(), now.plusDays(3).plusHours(3));
 	}
 
+	/**
+	 * 
+	 * @author Shannon
+	 */
 	@Test
 	public void testGetAuctionName() {
 		assertEquals(testAuction.getAuctionName(), "My-Org-Name-DECEMBER-2-2015");
 	}
 	
+	/**
+	 * 
+	 * @author Shannon
+	 */
 	@Test
 	public void testRemoveItem() {
 		ItemModel item = testAuctionWithItems.getAuctionItems().get(0);
@@ -123,6 +153,10 @@ public class AuctionModelTest {
 		assertTrue(testAuctionWithItems.getAuctionItems().isEmpty());
 	}
 	
+	/**
+	 * 
+	 * @author Shannon
+	 */
 	@Test
 	public void testGetUserName() {
 		assertEquals(testAuction.getUserName(), "steve");

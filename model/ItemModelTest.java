@@ -9,57 +9,46 @@ import org.junit.Test;
  */
 
 /**
- * @author Cox Family
+ * 
+ * @author Brendan, Shannon
  *
  */
 public class ItemModelTest {
 
+	ItemModel myTestItem;
+	BidderModel myTestBidder;
+	double bidTooLow = 23;
+	double theNextBid = 41;
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
+		myTestItem = new ItemModel("Shirt", 10, "Blue shirt");
+		myTestBidder = new BidderModel("brendo", UserModel.UserType.BIDDER);
 	}
 
 	/**
 	 * Test method for {@link ItemModel#Item(java.lang.String, double, java.lang.String)}.
 	 */
 	@Test
-	public void testItem() {
-		fail("Not yet implemented");
-	}
-	
-	ItemModel itemToTest;
-	BidderModel bidderToTest;
-	
-	double bidTooLow = 23;
-	double theNextBid = 41;
-	//User bidderToTest;
-	
-	@Before
-	public void setupBefore()
-	{
-		bidderToTest = new BidderModel("brendo", UserModel.UserType.BIDDER);
+	public void testItemConstructor() {
+		assertEquals(myTestItem.getItemName(), "Shirt");
 	}
 
 	@Test
 	public void testItemBidAddedOneBid() {
-		
-		//User bidderToTest = new User("brendo", User.UserType.BIDDER);
-		ItemModel itemToTest = new ItemModel("Chair", 25, "nice flashy chair");
-		itemToTest.bidOnItem(bidderToTest, theNextBid);
-		itemToTest.getBids().get(bidderToTest);
-		assertTrue(itemToTest.getBids().get(bidderToTest).doubleValue() == theNextBid);			
+		myTestItem.bidOnItem(myTestBidder, theNextBid);
+		myTestItem.getBids().get(myTestBidder);
+		assertTrue(myTestItem.getBids().get(myTestBidder).doubleValue() == theNextBid);			
 	}
 	
 	@Test
 	public void testItemBidBidChanged() {
-		
-		//User bidderToTest = new User("brendo", User.UserType.BIDDER);
-		ItemModel itemToTest = new ItemModel("Chair", 25, "nice flashy chair");
-		int numBids = itemToTest.getBids().size();
-		itemToTest.bidOnItem(bidderToTest, theNextBid);
-		assertEquals(numBids + 1, itemToTest.getBids().size());			
+		int numBids = myTestItem.getBids().size();
+		myTestItem.bidOnItem(myTestBidder, theNextBid);
+		assertEquals(numBids + 1, myTestItem.getBids().size());			
 	}
 
 
