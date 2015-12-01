@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Test methods for the BidderModel class.
+ * 
  * @author Shannon
  *
  */
