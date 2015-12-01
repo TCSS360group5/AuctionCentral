@@ -47,6 +47,7 @@ public class AuctionModelTest {
 	}
 
 	/**
+	 * Test method for the getAuctionOrg() method.
 	 * 
 	 * @author Shannon
 	 */
@@ -56,7 +57,7 @@ public class AuctionModelTest {
 	}
 	
 	/**
-	 * 
+	 * Test method for the setAuctionOrg() method.
 	 * @author Shannon
 	 */
 	@Test
@@ -134,6 +135,7 @@ public class AuctionModelTest {
 	}
 
 	/**
+	 * Test method for the getAuctionName() method.
 	 * 
 	 * @author Shannon
 	 */
@@ -143,7 +145,7 @@ public class AuctionModelTest {
 	}
 	
 	/**
-	 * 
+	 * Test method for the removeItem() method.
 	 * @author Shannon
 	 */
 	@Test
@@ -154,6 +156,7 @@ public class AuctionModelTest {
 	}
 	
 	/**
+	 * Test method for the getUserName() method.
 	 * 
 	 * @author Shannon
 	 */

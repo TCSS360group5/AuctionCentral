@@ -428,6 +428,3 @@ public class CalendarModel
 	}
   
 }
-
-	
-
