@@ -283,7 +283,7 @@ public class CalendarModel
 	 */
 	public Map<LocalDate, ArrayList<AuctionModel>> displayCurrentMonth()
 	{
-		return displayChosenMonth(LocalDate.now().getMonth().getValue());
+		return displayChosenMonth(LocalDate.now());
 	}
 	
 	/**
@@ -292,13 +292,12 @@ public class CalendarModel
 	 * @param theMonth the month to get a map for.
 	 * @return sorted by date map of auctions for the entered month.
 	 */
-	public Map<LocalDate, ArrayList<AuctionModel>> displayChosenMonth(int theMonth)
+	public Map<LocalDate, ArrayList<AuctionModel>> displayChosenMonth(LocalDate theMonth)
 	{
 		Map<LocalDate, ArrayList<AuctionModel>> returnMap = new TreeMap<LocalDate,ArrayList<AuctionModel>>();
-		Month chosenMonth = Month.of(theMonth);
 		for(Entry<LocalDate, ArrayList<AuctionModel>> entry : myAuctionByDateList.entrySet())
 		{
-			if(entry.getKey().getMonth() == chosenMonth)
+			if(entry.getKey().equals(theMonth))
 			{
 				returnMap.put(entry.getKey(), entry.getValue());
 			}
@@ -306,6 +305,25 @@ public class CalendarModel
 		  
 		return returnMap;
 		  
+	}
+	
+	/**
+	 * Gets a Map of all future Auctions.
+	 * @return Map of all future Auctions.
+	 */
+	public Map<LocalDate, ArrayList<AuctionModel>> getAllFutureAuctions()
+	{
+		LocalDate yesterday = LocalDate.now().minusDays(1);
+		Map<LocalDate, ArrayList<AuctionModel>> returnMap = new TreeMap<LocalDate,ArrayList<AuctionModel>>();
+		for(Entry<LocalDate, ArrayList<AuctionModel>> entry : myAuctionByDateList.entrySet())
+		{
+			if(entry.getKey().isAfter(yesterday))
+			{
+				returnMap.put(entry.getKey(), entry.getValue());
+			}
+		}
+		
+		return returnMap;
 	}
 	  
 	/**
@@ -365,7 +383,7 @@ public class CalendarModel
 	 */
 	public String toString(LocalDate theDate) 
 	{
-		Map<LocalDate, ArrayList<AuctionModel>> displayMap = displayChosenMonth(theDate.getMonthValue());
+		Map<LocalDate, ArrayList<AuctionModel>> displayMap = displayChosenMonth(theDate);
 		StringBuilder answer = new StringBuilder();
 		for (Map.Entry<LocalDate,ArrayList<AuctionModel>> entry : displayMap.entrySet()) 
 		{
