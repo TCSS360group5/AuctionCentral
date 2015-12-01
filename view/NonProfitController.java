@@ -165,10 +165,14 @@ public class NonProfitController extends UserController
 	  }
   	  if (auctionCanBeAdded){
 		  AuctionModel tempAuction = new AuctionModel(myNonProfitModel.getNPOName(), myNonProfitModel.getUserName(), startTime, endTime);
-		  if(theCalendar.addAuction(tempAuction))
+		  try
 		  {
+			  theCalendar.addAuction(tempAuction);	
 			  System.out.println("Auction added!");
 			  myNonProfitModel.setAuction(tempAuction);
+		  } catch (AuctionException e)
+		  {
+			  System.out.println(e.getExceptionString());
 		  }
 	  }
   }
@@ -222,17 +226,23 @@ public class NonProfitController extends UserController
 			  List<ItemModel> auctionItems = myNonProfitModel.getAuction().getAuctionItems();
 			  AuctionModel newAuction = new AuctionModel(myNonProfitModel.getNPOName(), myNonProfitModel.getUserName(), startTime, endTime, auctionItems);
 			  theCalendar.removeAuction(myNonProfitModel.getAuction());
-			  if(theCalendar.addAuction(newAuction))
+			  try
 			  {
+				  theCalendar.addAuction(newAuction);
 				  myNonProfitModel.setAuction(newAuction);
 				  System.out.println("Auction has been edited.");
 				  System.out.println("Edited Auction Details:");
 				  System.out.println(myNonProfitModel.getAuction().toString());
-			  }
-			  else
+			  } catch(AuctionException e)
 			  {
-				  theCalendar.addAuction(myNonProfitModel.getAuction());
-				  System.out.println("There was an error. Your auction has not been edited.");
+				  try
+				  {
+					  theCalendar.addAuction(myNonProfitModel.getAuction());
+				  } catch(AuctionException r)
+				  {
+					  // do nothing, this auction was already in the calendar
+				  }
+				  System.out.println(e.getExceptionString());
 			  }
 		  }
 	  }
