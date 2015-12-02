@@ -8,6 +8,12 @@ import java.util.Scanner;
 
 import model.*;
 
+/**
+ * Controller for a NonProfit using the system.
+ * 
+ * @author TCSS 360 Group 5
+ *
+ */
 public class NonProfitController extends UserController
 {
 //  private LocalDate myLastAuctionDate;
@@ -165,14 +171,10 @@ public class NonProfitController extends UserController
 	  }
   	  if (auctionCanBeAdded){
 		  AuctionModel tempAuction = new AuctionModel(myNonProfitModel.getNPOName(), myNonProfitModel.getUserName(), startTime, endTime);
-		  try
+		  if(theCalendar.addAuction(tempAuction))
 		  {
-			  theCalendar.addAuction(tempAuction);	
 			  System.out.println("Auction added!");
 			  myNonProfitModel.setAuction(tempAuction);
-		  } catch (AuctionException e)
-		  {
-			  System.out.println(e.getExceptionString());
 		  }
 	  }
   }
@@ -226,23 +228,17 @@ public class NonProfitController extends UserController
 			  List<ItemModel> auctionItems = myNonProfitModel.getAuction().getAuctionItems();
 			  AuctionModel newAuction = new AuctionModel(myNonProfitModel.getNPOName(), myNonProfitModel.getUserName(), startTime, endTime, auctionItems);
 			  theCalendar.removeAuction(myNonProfitModel.getAuction());
-			  try
+			  if(theCalendar.addAuction(newAuction))
 			  {
-				  theCalendar.addAuction(newAuction);
 				  myNonProfitModel.setAuction(newAuction);
 				  System.out.println("Auction has been edited.");
 				  System.out.println("Edited Auction Details:");
 				  System.out.println(myNonProfitModel.getAuction().toString());
-			  } catch(AuctionException e)
+			  }
+			  else
 			  {
-				  try
-				  {
-					  theCalendar.addAuction(myNonProfitModel.getAuction());
-				  } catch(AuctionException r)
-				  {
-					  // do nothing, this auction was already in the calendar
-				  }
-				  System.out.println(e.getExceptionString());
+				  theCalendar.addAuction(myNonProfitModel.getAuction());
+				  System.out.println("There was an error. Your auction has not been edited.");
 			  }
 		  }
 	  }

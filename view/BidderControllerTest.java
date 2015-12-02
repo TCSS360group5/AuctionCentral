@@ -23,8 +23,8 @@ public class BidderControllerTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		BidderModel theBidderModel = new BidderModel("charlie", UserModel.UserType.BIDDER);
-		myBidder = new BidderController(theBidderModel);
+		BidderModel bidderModel = new BidderModel("charlie", UserModel.UserType.BIDDER);
+		myBidder = new BidderController(bidderModel);
 	}
 
 	/**

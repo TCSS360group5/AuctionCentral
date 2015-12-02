@@ -9,14 +9,14 @@ import org.junit.Test;
 
 
 public class NonProfitModelTest {
-NonProfitModel myNPO;
-AuctionModel currentAuction;
-AuctionModel OverAYearAgoAuction;
-AuctionModel AYearAgoAuction;
-AuctionModel LessThanAYearAgoAuction;
-LocalDateTime OverAYearAgo;
-LocalDateTime AYearAgo;
-LocalDateTime LessThanAYearAgo;
+	NonProfitModel myNPO;
+	AuctionModel currentAuction;
+	AuctionModel OverAYearAgoAuction;
+	AuctionModel AYearAgoAuction;
+	AuctionModel LessThanAYearAgoAuction;
+	LocalDateTime OverAYearAgo;
+	LocalDateTime AYearAgo;
+	LocalDateTime LessThanAYearAgo;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -80,45 +80,4 @@ LocalDateTime LessThanAYearAgo;
 
 		  assertTrue(thrown);
 	}
-
-//	@Test
-//	public void testSetExistingActionStatus() {
-//		fail("Not yet implemented"); // TODO
-//	}
-//
-//	@Test
-//	public void testGetNPOName() {
-//		fail("Not yet implemented"); // TODO
-//	}
-//
-//	@Test
-//	public void testSetNPOName() {
-//		fail("Not yet implemented"); // TODO
-//	}
-//
-//	@Test
-//	public void testGetLastAuctionDate() {
-//		fail("Not yet implemented"); // TODO
-//	}
-//
-//	@Test
-//	public void testSetLastAuctionDate() {
-//		fail("Not yet implemented"); // TODO
-//	}
-//
-//	@Test
-//	public void testGetAuction() {
-//		fail("Not yet implemented"); // TODO
-//	}
-//
-//	@Test
-//	public void testSetAuction() {
-//		fail("Not yet implemented"); // TODO
-//	}
-//
-//	@Test
-//	public void testHasAuction() {
-//		fail("Not yet implemented"); // TODO
-//	}
-
 }
