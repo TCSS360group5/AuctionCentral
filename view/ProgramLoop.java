@@ -170,24 +170,24 @@ public class ProgramLoop {
 		return addedUser;
 	}
 		
-	/**
-	 * Check the list of Auctions to see if the NPO has an auction scheduled already.
-	 * 
-	 * @param theAuctions the list of auctions
-	 * @param theNPOname the name of the NPO being searched for
-	 * @return true if an auction exists, false otherwise
-	 */
-	
-	public static boolean checkAuctions(List<AuctionModel> theAuctions, String theNPOname, String theUserName) 
-	{
-		boolean result = false;
-		for(int i = 0; i < theAuctions.size(); i++) {
-			if(theAuctions.get(i).getAuctionOrg().equals(theNPOname)) {// && theAuctions.get(i).getUserName().equals(theUserName)) {
-				result = true;
-			}
-		}
-		return result;
-	}
+//	/**
+//	 * Check the list of Auctions to see if the NPO has an auction scheduled already.
+//	 * 
+//	 * @param theAuctions the list of auctions
+//	 * @param theNPOname the name of the NPO being searched for
+//	 * @return true if an auction exists, false otherwise
+//	 */
+//	
+//	public static boolean checkAuctions(List<AuctionModel> theAuctions, String theNPOname, String theUserName) 
+//	{
+//		boolean result = false;
+//		for(int i = 0; i < theAuctions.size(); i++) {
+//			if(theAuctions.get(i).getAuctionOrg().equals(theNPOname)) {// && theAuctions.get(i).getUserName().equals(theUserName)) {
+//				result = true;
+//			}
+//		}
+//		return result;
+//	}
 	
 	/**
 	 * Executes the program.
@@ -409,21 +409,21 @@ public class ProgramLoop {
 	
 
 	
-	/**
-	 * Returns whether or not the specified NPO has an auction already.
-	 * 
-	 * @param theNPOname the name of the NonProfit Organization we are checking
-	 * @return true if an auction exists, false otherwise
-	 */
-	public boolean hasExistingAuction(String theNPOname) {
-		AuctionModel auction;
-		boolean result = false;
-		for(int i = 0; i < myAuctionList.size(); i++) {
-			auction = myAuctionList.get(i);
-			if(auction.myOrgName.equals(theNPOname)) {
-				result = true;
-			}
-		}
-		return result;
-	}
+//	/**
+//	 * Returns whether or not the specified NPO has an auction already.
+//	 * 
+//	 * @param theNPOname the name of the NonProfit Organization we are checking
+//	 * @return true if an auction exists, false otherwise
+//	 */
+//	public boolean hasExistingAuction(String theNPOname) {
+//		AuctionModel auction;
+//		boolean result = false;
+//		for(int i = 0; i < myAuctionList.size(); i++) {
+//			auction = myAuctionList.get(i);
+//			if(auction.myOrgName.equals(theNPOname)) {
+//				result = true;
+//			}
+//		}
+//		return result;
+//	}
 }
