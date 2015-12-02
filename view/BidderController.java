@@ -5,28 +5,35 @@ import java.util.Scanner;
 
 import model.*;
 
-
-
 /**
- * @author Group 5
- * The bidder class represents the bidders that use our system and produces
- * the menus and allows the bidder to bid and edit his bid.
+ * The BidderController class represents the bidders that use our system.
+ * It controls the Bidder menus and functions for our system.
+ * 
+ * @author TCSS 360 Group 5
  */
 public class BidderController extends UserController
 {
 	private BidderModel myBidderModel;
 	  
+	/**
+	 * Creates a BidderController using the passed BidderModel.
+	 * 
+	 * @param theModel a UserModel (BidderModel) that will be used for the controller.
+	 * @author
+	 */
     public BidderController(UserModel theModel) {
 		super("Bidder");
 		myBidderModel = (BidderModel) theModel;
 	}
 
 	/**
-     * This function accepts the item and the bid and then puts the bid in the item.
+     * Accepts the item and the bid and then puts the bid in the item.
+     * If the bid is too low, a message is printed to the console and the bid is not added.
      * 
-	 * @param theItem
-	 * @param theBid
-	 * @return if fail return false, also print to console why failed.
+	 * @param theItem the item being bidded on
+	 * @param theBid the amount for the bid
+	 * @return true IFF the bid is greater than the starting bid
+	 * @author 
 	 */
 	public boolean bid(ItemModel theItem, double theBid){
 		  boolean answer = false;
@@ -46,7 +53,6 @@ public class BidderController extends UserController
 	/* (non-Javadoc)
 	 * @see User#ExecuteCommand(User.Command, Calendar, Auction, Item)
 	 */
-
 	@Override
 	public boolean ExecuteCommand(Command theCommand, CalendarModel theCalendar,
 			AuctionModel theAuction, ItemModel theItem) {
@@ -96,19 +102,6 @@ public class BidderController extends UserController
 				break;
 		}
 		return answer;
-	}
-	
-
-	private void bidOnItem(Scanner user_input, ItemModel theItem) {
-		double bid;
-		System.out.println("Please Enter a Bid:");
-		bid = user_input.nextDouble();
-		if (theItem.getStartingBid() > bid) {
-			System.out.println("Bid is below minimum bid for this item.");
-		}else {
-			myBidderModel.getBids().put(theItem, bid);
-			System.out.println("Bid entered.");
-		}	
 	}
 	
 	@Override
@@ -181,5 +174,34 @@ public class BidderController extends UserController
 	 			break;						 
 		 }		
 		return answer;
+	}
+	
+	/**
+	 * Returns the BidderModel associated with this BidderController.
+	 * (Used for testing purposes)
+	 * 
+	 * @return myBidderModel
+	 * @author Shannon
+	 */
+	public BidderModel getBidderModel() {
+		return myBidderModel;
+	}
+	
+	/**
+	 * Used for the BidderController to add bids.
+	 * 
+	 * @param theUserInput the Scanner used to read user input from console
+	 * @param theItem the item being bidded on
+	 */
+	private void bidOnItem(Scanner theUserInput, ItemModel theItem) {
+		double bid;
+		System.out.println("Please Enter a Bid:");
+		bid = theUserInput.nextDouble();
+		if (theItem.getStartingBid() > bid) {
+			System.out.println("Bid is below minimum bid for this item.");
+		}else {
+			myBidderModel.getBids().put(theItem, bid);
+			System.out.println("Bid entered.");
+		}	
 	}
 }
