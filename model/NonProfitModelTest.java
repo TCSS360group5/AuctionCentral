@@ -9,14 +9,14 @@ import org.junit.Test;
 
 
 public class NonProfitModelTest {
-NonProfitModel myNPO;
-AuctionModel currentAuction;
-AuctionModel OverAYearAgoAuction;
-AuctionModel AYearAgoAuction;
-AuctionModel LessThanAYearAgoAuction;
-LocalDateTime OverAYearAgo;
-LocalDateTime AYearAgo;
-LocalDateTime LessThanAYearAgo;
+	NonProfitModel myNPO;
+	AuctionModel currentAuction;
+	AuctionModel OverAYearAgoAuction;
+	AuctionModel AYearAgoAuction;
+	AuctionModel LessThanAYearAgoAuction;
+	LocalDateTime OverAYearAgo;
+	LocalDateTime AYearAgo;
+	LocalDateTime LessThanAYearAgo;
 	
 	@Before
 	public void setUp() throws Exception {

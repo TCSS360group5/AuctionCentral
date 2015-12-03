@@ -167,13 +167,12 @@ public class FileSaving {
 		        theAuctionList.add(newAuction);
 		        UserModel userToAdd = FindUserByNPOName(orgName, myUserList);
 		        ((NonProfitModel)userToAdd).setAuction(newAuction);
-		        try
-		        {
-		        	theCalendar.addAuction(newAuction);
-		        } catch (AuctionException e) {
-		        	System.out.println(e.getExceptionString());
-		  	 	}
-		        
+		        try {
+					theCalendar.addAuction(newAuction);
+				} catch (AuctionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		        
 		        if(s.hasNextLine()) 			// bug fix for input mismatch exceptions
 		        {

@@ -20,6 +20,7 @@ public class AuctionModelTest {
 
 	AuctionModel testAuction;
 	AuctionModel testAuctionWithItems;
+	AuctionModel testAuctionForName;
 	LocalDateTime now = LocalDateTime.now();
 	
 	/**
@@ -32,7 +33,8 @@ public class AuctionModelTest {
 	
 		List<ItemModel> inventory = new ArrayList<ItemModel>();
 		inventory.add(new ItemModel("item", 20, "cool item"));
-		testAuctionWithItems = new AuctionModel("My Org Name", "steve", now.plusDays(2), now.plusDays(2).plusHours(2), inventory);
+		LocalDateTime theAuctionDate = LocalDateTime.of(2015, 12, 04, 12, 30);
+		testAuctionWithItems = new AuctionModel("My Org Name", "steve", theAuctionDate, theAuctionDate.plusHours(2), inventory);
 	}
 	
 	/**
@@ -141,7 +143,7 @@ public class AuctionModelTest {
 	 */
 	@Test
 	public void testGetAuctionName() {
-		assertEquals(testAuction.getAuctionName(), "My-Org-Name-DECEMBER-2-2015");
+		assertEquals(testAuction.getAuctionName(), "My-Org-Name-DECEMBER-4-2015");
 	}
 	
 	/**

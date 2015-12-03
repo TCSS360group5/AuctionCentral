@@ -1,4 +1,5 @@
 package view;
+import model.EmployeeModel;
 import model.UserModel;
 
 
@@ -6,19 +7,22 @@ import model.UserModel;
 /**
  * This class represents an Auction Central Employee and gives the
  *  functionality to move around the menus.
+ *  
+ *  @author TCSS 360 Group 5
  */
 public class EmployeeController extends UserController
 {
 	
-	//private EmployeeModel myEmployeeModel;
+	private EmployeeModel myEmployeeModel;
 
-  /**
- * @param theUsername
- * @param theUserType
- */
-public EmployeeController(UserModel theModel) {
+	/**
+	 * Creates a new EmployeeController using the EmployeeModel passed in.
+	 * 
+	 * @param theModel the EmployeeModel to be used by the controller.
+	 */
+	public EmployeeController(UserModel theModel) {
 		super("Employee");
-		//myEmployeeModel = (EmployeeModel) theModel;		
+		myEmployeeModel = (EmployeeModel) theModel;		
 	}
 
 	/**
@@ -42,4 +46,9 @@ public EmployeeController(UserModel theModel) {
 		 } 		 
 		return answer;
 	}
+	
+	public EmployeeModel getEmployeeModel() {
+		return myEmployeeModel;
+	}
+	
 }
