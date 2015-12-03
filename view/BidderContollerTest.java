@@ -7,10 +7,6 @@ import org.junit.Test;
 import model.*;
 
 /**
- * 
- */
-
-/**
  * @author Cox Family
  *
  */

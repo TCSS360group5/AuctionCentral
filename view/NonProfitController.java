@@ -24,7 +24,7 @@ public class NonProfitController extends UserController
 	  switch (theCommand)
 	  {
 	  case VIEWMYAUCTION:
-		  System.out.println("\n" + ((NonProfitModel)theUser).getAuction().toString());
+		  System.out.println("\n" + auctionToString(((NonProfitModel)theUser).getAuction()));
 		  answer.add(UserController.Command.GOBACK);
 		  answer.add(UserController.Command.EDITAUCTION);
 		  answer.add(UserController.Command.VIEWITEM);
@@ -35,11 +35,13 @@ public class NonProfitController extends UserController
 		  answer.add(UserController.Command.EDITITEM);
 		  break;
 	  case VIEWMAINMENU:
-		  if(myNonProfitModel.canAddAuction()) {
-			  answer.add(UserController.Command.ADDAUCTION);			  
-		  } else {
-			  answer.add(UserController.Command.VIEWMYAUCTION);
-		  }
+		  answer.add(UserController.Command.ADDAUCTION);
+		  answer.add(UserController.Command.VIEWMYAUCTION);
+//		  if(myNonProfitModel.canAddAuction()) {
+//			  answer.add(UserController.Command.ADDAUCTION);			  
+//		  } else {
+//			  answer.add(UserController.Command.VIEWMYAUCTION);
+//		  }
 	  break;
 		default:
 			System.out.println("Menu Command Not Recognized");
@@ -49,35 +51,26 @@ public class NonProfitController extends UserController
   }
 
 @Override
-  public boolean ExecuteCommand(Command theCommand, CalendarModel theCalendar, AuctionModel theAuction, ItemModel theItem)
+  public void ExecuteCommand(Command theCommand, CalendarModel theCalendar, AuctionModel theAuction, ItemModel theItem)
   {
-	  //ArrayList<Command> answer = new ArrayList<Command>();
-	  boolean answer = false;
 	  Scanner user_input = new Scanner( System.in );
 	  switch (theCommand) {
 		  case ADDAUCTION:	  
 			  addAuction(user_input, theCalendar);
-			  answer = true;
 			  break;
 		  case EDITAUCTION:				  
 			  editAuction(user_input, theCalendar);	
-			  answer = true;
 			  break;
 		  case ADDITEM:
 			  ItemModel tempItem = getItemDetailsFromUser(user_input);	
 			 addItemToAuction(myNonProfitModel.getAuction(), tempItem);
-			  answer = true;
 			  break;
 		  case EDITITEM:
 			  editItem(theItem, user_input, theAuction);
-			  answer = true;
 			  break;
 		  default:
-			  //System.out.println("Command Not Recognized");
-			  answer = false;
 			  break;	  
 	  }
-	  return answer;
   }
   
   @Override
@@ -91,15 +84,7 @@ public class NonProfitController extends UserController
 		else if (theCurrentCommand == UserController.Command.VIEWMYAUCTION)
 		 {
 			answer = UserController.Command.VIEWMYAUCTION;
-		 } 
-//		else if (theCurrentCommand == UserController.Command.ADDAUCTION)
-//		 {
-//			answer = UserController.Command.ADDAUCTION;
-//		 } 
-//		 else if (theCurrentCommand == UserController.Command.EDITAUCTION)
-//		 {
-//			 answer = UserController.Command.EDITAUCTION;
-//		 }				 
+		 } 			 
 		return answer;
 	}
    
@@ -125,14 +110,14 @@ public class NonProfitController extends UserController
 	private void editItem(ItemModel theItem, Scanner user_input, AuctionModel theAuction)
 	{
 		System.out.println("The current Item details:");
-		  System.out.println(theItem.toString());
+		  System.out.println(itemToString(theItem));
 		  ItemModel tempEditItem = getItemDetailsFromUser(user_input);				  
 		  try
 		  {
 			  theAuction.removeItem(theItem);
 			  theAuction.addItem(tempEditItem);
 			  System.out.println("Edited Item details:");
-			  System.out.println(tempEditItem.toString());
+			  System.out.println(itemToString(tempEditItem));
 		  } catch (Exception e) {
 			  theAuction.addItem(theItem);
 		  }
@@ -177,7 +162,7 @@ public class NonProfitController extends UserController
   private void editAuction(Scanner user_input, CalendarModel theCalendar) 
   {
 	  System.out.println("The current Auction details:");
-	  System.out.println(myNonProfitModel.getAuction().toString());	
+	  System.out.println(auctionToString(myNonProfitModel.getAuction()));	
 	  LocalDateTime startTime;
 	  LocalDateTime endTime;
 	  System.out.println("Would you like to edit the auction? (Enter 0 to go back, 1 to edit)");
@@ -229,7 +214,7 @@ public class NonProfitController extends UserController
 				  myNonProfitModel.setAuction(newAuction);
 				  System.out.println("Auction has been edited.");
 				  System.out.println("Edited Auction Details:");
-				  System.out.println(myNonProfitModel.getAuction().toString());
+				  System.out.println(auctionToString(myNonProfitModel.getAuction()));
 			  } catch(AuctionException e)
 			  {
 				  try
@@ -340,4 +325,34 @@ private ItemModel getItemDetailsFromUser(Scanner user_input)
 	  }  
 	  return LocalDateTime.of(year, month, day, hour, minutes);
   } 
+  
+  public String itemToString(ItemModel theItemModel) {
+	  StringBuilder answer = new StringBuilder();
+	  answer.append("Name: " + theItemModel.getItemName() + "\n");
+	  answer.append("Description: " + theItemModel.getDescription() + "\n");
+	  answer.append("Starting Bid: " + String.format("%.2f", theItemModel.getStartingBid())   + "\n");
+	  return answer.toString();
+  }
+  
+  public String auctionToString(AuctionModel theAuctionModel){
+	  StringBuilder answer = new StringBuilder();
+	  answer.append("Name: " + theAuctionModel.getAuctionName() + "\n");
+	  answer.append("Organization name: " + theAuctionModel.getAuctionOrg() + "\n");
+	  LocalDateTime theStartDateTime = theAuctionModel.getStartTime();
+	  answer.append("Date: " + theStartDateTime.getMonth() + " " + theStartDateTime.getDayOfMonth() +", " + theStartDateTime.getYear() + "\n");
+	  answer.append("Start time: " + theStartDateTime.getHour() + ":" + theStartDateTime.getMinute() + "\n");
+	  LocalDateTime theEndDateTime = theAuctionModel.getStartTime();
+	  answer.append("End: " + theEndDateTime.getHour() + ":" + theEndDateTime.getMinute() + "\n");
+	  
+	  List<ItemModel> items = theAuctionModel.getAuctionItems();  
+	  if(items!= null) 
+	  {
+		  answer.append("Items: " + items.size());
+	  } 
+	  else 
+	  {
+		  answer.append("Items: 0");
+	  }
+	  return answer.toString();
+  }
 }

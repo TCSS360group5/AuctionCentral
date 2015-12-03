@@ -5,8 +5,6 @@ import java.util.Scanner;
 
 import model.*;
 
-
-
 /**
  * @author Group 5
  * The bidder class represents the bidders that use our system and produces
@@ -46,23 +44,18 @@ public class BidderController extends UserController
 	/* (non-Javadoc)
 	 * @see User#ExecuteCommand(User.Command, Calendar, Auction, Item)
 	 */
-
 	@Override
-	public boolean ExecuteCommand(Command theCommand, CalendarModel theCalendar,
+	public void ExecuteCommand(Command theCommand, CalendarModel theCalendar,
 			AuctionModel theAuction, ItemModel theItem) {
-		boolean answer = false;
 		Scanner user_input = new Scanner( System.in );
 		switch (theCommand) {
 			case BID:
 				bidOnItem(user_input, theItem);
-				answer = true;
 				break;
 			case EDITBID:
 				System.out.println("This is the previous Bid: $");
 				System.out.println(myBidderModel.getBids().get(theItem).toString());
-				System.out.println("Please Enter a new Bid:");
 				bidOnItem(user_input, theItem);
-				answer = true;
 				break;
 			case VIEWBIDS:
 				Scanner myScanner = new Scanner(System.in);
@@ -90,33 +83,61 @@ public class BidderController extends UserController
 						bidOnItem(myScanner, bidsToEdit.get(auctionNum - 1));
 					}
 				}
-				answer = true;
 				break;
 			default:
 				break;
 		}
-		return answer;
 	}
-	
 
-	private void bidOnItem(Scanner user_input, ItemModel theItem) {
-		double bid;
-		System.out.println("Please Enter a Bid:");
-		bid = user_input.nextDouble();
-		if (theItem.getStartingBid() > bid) {
-			System.out.println("Bid is below minimum bid for this item.");
-		}else {
-			myBidderModel.getBids().put(theItem, bid);
-			System.out.println("Bid entered.");
-		}	
+	private void bidOnItem(Scanner user_input, ItemModel theItem) 
+	{
+		Double bid = null;
+		String actionMessage = "Please Enter a Bid, Press Q to cancel:";
+		String exitString = "Q";
+
+		boolean exitBid = false;
+		boolean validBid = false;
+		do 
+		{
+			boolean validDouble = false;
+			System.out.println(actionMessage);
+			String UserInputString = user_input.nextLine();
+			if (UserInputString.startsWith(exitString))
+			{
+				exitBid = true;
+			} else {
+				try
+				{
+					bid = Double.valueOf(UserInputString);
+					validDouble = true;
+				} catch (NumberFormatException e)
+				{
+					System.out.println("Invalid input");
+					validDouble = false;
+				}
+				if (validDouble) 
+				{
+					if (!theItem.isBidAboveStartingBid(bid)) {
+						System.out.println("Bid is below minimum bid for this item.");
+					}else {
+						myBidderModel.getBids().put(theItem, bid);
+						System.out.println("Bid entered.");
+						validBid = true;
+					}	
+				}
+			}
+		} while (!validBid && !exitBid);	
 	}
 	
+	/**
+	 * These are the menu items available for this type of user.
+	 */
 	@Override
 	public ArrayList<Command> GetMenu(Command theCurrentState, ItemModel theItem, UserModel theUser) {
 		ArrayList<Command> answer = new ArrayList<Command>();
 		switch (theCurrentState)
 		 {
-			case VIEWBIDDERAUCTIONS:
+			case VIEWAUCTIONDETAILS:
 				answer.add(UserController.Command.GOBACK);
 				answer.add(UserController.Command.VIEWITEM);
 				break;
@@ -132,16 +153,16 @@ public class BidderController extends UserController
 				answer.add(UserController.Command.VIEWBIDDERAUCTIONS);
 				answer.add(UserController.Command.VIEWBIDS);
 				break;
-			case BID:
-				answer.add(UserController.Command.VIEWCALENDAR);
-				answer.add(UserController.Command.VIEWBIDS);
-				break;
 			default:
 				break;
 		 }
 		return answer;
 	}
 	
+	/**
+	 * This method returns the current state of which menu the user is in if and only 
+	 * if the current command is an option to view another valid menu for this user.
+	 */
 	@Override
 	public UserController.Command goForwardState(UserController.Command theCurrentState, UserController.Command theCurrentCommand)
 	{
@@ -152,14 +173,16 @@ public class BidderController extends UserController
 		 } 
 		 else if (theCurrentCommand == UserController.Command.VIEWBIDDERAUCTIONS)
 		 {
-			 //this should be uncommented when implemented:
-			 //answer = User.Command.VIEWBIDDERAUCTIONS;
-			 System.out.println("Auctions for Bidders not implemented yet.");
+			 answer = UserController.Command.VIEWBIDDERAUCTIONS;
 		 }
-		 else if (theCurrentCommand == UserController.Command.VIEWMYAUCTION)
+		 else if (theCurrentCommand == UserController.Command.VIEWAUCTIONDETAILS)
 		 {
-			 answer = UserController.Command.VIEWMYAUCTION;
-		 }				 
+			 answer = UserController.Command.VIEWAUCTIONDETAILS;
+		 }			
+		 else if ((theCurrentCommand == UserController.Command.VIEWITEM))
+		 {
+			 answer = UserController.Command.VIEWITEM;
+		 }	
 		return answer;
 	}
 
@@ -173,9 +196,12 @@ public class BidderController extends UserController
 		 	case VIEWBIDDERAUCTIONS:
 		 		answer = UserController.Command.VIEWMAINMENU;
 		 		break;
-	 		case VIEWITEM:
+	 		case VIEWAUCTIONDETAILS:
 	 			answer = UserController.Command.VIEWBIDDERAUCTIONS;
-	 			break;						
+	 			break;
+	 		case VIEWITEM:
+	 			answer = UserController.Command.VIEWAUCTIONDETAILS;
+	 			break;
 	 		default:
 	 			System.out.println("Cannot Go Back");
 	 			break;						 

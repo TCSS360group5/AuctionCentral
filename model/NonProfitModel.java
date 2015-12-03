@@ -76,7 +76,7 @@ public AuctionModel getAuction()
 	  return myAuction != null;
   }
   
-  public boolean canAddAuction() {	
-	  return (myAuction == null);
-  }
+//  public boolean canAddAuction() {	
+//	  return (myAuction == null);
+//  }
 }

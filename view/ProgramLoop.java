@@ -1,7 +1,4 @@
 package view;
-//import java.io.File;
-//import java.io.FileNotFoundException;
-//import java.io.PrintStream;
 import java.time.LocalDate;
 //import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,24 +21,15 @@ import model.UserModel;
 
 public class ProgramLoop {
 	private FileSaving myFileSaver;
-//	private static final String myUserFileString = "users.txt";
-//	private static final String myAuctionFileString = "auction.txt";
-//	private File myUserFile;
-//	private File myAuctionFile;
 	private UserModel myUserModel;
 	private UserController myUserController;
 	private static CalendarModel myCalendar;
 	private ArrayList<UserModel> myUserList;
 	private ArrayList<AuctionModel> myAuctionList;
 	private Scanner myScanner;
-//	private String myHomePageMessage;
 	private UserController.Command myCurrentState;
 	private AuctionModel myCurrentAuction;
 	private ItemModel myCurrentItem;
-	
-//	private static final String myHomePageMessageEnd = " Homepage\n"
-//		+ "----------------------------------\n"
-//		+ "What would you like to do?\n";
 	
 	/**
 	 * Constructor for ProgramLoop. Initializes some of the fields.
@@ -71,7 +59,7 @@ public class ProgramLoop {
 				System.out.println("Welcome to AuctionCentral!");
 				System.out.println("0) Quit");
 				System.out.println("1) Login");
-				int selection = getNumberFromUser();
+				int selection = getNumberFromUserWithinRange(0, 1, 99);
 				switch (selection){
 					case 0:
 						notQuit = false;
@@ -99,7 +87,7 @@ public class ProgramLoop {
 		} while (notQuit);						
 		myScanner.close();
 	}
-	
+
 	private boolean login() {
 		boolean foundUser = false;
 		System.out.print("Please enter your username: ");
@@ -202,11 +190,9 @@ public class ProgramLoop {
 			}			
 		}
 		boolean notLogout = true;
-//		Auction currentAuction = null;
-//		Item currentItem = null;
 		do
 		{
-			 System.out.println(myUserController.menuTitle(myCurrentState));
+			 System.out.println("\n" + myUserController.menuTitle(myCurrentState));
 			 ArrayList<UserController.Command> currentCommands = myUserController.GetMenu(myCurrentState, myCurrentItem, myUserModel);
 			 
 			 //print out available commands
@@ -216,12 +202,8 @@ public class ProgramLoop {
 				 System.out.print(i + 1 + ") ");
 				 System.out.println(myUserController.getCommandName(currentCommands.get(i)));			 
 			 }
-			 
-			 //get command 
-			 //String TempString = myScanner.nextLine();
 
-			 //boolean validCommand = true;
-			 int commandInt = getNumberFromUserWithinRange(0, currentCommands.size() - 1);
+			 int commandInt = getNumberFromUserWithinRange(0, currentCommands.size());
 			 
 			 if (commandInt >= 0)
 			 {
@@ -232,50 +214,27 @@ public class ProgramLoop {
 				 else if (commandInt <= currentCommands.size())
 				 {
 					 UserController.Command thisCommand = currentCommands.get(commandInt - 1);
-					 myCurrentState = myUserController.getNextState(myCurrentState, thisCommand);
-//					 if (tempState != null) {
-//						 myCurrentState = tempState;
-//					 }
-					 
+					 myCurrentState = myUserController.getNextState(myCurrentState, thisCommand);				 
 					 if (myCurrentState == UserController.Command.VIEWCALENDAR)
 					 {
 						 viewCalendarAuctions();
 					 } 
-//					 else if (myCurrentState == User.Command.VIEWMAINMENU)
-//					 {
-//						 executeProgramLoop();
-//					 } 
 					 else if (myCurrentState == UserController.Command.VIEWBIDDERAUCTIONS)
 					 {
-						 System.out.println("Auctions for Bidders not implemented yet.");
-						 //viewCalendarAuctions();
+						 viewBidderAuctions();
 					 }
 
 					 if (thisCommand == UserController.Command.VIEWITEM)
 					 {
 						 viewItems();
-					 }					 
-//					 else if (thisCommand == User.Command.GOBACK)
-//					 {
-//						 User.Command moveState = myUser.goBackState(myCurrentState);
-//						 if (moveState != null) 
-//						 {
-//							 myCurrentState = moveState;
-//						 }			
-//						 else 
-//						 {
-//							 System.out.println("Cannot go Back.");
-//						 }
-//					 } 		
+					 }					 	
 
 					 myUserController.ExecuteCommand(thisCommand, myCalendar, myCurrentAuction, myCurrentItem);
 						 
-						 if(myUserModel.getUserType() == UserModel.UserType.NPO && thisCommand == UserController.Command.ADDAUCTION)
-						 {
-							 myCurrentAuction = ((NonProfitModel)myUserModel).getAuction();
-						 }
-
-					 
+					 if(myUserModel.getUserType() == UserModel.UserType.NPO && thisCommand == UserController.Command.ADDAUCTION)
+					 {
+						 myCurrentAuction = ((NonProfitModel)myUserModel).getAuction();
+					 }				 
 					 // neccessary to transfer the newest auction that was added to the Calendar to our local AuctionList
 					 if(thisCommand.equals(UserController.Command.ADDAUCTION)) {
 							Collection<ArrayList<AuctionModel>> auctions = myCalendar.myAuctionByDateList.values();
@@ -296,10 +255,31 @@ public class ProgramLoop {
 				 {
 					 System.out.println("Please enter a valid selection.");
 				 }
-		} while (notLogout);	
-	
+		} while (notLogout);		
 	}
 	
+	private void viewBidderAuctions() {
+		System.out.println("Future Auctions View");
+		ArrayList<AuctionModel> futureAuctions = auctionMapToList(myCalendar.getAllFutureAuctions());
+		if (futureAuctions == null || futureAuctions.size() == 0) {
+			 System.out.println("No Future Auctions Found.");
+		 }
+		 else 
+		 {
+			 int AuctionListNumber = printOutAllAuctions(futureAuctions);
+			 int userAnswer = 0;
+			System.out.println("Enter the number of an auction to view its details.\nPress 0 to go back.");
+			userAnswer = getNumberFromUserWithinRange(0, AuctionListNumber);
+			if (userAnswer > 0 && userAnswer <= AuctionListNumber - 1) {
+				myCurrentState = UserController.Command.VIEWAUCTIONDETAILS;
+				myCurrentAuction = futureAuctions.get(userAnswer - 1);
+				System.out.println(myCurrentAuction.toString() + "\n");
+			} else {
+				myCurrentState = UserController.Command.VIEWMAINMENU;
+			}
+		 }
+	}
+
 	/**
 	 * Displays/controls menu for viewing items of the current auction.
 	 */
@@ -323,7 +303,7 @@ public class ProgramLoop {
 			if (myAuctionList.size() > 0) 
 			{
 				System.out.println("Enter the number of an item to view/edit its details.\nEnter 0 to go back.");
-				userAnswer = getNumberFromUser();
+				userAnswer = getNumberFromUserWithinRange(1, theItemIndex - 3);
 			}
 			if (userAnswer > 0) {
 				myCurrentState = UserController.Command.VIEWITEM;
@@ -338,7 +318,7 @@ public class ProgramLoop {
 	 */
 	private void viewCalendarAuctions() {
 		myAuctionList.clear();
-		Map<LocalDate, ArrayList<AuctionModel>> theAuctionList = myCalendar.displayCurrentMonth();
+		ArrayList<AuctionModel> theAuctionList = auctionMapToList(myCalendar.displayCurrentMonth());
 		if (theAuctionList.size() == 0)
 		{
 			System.out.println("No Auctions to view");
@@ -346,30 +326,14 @@ public class ProgramLoop {
 		else 
 		{
 			System.out.println("Auctions for " + LocalDate.now().getMonth().name());
-			int AuctionListNumber = 1;
-			for (Entry<LocalDate, ArrayList<AuctionModel>> entry: theAuctionList.entrySet())
-			{
-				ArrayList<AuctionModel> temp = entry.getValue();
-				for (int i = 0; i < temp.size(); i++) 
-				{
-					AuctionModel tempAuction = temp.get(i);
-					myAuctionList.add(tempAuction);
-					System.out.print(AuctionListNumber + ") ");
-					System.out.println(tempAuction.getAuctionName());
-					AuctionListNumber++;
-					
-				}
-				System.out.println("");
-			}
+			int AuctionListNumber = printOutAllAuctions(theAuctionList);
+			
 			int userAnswer = 0;
-			if (myAuctionList.size() > 0) 
-			{
-				System.out.println("Enter the number of an auction to view its details.\nPress 0 to go back.");
-				userAnswer = getNumberFromUser();
-			}
-			if (userAnswer > 0) {
+			System.out.println("Enter the number of an auction to view its details.\nPress 0 to go back.");
+			userAnswer = getNumberFromUserWithinRange(0, AuctionListNumber);
+			if (userAnswer > 0 && userAnswer <= AuctionListNumber) {
 				myCurrentState = UserController.Command.VIEWAUCTIONDETAILS;
-				myCurrentAuction = myAuctionList.get(userAnswer - 1);
+				myCurrentAuction = theAuctionList.get(userAnswer - 1);
 				System.out.println(myCurrentAuction.toString() + "\n");
 			} else {
 				myCurrentState = UserController.Command.VIEWMAINMENU;
@@ -377,36 +341,70 @@ public class ProgramLoop {
 		}		
 	}
 	
+	private ArrayList<AuctionModel> auctionMapToList(Map<LocalDate, ArrayList<AuctionModel>> theAuctionMap) 
+	{
+		ArrayList<AuctionModel> allAuctions = new ArrayList<AuctionModel>();
+		if (theAuctionMap != null) {
+			for (Entry<LocalDate, ArrayList<AuctionModel>> entry: theAuctionMap.entrySet())
+			{
+				allAuctions.addAll(entry.getValue());
+			}
+		}
+		return allAuctions;
+	}
+	
+	private int printOutAllAuctions(ArrayList<AuctionModel> theAuctionList)
+	{
+		int AuctionListNumber = 1;
+		for (int i = 0; i < theAuctionList.size(); i++) 
+		{
+			AuctionModel thisAuction = theAuctionList.get(i);
+			myAuctionList.add(thisAuction);
+			System.out.print(AuctionListNumber + ") ");
+			System.out.println(thisAuction.getAuctionName());
+			AuctionListNumber++;				
+		}
+		System.out.println("");		
+		return AuctionListNumber;
+	}
+	
 	/**
-	 * Gets the user input.
+	 * Gets the user input between a range of integer values.
 	 * 
 	 * @return the user's selection
 	 */
-	private int getNumberFromUser()
-	{
-		int answer = -1;
-		if(myScanner.hasNextInt()) {
-			answer = myScanner.nextInt();
-		}
-		myScanner.nextLine();
-		return answer;
-	}
-	
 	private int getNumberFromUserWithinRange(int Start, int End)
 	{
-		 int commandInt = -1;
-		 String TempString = myScanner.nextLine();
-		 try 
-		 {
-			 commandInt = Integer.parseInt(TempString);
-		 } catch (Exception e) {
-			 System.out.println("Enter a Number between " + Start + " and " + End);
-			 commandInt = getNumberFromUserWithinRange(Start, End);
-		 }
-		return commandInt;
+		return getNumberFromUserWithinRange(Start, End, Start);
 	}
 	
-	
+	/**
+	 * Gets the user input between a range of integer values and
+	 * includes a hidden value option.
+	 * 
+	 * @return the user's selection
+	 */
+	private int getNumberFromUserWithinRange(int Start, int End, int HiddenOption) {
+		int commandInt = -1;
+		boolean validCommand = false;
+		do
+		{
+			 String TempString = myScanner.nextLine();
+			 try 
+			 {
+				 commandInt = Integer.parseInt(TempString);
+			 } catch (Exception e) {
+				 validCommand = false;
+			 }
+			 if ((commandInt < Start || commandInt > End) && commandInt != HiddenOption) {
+				 validCommand = false;
+				 System.out.println("Enter a Number between " + Start + " and " + End);
+			 } else {
+				 validCommand = true;
+			 }
+		} while (!validCommand);
+		return commandInt;
+	}
 
 	
 	/**

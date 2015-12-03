@@ -164,6 +164,4 @@ public class AuctionModelTest {
 	public void testGetUserName() {
 		assertEquals(testAuction.getUserName(), "steve");
 	}
-	
-	// Do we need to test toString methods?? TODO
 }

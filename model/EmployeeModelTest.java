@@ -1,18 +1,6 @@
 package model;
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
-
 
 public class EmployeeModelTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@Test
-	public void testEmployee() {
-		fail("Not yet implemented");
-	}
+	//nothing needs to be tested.
 }

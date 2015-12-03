@@ -109,21 +109,20 @@ public class AuctionModel
 	  myEndTime = theEndTime;
 	  return true;	  
   }
-
+  
+  //sets the auction date
   public void setAuctionDate(LocalDateTime theAuctionStart, LocalDateTime theAuctionEnd) {
 	myEndTime = theAuctionEnd;
 	myStartTime = theAuctionStart;
 	updateAuctionName();
   }
   
+  //returns the user name
   public String getUserName() {
 	  return myUserName;
   }
-  
-//  public void setUserName(String theUserName) {
-//	  myUserName = theUserName;
-//  }
-  
+
+
   public String toStringSimple(){
 	  StringBuilder answer = new StringBuilder();
 	  answer.append("Name: " + myAuctionName + "\n");

@@ -1,4 +1,5 @@
 package view;
+
 /*
  * This is the Main class that starts the program.  It creates a Programloop
  * object and then starts the program.

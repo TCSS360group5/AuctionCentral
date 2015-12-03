@@ -1,10 +1,8 @@
 package model;
-import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 
 import org.junit.Before;
-import org.junit.Test;
 
 public class UserModelTest {
 	NonProfitModel myNPO;
@@ -18,19 +16,14 @@ public class UserModelTest {
 		myBidder = new BidderModel("Sam", UserModel.UserType.BIDDER);
 	}
 
-	@Test
-	public void testUser() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testExecuteCommand() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testToString() {
-		fail("Not yet implemented");
-	}
+//	@Test
+//	public void testUser() {
+//		fail("Not yet implemented");
+//	}
+//
+//	@Test
+//	public void testToString() {
+//		fail("Not yet implemented");
+//	}
 
 }

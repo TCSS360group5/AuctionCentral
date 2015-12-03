@@ -56,6 +56,9 @@ public UserController(String theUserType)
 		case VIEWBIDDERAUCTIONS:
 			answerString ="All Upcomming Auctions";
 			break;
+		case VIEWAUCTIONDETAILS:
+			answerString ="Auction Details";
+			break;
 		default:
 			break;
 		
@@ -121,20 +124,23 @@ public UserController(String theUserType)
 	
 	
   
-  /**
- * @param theCommand
- * @param theCalendar
- * @param theAuction
- * @param theItem
- * @return
- */
-public boolean ExecuteCommand(Command theCommand, CalendarModel theCalendar, AuctionModel theAuction, ItemModel theItem)
-  {
-	  boolean answer = false;
-	  return answer;
-  }
+	/**
+	 * @param theCommand
+	 * @param theCalendar
+	 * @param theAuction
+	 * @param theItem
+	 */
+	public void ExecuteCommand(Command theCommand, CalendarModel theCalendar, AuctionModel theAuction, ItemModel theItem)
+	  {
+	  }
 
-	
+	/**
+	 * @param theCurrentState This is the menu the user is currently in
+	 * @param theCurrentCommand This is the command the user just selected
+	 * 
+	 * This method returns the current state of which menu the user is in if and only 
+	 * if the current command is an option to view another valid menu for this user.
+	 */
 	public UserController.Command goForwardState(UserController.Command theCurrentState, UserController.Command theCurrentCommand)
 	{
 		UserController.Command answer = theCurrentState;

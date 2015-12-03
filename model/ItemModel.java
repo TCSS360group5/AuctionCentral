@@ -17,8 +17,7 @@ public class ItemModel
 	  myBids = new HashMap<>();
 	  myItemName = theItemName;
 	  myStartingBid = theStartingBid;
-	  myDescription = theDescription;
-	  
+	  myDescription = theDescription;	  
   }
   
   public void setHighestBid(double theBid) {
@@ -32,11 +31,9 @@ public class ItemModel
   }
   
   public boolean setStartingBid(double theStartingBid)
-  {
-	  
+  {	  
 	  myStartingBid = theStartingBid;
-	  return true;
-	  
+	  return true;	  
   }
   
   public boolean setDescription(String theDescription)
@@ -74,6 +71,11 @@ public class ItemModel
   public void bidOnItem(UserModel user, double bid)
   {
 	  	  myBids.put(user, bid);
+  }
+  
+  public boolean isBidAboveStartingBid(Double theBid)
+  {
+	  return (theBid >= myStartingBid);
   }
   
   public void updateBid(UserModel user, double newBid)
