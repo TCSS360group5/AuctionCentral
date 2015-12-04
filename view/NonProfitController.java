@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import exceptions.AuctionException;
 import model.*;
 
 /**
@@ -159,9 +160,9 @@ public class NonProfitController extends UserController
 			  System.out.println("Auction added!");
 			  myNonProfitModel.setAuction(tempAuction);
 		  }
-		  catch (AuctionException e)
+		  catch (Exception e)
 		  {
-			  System.out.println(e.getExceptionString());
+			  System.out.println(e.getMessage());
 		  }
 	  }
   }
@@ -224,8 +225,8 @@ public class NonProfitController extends UserController
 				  System.out.println("Edited Auction Details:");
 				  System.out.println(auctionToString(myNonProfitModel.getAuction()));
 				  //System.out.println(myNonProfitModel.getAuction().toString());
-			  } catch(AuctionException e) {
-				  System.out.println(e.getExceptionString());
+			  } catch(Exception e) {
+				  System.out.println(e.getMessage());
 				  
 				  //theCalendar.addAuction(myNonProfitModel.getAuction());
 			  	//System.out.println("There was an error. Your auction has not been edited.");

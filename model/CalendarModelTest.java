@@ -1,10 +1,15 @@
 package model;
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import exceptions.*;
 
 public class CalendarModelTest {
 	CalendarModel myCalendar;
@@ -13,13 +18,206 @@ public class CalendarModelTest {
 	 * @throws java.lang.Exception
 	 */
 	
-	// T0D0: redo with error messages.
-	/*
+	int maxFutureAuctions;
+	int maxDaysInFuture;
+	int maxAuctionsPerWeek;
+	int maxAuctionsPerDay;
+
 	@Before
 	public void setUp() throws Exception {
 		myCalendar = new CalendarModel();
+		maxFutureAuctions = AuctionsAtCapacityException.MAX_FUTURE_AUCTIONS;
+		maxDaysInFuture = AuctionTooFarAwayException.MAX_DAYS_AWAY;
+		maxAuctionsPerWeek = AuctionsAtCapacityForWeekException.MAX_AUCTIONS_FOR_WEEK;
+		maxAuctionsPerDay = AuctionsPerDayException.MAX_AUCTIONS_PER_DAY;
 	}
 	
+	@Test
+	public void testAddAuctionOnEmptyCalendar()
+	{
+		boolean exceptionThrown;
+		
+		assertEquals(myCalendar.getAllFutureAuctions().size(), 0);
+		AuctionModel auctionToAdd = new AuctionModel("testOrg", "testUserName", LocalDateTime.of(2015, 12, 25, 12, 30), LocalDateTime.of(2015, 12, 25, 14, 30));
+		try
+		{
+			myCalendar.addAuction(auctionToAdd);
+			exceptionThrown = false;
+		}
+		catch(Exception e)
+		{
+			exceptionThrown = true;
+		}
+		assertEquals(myCalendar.getAllFutureAuctions().size(), 1);
+		assertFalse(exceptionThrown);
+	}
+	
+	@Test
+	public void testAddAuctionOnCalendarWithAuctionsAtCapacity()
+	{
+		boolean errorMessage;
+		LocalDateTime startDate = LocalDateTime.now();
+		
+		for(int i = 1; i <= maxFutureAuctions; i++)
+		{
+			try
+			{
+				myCalendar.addAuction(new AuctionModel("testOrg" + i, "testUserName" + i, startDate.plusDays(i), startDate.plusDays(i).plusHours(1)));
+			}
+			catch(Exception e)
+			{
+				errorMessage = false;
+			}
+		}
+		
+		assertEquals(myCalendar.getAllFutureAuctions().size(), maxFutureAuctions);
+		try
+		{
+			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", startDate.plusDays(maxFutureAuctions + 1),  startDate.plusDays(maxFutureAuctions + 1).plusHours(1)));
+			errorMessage = false;
+		}
+		catch(Exception e)
+		{
+			if(e.getMessage().equals("The number of future auctions is already at its capacity of " + maxFutureAuctions))
+			{
+				errorMessage = true;
+			}
+			else
+				errorMessage = false;
+		}
+		
+		assertTrue(errorMessage);
+		assertEquals(myCalendar.getAllFutureAuctions().size(), maxFutureAuctions);
+	}
+	
+	@Test
+	public void testAddAuctionOnCalendarWithAuctionsOneBelowCapacity()
+	{	
+		boolean exceptionThrown;
+		LocalDateTime startDate = LocalDateTime.now();
+		
+		for(int i = 1; i < maxFutureAuctions; i++)
+		{
+			try
+			{
+				myCalendar.addAuction(new AuctionModel("testOrg" + i, "testUserName" + i, startDate.plusDays(i), startDate.plusDays(i).plusHours(1)));
+			}
+			catch(Exception e)
+			{
+				exceptionThrown = true;
+			}
+		}
+		assertEquals(myCalendar.getAllFutureAuctions().size(), (maxFutureAuctions - 1));
+		
+		try
+		{
+			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", startDate.plusDays(maxFutureAuctions), startDate.plusDays(maxFutureAuctions).plusHours(1)));
+			exceptionThrown = false;
+		}
+		catch(Exception e)
+		{
+			exceptionThrown = true;
+		}
+		
+		assertEquals(myCalendar.getAllFutureAuctions().size(), maxFutureAuctions);
+		assertFalse(exceptionThrown);
+	}
+	
+	@Test
+	public void testAddAuctionOnAuctionDateLessThanSpecifiedDaysInFuture()
+	{
+		boolean exceptionThrown;
+		assertEquals(myCalendar.getAllFutureAuctions().size(), 0);
+		AuctionModel auctionToAdd = new AuctionModel("testOrg", "testUserName", LocalDateTime.now().plusDays(maxDaysInFuture - 10), LocalDateTime.now().plusDays(maxDaysInFuture - 10).plusHours(2));
+		try
+		{
+			myCalendar.addAuction(auctionToAdd);
+			exceptionThrown = false;
+		}
+		catch(Exception e)
+		{
+			exceptionThrown = true;
+		}
+		assertEquals(myCalendar.getAllFutureAuctions().size(), 1);
+		assertFalse(exceptionThrown);
+		
+	}
+	
+	@Test
+	public void testAddAuctionOnAuctionDateAtNumberOfSpecifiedDaysInFuture()
+	{
+		boolean exceptionThrown;
+		assertEquals(myCalendar.getAllFutureAuctions().size(), 0);
+		
+		try
+		{
+			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", LocalDateTime.now().plusDays(maxDaysInFuture),  LocalDateTime.now().plusDays(maxDaysInFuture).plusHours(1)));
+			exceptionThrown = false;
+		}
+		catch(Exception e)
+		{
+			exceptionThrown = true;
+		}
+		
+		assertFalse(exceptionThrown);
+		assertEquals(myCalendar.getAllFutureAuctions().size(), 1);
+		
+	}
+	
+	@Test
+	public void testAddAuctionOnAuctionDateMoreThanSpecifiedDaysInFuture()
+	{
+		boolean errorMessage;
+		assertEquals(myCalendar.getAllFutureAuctions().size(), 0);
+		
+		try
+		{
+			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", LocalDateTime.now().plusDays(maxDaysInFuture).plusDays(1),  LocalDateTime.now().plusDays(maxDaysInFuture).plusDays(1).plusHours(1)));
+			errorMessage = false;
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+			if(e.getMessage().equals("An auction may not be scheduled more than " + maxDaysInFuture + " days in the future."))
+			{
+				errorMessage = true;
+			}
+			else
+				errorMessage = false;
+		}
+		
+		assertTrue(errorMessage);
+		assertEquals(myCalendar.getAllFutureAuctions().size(), 0);
+		
+	}
+	
+	/*
+	@Test
+	public void testAddAuctionOnWeekCapacityLessThanOne()
+	{
+		LocalDateTime weekStart = LocalDateTime.now();
+		LocalDateTime midWeek = LocalDateTime.
+				
+		if(maxAuctionsPerWeek >= (maxAuctionsPerDay * 7))
+		{
+			
+		}
+		else
+		{
+			
+		}
+		for(int i = 1; i < maxAuctionsPerWeek; i++)
+		{
+			
+		}
+	}*/
+	
+	
+	
+	//@Test
+	//public void testAddAuctionOnAuctionDateWithOneLessThanSpecifiedWeekCapacity
+	
+	/*
 	@Test
 	public void testAddAuction()
 	{

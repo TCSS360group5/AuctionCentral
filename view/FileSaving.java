@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Map.Entry;
 
-import model.AuctionException;
+import exceptions.*;
 import model.AuctionModel;
 import model.BidderModel;
 import model.CalendarModel;
@@ -169,9 +169,9 @@ public class FileSaving {
 		        ((NonProfitModel)userToAdd).setAuction(newAuction);
 		        try {
 					theCalendar.addAuction(newAuction);
-				} catch (AuctionException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					e.getMessage();
 				}
 		        
 		        if(s.hasNextLine()) 			// bug fix for input mismatch exceptions
