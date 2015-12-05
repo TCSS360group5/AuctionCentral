@@ -33,7 +33,7 @@ public class BidderController extends UserController
 	 * @param theItem the item being bidded on
 	 * @param theBid the amount for the bid
 	 * @return true IFF the bid is greater than the starting bid
-	 * @author 
+	 * @author Quinn
 	 */
 	public boolean bid(ItemModel theItem, double theBid){
 		  boolean answer = false;
@@ -50,8 +50,15 @@ public class BidderController extends UserController
 		return answer;
 	  }
 	
-	/* (non-Javadoc)
-	 * @see User#ExecuteCommand(User.Command, Calendar, Auction, Item)
+	/**
+	 * This method executes commands if the command is something the user can execute and 
+	 * does nothing otherwise.
+	 * 
+	 * @param theCommand this is the action the user wants to take
+	 * @param theCalendar this is the calendar object needed in some situations 
+	 * @param theAuction this is the auction the user is currently looking at if they are in the Auction details menu
+	 * @param theItem this is the item the user is currently looking at if they are at the item menu
+	 * @author Quinn
 	 */
 	@Override
 	public void ExecuteCommand(Command theCommand, CalendarModel theCalendar,
@@ -63,7 +70,7 @@ public class BidderController extends UserController
 				break;
 			case EDITBID:
 				System.out.println("This is the previous Bid: $");
-				System.out.println(myBidderModel.getBids().get(theItem).toString());
+				System.out.println(myBidderModel.getBids().get(theItem));
 				bidOnItem(user_input, theItem);
 				break;
 			case VIEWBIDS:
@@ -99,10 +106,11 @@ public class BidderController extends UserController
 	}
 
 	/**
-	 * Used for the BidderController to add bids.
+	 * Used to get bids from the user and then calls the item to make sure they are valid.
 	 * 
 	 * @param theUserInput the Scanner used to read user input from console
 	 * @param theItem the item being bidded on
+	 * @author Quinn
 	 */
 	private void bidOnItem(Scanner user_input, ItemModel theItem) 
 	{
@@ -146,6 +154,12 @@ public class BidderController extends UserController
 	
 	/**
 	 * These are the menu items available for this type of user.
+	 * 
+	 * @param theCurrentState this is the current state of the view
+	 * @param theItem this is the item the user is looking at and is used to see if the bidder has bid on that item
+	 * @param theUser not used in the bidder class implementation of this method
+	 * @return returns a list of menu options for this user.
+	 * @author Quinn
 	 */
 	@Override
 	public ArrayList<Command> GetMenu(Command theCurrentState, ItemModel theItem, UserModel theUser) {
@@ -177,6 +191,11 @@ public class BidderController extends UserController
 	/**
 	 * This method returns the current state of which menu the user is in if and only 
 	 * if the current command is an option to view another valid menu for this user.
+	 * 
+	 * @param theCurrentState this is the current state of the view
+	 * @param theCurrentCommand this is what the user is trying to do
+	 * @return returns the next view state or current view state if there isn't a valid move
+	 * @author Quinn
 	 */
 	@Override
 	public UserController.Command goForwardState(UserController.Command theCurrentState, UserController.Command theCurrentCommand)
@@ -201,7 +220,13 @@ public class BidderController extends UserController
 		return answer;
 	}
 
-
+	/**
+	 * Changes the view state by going back one if possible.
+	 * 
+	 * @param theCurrentState this is the current state of the view
+	 * @return returns the new view state
+	 * @author Quinn
+	 */
 	@Override
 	public UserController.Command goBackState(UserController.Command theCurrentState) 
 	{

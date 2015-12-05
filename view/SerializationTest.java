@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,30 +17,58 @@ import org.junit.Test;
 
 public class SerializationTest {
 	AuctionModel myAuction;
-	 
-	UserModel myUser;
+	AuctionModel myAuctionWithItems;
+	AuctionModel myAuctionWithItemsWithBids;
+	UserModel myNPOUser;
+	UserModel myEmployeeUser;
+	UserModel myBidderUser;
 	LocalDateTime myDate;
 
 	@Before
 	public void setUp() throws Exception {
 		myDate = LocalDateTime.of(2015, 12, 15, 12, 30);
 		myAuction = new AuctionModel("Org Name", "UserForSerialize", myDate, myDate.plusHours(2));
-		myUser = new UserModel("UserForSerialize", UserModel.UserType.NPO);
+		try
+		{
+			 Serialization.serializeObject("auction.ser", myAuction);
+		} catch (IOException io) {
+			System.out.println(io.getMessage());
+		}
+		ItemModel item1 = new ItemModel("chair", 50, "grey Chair");
+		ItemModel item2 = new ItemModel("vase", 200.00, "glass vase");
+		ArrayList<ItemModel> ItemList = new ArrayList<ItemModel>();
+		ItemList.add(item1);
+		ItemList.add(item2);
+		myAuctionWithItems = new AuctionModel("Another Org Name", "User2ForSerialize", myDate, myDate.plusHours(2), ItemList);
+		try
+		{
+			 Serialization.serializeObject("auctionwithitems.ser", myAuctionWithItems);
+		} catch (IOException io) {
+			System.out.println(io.getMessage());
+		}
+		myNPOUser = new UserModel("UserForSerialize", UserModel.UserType.NPO);
+		UserModel User2 = new UserModel ("2ndUser", UserModel.UserType.NPO);
+		ItemModel item3 = new ItemModel("chair", 50, "grey Chair");
+		ItemModel item4 = new ItemModel("vase", 200.00, "glass vase");
+		item3.bidOnItem(myNPOUser, 60);
+		item4.bidOnItem(User2, 300);
+		ArrayList<ItemModel> ItemList2  = new ArrayList<ItemModel>();
+		ItemList2.add(item3);
+		ItemList2.add(item4);
+		myAuctionWithItemsWithBids = new AuctionModel("Likes bidding", "AnotherForSerialize", myDate, myDate.plusHours(2), ItemList2);
+		try
+		{
+			 Serialization.serializeObject("auctionwithitemswithbids.ser", myAuctionWithItemsWithBids);
+		} catch (IOException io) {
+			System.out.println(io.getMessage());
+		}
 	}
 
 	@Test
 	public void testSerialize() {
-//		class what{
-//			ArrayList<UserModel> myUserList;
-//			ArrayList<AuctionModel> myAuctionList;
-//			what(ArrayList<UserModel> theUserList, ArrayList<AuctionModel> theAuctionList) {
-//				myUserList = theUserList;
-//				myAuctionList = theAuctionList;
-//			}
-//		}
 		try
 		{
-			 Serialization.SerializeAuctions("auction.ser", myAuction);
+			 Serialization.serializeObject("auctionSerialize.ser", myAuction);
 		} catch (IOException io) {
 			System.out.println(io.getMessage());
 			fail("IOException");
@@ -47,11 +76,11 @@ public class SerializationTest {
 	}
 
 	@Test
-	public void testDeSerialize() {
-		AuctionModel tempModel = new AuctionModel("", "", myDate.plusDays(3), myDate.plusDays(3).plusHours(3));
+	public void testDeSerializeAuction() {
+		AuctionModel tempModel = null;//new AuctionModel("", "", myDate.plusDays(3), myDate.plusDays(3).plusHours(3));
 		try
 		{
-			tempModel = (AuctionModel) Serialization.DeSerialize("auction.ser");
+			tempModel = (AuctionModel) Serialization.deSerializeObject("auction.ser");
 		} catch (IOException io) {
 			System.out.println(io.getMessage());
 			fail("IOException");
@@ -61,10 +90,40 @@ public class SerializationTest {
 			fail("ClassNotFoundException");
 		}
 		assertTrue(compareAuction(tempModel, myAuction));
-//		assertEquals(tempModel.myAuctionName, myAuction.myAuctionName);
-//		assertEquals(tempModel.myOrgName, myAuction.myOrgName);
-//		assertEquals(tempModel.getStartTime(), myAuction.getStartTime());
-//		assertEquals(tempModel.getEndTime(), myAuction.getEndTime());
+	}
+	
+	@Test
+	public void testDeSerializeAuctionWithItems() {
+		AuctionModel tempModel = null;//new AuctionModel("", "", myDate.plusDays(3), myDate.plusDays(3).plusHours(3));
+		try
+		{
+			tempModel = (AuctionModel) Serialization.deSerializeObject("auctionwithitems.ser");
+		} catch (IOException io) {
+			System.out.println(io.getMessage());
+			fail("IOException");
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			fail("ClassNotFoundException");
+		}
+		assertTrue(compareAuction(tempModel, myAuctionWithItems));
+	}
+	
+	@Test
+	public void testDeSerializeAuctionWithItemsWithBids() {
+		AuctionModel tempModel = null;//new AuctionModel("", "", myDate.plusDays(3), myDate.plusDays(3).plusHours(3));
+		try
+		{
+			tempModel = (AuctionModel) Serialization.deSerializeObject("auctionwithitemswithbids.ser");
+		} catch (IOException io) {
+			System.out.println(io.getMessage());
+			fail("IOException");
+		}
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			fail("ClassNotFoundException");
+		}
+		assertTrue(compareAuction(tempModel, myAuctionWithItemsWithBids));
 	}
 	
 	private boolean compareAuction(AuctionModel Auction1, AuctionModel Auction2)
@@ -182,7 +241,7 @@ public class SerializationTest {
 		boolean answer = true;
 		for (Entry<UserModel, Double> theEntry: Bids1.entrySet())
 		{
-			if (Bids1.containsKey(theEntry.getKey()))
+			if (Bids2.containsKey(theEntry.getKey()) && Bids1.containsKey(theEntry.getKey()))
 			{
 				if (Bids2.get(theEntry.getKey()).compareTo(theEntry.getValue()) != 0)
 				{

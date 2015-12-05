@@ -31,7 +31,7 @@ public class NonProfitController extends UserController
 	  switch (theCommand)
 	  {
 	  case VIEWMYAUCTION:
-		  System.out.println("\n" + auctionToString(((NonProfitModel)theUser).getAuction()));
+		  System.out.println("\n" + AuctionCentralToStrings.auctionToString(((NonProfitModel)theUser).getAuction()));
 		  answer.add(UserController.Command.GOBACK);
 		  answer.add(UserController.Command.EDITAUCTION);
 		  answer.add(UserController.Command.VIEWITEM);
@@ -117,14 +117,14 @@ public class NonProfitController extends UserController
 	private void editItem(ItemModel theItem, Scanner user_input, AuctionModel theAuction)
 	{
 		System.out.println("The current Item details:");
-		  System.out.println(itemToString(theItem));
+		  System.out.println(AuctionCentralToStrings.itemToString(theItem));
 		  ItemModel tempEditItem = getItemDetailsFromUser(user_input);				  
 		  try
 		  {
 			  theAuction.removeItem(theItem);
 			  theAuction.addItem(tempEditItem);
 			  System.out.println("Edited Item details:");
-			  System.out.println(itemToString(tempEditItem));
+			  System.out.println(AuctionCentralToStrings.itemToString(tempEditItem));
 		  } catch (Exception e) {
 			  theAuction.addItem(theItem);
 		  }
@@ -170,7 +170,7 @@ public class NonProfitController extends UserController
   private void editAuction(Scanner user_input, CalendarModel theCalendar) 
   {
 	  System.out.println("The current Auction details:");
-	  System.out.println(auctionToString(myNonProfitModel.getAuction()));	
+	  System.out.println(AuctionCentralToStrings.auctionToString(myNonProfitModel.getAuction()));	
 	  LocalDateTime startTime;
 	  LocalDateTime endTime;
 	  System.out.println("Would you like to edit the auction? (Enter 0 to go back, 1 to edit)");
@@ -223,7 +223,7 @@ public class NonProfitController extends UserController
 				  myNonProfitModel.setAuction(newAuction);
 				  System.out.println("Auction has been edited.");
 				  System.out.println("Edited Auction Details:");
-				  System.out.println(auctionToString(myNonProfitModel.getAuction()));
+				  System.out.println(AuctionCentralToStrings.auctionToString(myNonProfitModel.getAuction()));
 				  //System.out.println(myNonProfitModel.getAuction().toString());
 			  } catch(Exception e) {
 				  System.out.println(e.getMessage());
@@ -330,33 +330,33 @@ private ItemModel getItemDetailsFromUser(Scanner user_input)
 	  return LocalDateTime.of(year, month, day, hour, minutes);
   } 
   
-  public String itemToString(ItemModel theItemModel) {
-	  StringBuilder answer = new StringBuilder();
-	  answer.append("Name: " + theItemModel.getItemName() + "\n");
-	  answer.append("Description: " + theItemModel.getDescription() + "\n");
-	  answer.append("Starting Bid: " + String.format("%.2f", theItemModel.getStartingBid())   + "\n");
-	  return answer.toString();
-  }
-  
-  public String auctionToString(AuctionModel theAuctionModel){
-	  StringBuilder answer = new StringBuilder();
-	  answer.append("Name: " + theAuctionModel.getAuctionName() + "\n");
-	  answer.append("Organization name: " + theAuctionModel.getAuctionOrg() + "\n");
-	  LocalDateTime theStartDateTime = theAuctionModel.getStartTime();
-	  answer.append("Date: " + theStartDateTime.getMonth() + " " + theStartDateTime.getDayOfMonth() +", " + theStartDateTime.getYear() + "\n");
-	  answer.append("Start time: " + theStartDateTime.getHour() + ":" + theStartDateTime.getMinute() + "\n");
-	  LocalDateTime theEndDateTime = theAuctionModel.getStartTime();
-	  answer.append("End: " + theEndDateTime.getHour() + ":" + theEndDateTime.getMinute() + "\n");
-	  
-	  List<ItemModel> items = theAuctionModel.getAuctionItems();  
-	  if(items!= null) 
-	  {
-		  answer.append("Items: " + items.size());
-	  } 
-	  else 
-	  {
-		  answer.append("Items: 0");
-	  }
-	  return answer.toString();
-  }
+//  public String itemToString(ItemModel theItemModel) {
+//	  StringBuilder answer = new StringBuilder();
+//	  answer.append("Name: " + theItemModel.getItemName() + "\n");
+//	  answer.append("Description: " + theItemModel.getDescription() + "\n");
+//	  answer.append("Starting Bid: " + String.format("%.2f", theItemModel.getStartingBid())   + "\n");
+//	  return answer.toString();
+//  }
+//  
+//  public String auctionToString(AuctionModel theAuctionModel){
+//	  StringBuilder answer = new StringBuilder();
+//	  answer.append("Name: " + theAuctionModel.getAuctionName() + "\n");
+//	  answer.append("Organization name: " + theAuctionModel.getAuctionOrg() + "\n");
+//	  LocalDateTime theStartDateTime = theAuctionModel.getStartTime();
+//	  answer.append("Date: " + theStartDateTime.getMonth() + " " + theStartDateTime.getDayOfMonth() +", " + theStartDateTime.getYear() + "\n");
+//	  answer.append("Start time: " + theStartDateTime.getHour() + ":" + theStartDateTime.getMinute() + "\n");
+//	  LocalDateTime theEndDateTime = theAuctionModel.getStartTime();
+//	  answer.append("End: " + theEndDateTime.getHour() + ":" + theEndDateTime.getMinute() + "\n");
+//	  
+//	  List<ItemModel> items = theAuctionModel.getAuctionItems();  
+//	  if(items!= null) 
+//	  {
+//		  answer.append("Items: " + items.size());
+//	  } 
+//	  else 
+//	  {
+//		  answer.append("Items: 0");
+//	  }
+//	  return answer.toString();
+//  }
 }

@@ -5,6 +5,11 @@ import exceptions.AuctionException;
 
 public class NonProfitModel extends UserModel
 {
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6214725495197646748L;
+	
   private LocalDate myLastAuctionDate;
   private AuctionModel myAuction; 
   private String myNPOName;
@@ -78,7 +83,31 @@ public AuctionModel getAuction()
 	  return myAuction != null;
   }
   
-//  public boolean canAddAuction() {	
-//	  return (myAuction == null);
-//  }
+	@Override
+	public boolean equals(Object theOther){
+		boolean answer = super.equals(theOther);
+		if (answer && theOther instanceof NonProfitModel) {
+			NonProfitModel theOtherModel = (NonProfitModel) theOther;
+			if (theOtherModel.myNPOName.compareTo(myNPOName) != 0) {
+				answer = false;
+			}
+			if (!theOtherModel.myLastAuctionDate.equals(myLastAuctionDate)) {
+				answer = false;
+			}
+			if (!theOtherModel.myAuction.equals(myAuction)) {
+				answer = false;
+			}
+		} 
+		return answer;		
+	}
+	
+	@Override
+	public int hashCode() {
+		int answer = 0;
+		answer += myNPOName.hashCode();
+		answer += myLastAuctionDate.toString().hashCode();
+		answer += myAuction.hashCode();
+		return answer;
+	}
+
 }

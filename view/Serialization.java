@@ -3,17 +3,17 @@ import java.io.*;
 
 public class Serialization {
 
-   public static void SerializeAuctions(String OutputFileName, Object myAuction) throws IOException
+   public static void serializeObject(String OutputFileName, Object theObject) throws IOException
    {
          FileOutputStream OutputFile = new FileOutputStream(OutputFileName);
          ObjectOutputStream output = new ObjectOutputStream(OutputFile);
-         output.writeObject(myAuction);
+         output.writeObject(theObject);
          output.close();
          OutputFile.close();
    }
 
 
-   public static Object DeSerialize(String theInputFileName) throws IOException, ClassNotFoundException
+   public static Object deSerializeObject(String theInputFileName) throws IOException, ClassNotFoundException
    {
 	   	 Object theObject;
          FileInputStream InputFile = new FileInputStream(theInputFileName);

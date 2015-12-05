@@ -1,4 +1,5 @@
 package view;
+
 import java.time.LocalDate;
 //import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import model.ItemModel;
 import model.NonProfitModel;
 import model.UserModel;
 
-
 public class ProgramLoop {
 	private FileSaving myFileSaver;
 	private UserModel myUserModel;
@@ -30,12 +30,11 @@ public class ProgramLoop {
 	private UserController.Command myCurrentState;
 	private AuctionModel myCurrentAuction;
 	private ItemModel myCurrentItem;
-	
+
 	/**
 	 * Constructor for ProgramLoop. Initializes some of the fields.
 	 */
-	public ProgramLoop()
-	{
+	public ProgramLoop() {
 		myCurrentState = UserController.Command.VIEWMAINMENU;
 		myCalendar = new CalendarModel();
 		myUserList = new ArrayList<UserModel>();
@@ -43,48 +42,44 @@ public class ProgramLoop {
 		myScanner = new Scanner(System.in);
 		myFileSaver = new FileSaving();
 	}
-	
+
 	/**
 	 * Loads and stores the files, handles user log in, and outputs files.
 	 */
-	public void startProgram() 
-	{	
+	public void startProgram() {
 		myFileSaver.loadAll(myUserList, myAuctionList, myCalendar);
 		boolean notQuit = true;
-		do
-		{			
+		do {
 			boolean doneWithMenu = false;
-			do 
-			{
+			do {
 				System.out.println("Welcome to AuctionCentral!");
 				System.out.println("0) Quit");
 				System.out.println("1) Login");
 				int selection = getNumberFromUserWithinRange(0, 1, 99);
-				switch (selection){
-					case 0:
-						notQuit = false;
-						doneWithMenu = true;
-						break;
-					case 1:
-						doneWithMenu = login();
-						break;
-					case 99:
-						doneWithMenu = createNewUser();
-						break;
-					default:
-						System.out.println("Selection not recognized.");
-						break;
+				switch (selection) {
+				case 0:
+					notQuit = false;
+					doneWithMenu = true;
+					break;
+				case 1:
+					doneWithMenu = login();
+					break;
+				case 99:
+					doneWithMenu = createNewUser();
+					break;
+				default:
+					System.out.println("Selection not recognized.");
+					break;
 				}
-			}while (!doneWithMenu);
-			
-			if (notQuit)
-			{
+			} while (!doneWithMenu);
+
+			if (notQuit) {
 				myCurrentState = UserController.Command.VIEWMAINMENU;
 				executeProgramLoop();
-			}		
+			}
 			myFileSaver.saveAll(myUserList, myAuctionList, myCalendar);
-			System.out.println("Thank you for using Auction Central.\n");						
-		} while (notQuit);						
+			System.out.println("Thank you for using Auction Central.\n");
+		} while (notQuit);
 		myScanner.close();
 	}
 
@@ -93,12 +88,10 @@ public class ProgramLoop {
 		System.out.print("Please enter your username: ");
 		String userName = myScanner.nextLine();
 		UserModel theUser = myFileSaver.FindUser(userName, myUserList);
-		if (theUser != null)
-		{
+		if (theUser != null) {
 			foundUser = true;
 			myUserModel = theUser;
-			switch(theUser.getUserType())
-			{
+			switch (theUser.getUserType()) {
 			case BIDDER:
 				myUserController = new BidderController(myUserModel);
 				break;
@@ -107,212 +100,221 @@ public class ProgramLoop {
 				break;
 			default:
 				myUserController = new EmployeeController(myUserModel);
-				break;			
+				break;
 			}
 			System.out.println("Welcome Back " + userName);
 		} else {
 			System.out.println("User " + userName + " not found.\n");
 		}
 		return foundUser;
-	}	
-	
-	private boolean createNewUser()
-	{
+	}
+
+	private boolean createNewUser() {
 		boolean addedUser = false;
 		System.out.print("Please enter your username: ");
 		String userName = myScanner.nextLine();
-		//see if this user already has a profile
+		// see if this user already has a profile
 		UserModel theUser = myFileSaver.FindUser(userName, myUserList);
-		if (theUser == null)
-			{
-				System.out.println("Are you an AuctionCentral employee, a non-profit organization member, or a bidder?");
-				System.out.println("1) AuctionCentral Employee\n2) Non-Profit Organization\n3) Bidder");
-				
-				int userType = myScanner.nextInt();
-				myScanner.nextLine();
-				if(userType == 1) 
-				{
-					myUserModel = new EmployeeModel(userName, UserModel.UserType.EMPLOYEE);
-					myUserController = new EmployeeController(myUserModel);
-				} 
-				else if(userType == 2)
-				{
-					System.out.println("What is the name of your Non-Profit Organization?");
-					String NPOname = myScanner.nextLine();
-					System.out.println("Your NPO is " + NPOname);
-					
-					myUserModel = new NonProfitModel(userName, UserModel.UserType.NPO, NPOname, LocalDate.now().minusYears(1).minusDays(1));
-					myUserController = new NonProfitController(myUserModel);
-				} 
-				else if (userType == 3)
-				{
-					myUserModel = new BidderModel(userName, UserModel.UserType.BIDDER);
-					myUserController = new BidderController(myUserModel);
-				}
-				System.out.println("Welcome to Auction Central " + myUserModel.getUserName());
-				myUserList.add(myUserModel);
-				addedUser = true;
-			} 
-			else //user already is in user list
-			{
-				System.out.println("Cannot add the user name " + myUserModel.getUserName() + " as it is already in our system!");
+		if (theUser == null) {
+			System.out
+					.println("Are you an AuctionCentral employee, a non-profit organization member, or a bidder?");
+			System.out
+					.println("1) AuctionCentral Employee\n2) Non-Profit Organization\n3) Bidder");
+
+			int userType = myScanner.nextInt();
+			myScanner.nextLine();
+			if (userType == 1) {
+				myUserModel = new EmployeeModel(userName,
+						UserModel.UserType.EMPLOYEE);
+				myUserController = new EmployeeController(myUserModel);
+			} else if (userType == 2) {
+				System.out
+						.println("What is the name of your Non-Profit Organization?");
+				String NPOname = myScanner.nextLine();
+				System.out.println("Your NPO is " + NPOname);
+
+				myUserModel = new NonProfitModel(userName,
+						UserModel.UserType.NPO, NPOname, LocalDate.now()
+								.minusYears(1).minusDays(1));
+				myUserController = new NonProfitController(myUserModel);
+			} else if (userType == 3) {
+				myUserModel = new BidderModel(userName,
+						UserModel.UserType.BIDDER);
+				myUserController = new BidderController(myUserModel);
 			}
+			System.out.println("Welcome to Auction Central "
+					+ myUserModel.getUserName());
+			myUserList.add(myUserModel);
+			addedUser = true;
+		} else // user already is in user list
+		{
+			System.out.println("Cannot add the user name "
+					+ myUserModel.getUserName()
+					+ " as it is already in our system!");
+		}
 		return addedUser;
 	}
-		
-//	/**
-//	 * Check the list of Auctions to see if the NPO has an auction scheduled already.
-//	 * 
-//	 * @param theAuctions the list of auctions
-//	 * @param theNPOname the name of the NPO being searched for
-//	 * @return true if an auction exists, false otherwise
-//	 */
-//	
-//	public static boolean checkAuctions(List<AuctionModel> theAuctions, String theNPOname, String theUserName) 
-//	{
-//		boolean result = false;
-//		for(int i = 0; i < theAuctions.size(); i++) {
-//			if(theAuctions.get(i).getAuctionOrg().equals(theNPOname)) {// && theAuctions.get(i).getUserName().equals(theUserName)) {
-//				result = true;
-//			}
-//		}
-//		return result;
-//	}
-	
+
+	// /**
+	// * Check the list of Auctions to see if the NPO has an auction scheduled
+	// already.
+	// *
+	// * @param theAuctions the list of auctions
+	// * @param theNPOname the name of the NPO being searched for
+	// * @return true if an auction exists, false otherwise
+	// */
+	//
+	// public static boolean checkAuctions(List<AuctionModel> theAuctions,
+	// String theNPOname, String theUserName)
+	// {
+	// boolean result = false;
+	// for(int i = 0; i < theAuctions.size(); i++) {
+	// if(theAuctions.get(i).getAuctionOrg().equals(theNPOname)) {// &&
+	// theAuctions.get(i).getUserName().equals(theUserName)) {
+	// result = true;
+	// }
+	// }
+	// return result;
+	// }
+
 	/**
 	 * Executes the program.
 	 */
-	private void executeProgramLoop()
-	{
-		if(myUserModel.getUserType() == UserModel.UserType.NPO)
-		{
-			if(((NonProfitModel)myUserModel).getAuction() != null)
-			{
-				myCurrentAuction = ((NonProfitModel)myUserModel).getAuction();
-			}			
+	private void executeProgramLoop() {
+		if (myUserModel.getUserType() == UserModel.UserType.NPO) {
+			if (((NonProfitModel) myUserModel).getAuction() != null) {
+				myCurrentAuction = ((NonProfitModel) myUserModel).getAuction();
+			}
 		}
 		boolean notLogout = true;
-		do
-		{
-			 System.out.println("\n" + myUserController.menuTitle(myCurrentState));
-			 ArrayList<UserController.Command> currentCommands = myUserController.GetMenu(myCurrentState, myCurrentItem, myUserModel);
-			 
-			 //print out available commands
-			 System.out.println("0) Logout");
-			 for (int i = 0; i < currentCommands.size(); i++)
-			 {
-				 System.out.print(i + 1 + ") ");
-				 System.out.println(myUserController.getCommandName(currentCommands.get(i)));			 
-			 }
+		do {
+			System.out.println("\n"
+					+ myUserController.menuTitle(myCurrentState));
+			if (myCurrentState == UserController.Command.VIEWAUCTIONDETAILS) {
+				System.out.println(AuctionCentralToStrings
+						.auctionToString(myCurrentAuction));
+			}
+			ArrayList<UserController.Command> currentCommands = myUserController
+					.GetMenu(myCurrentState, myCurrentItem, myUserModel);
 
-			 int commandInt = getNumberFromUserWithinRange(0, currentCommands.size());
-			 
-			 if (commandInt >= 0)
-			 {
-				 if (commandInt == 0)
-				 {
-					 notLogout = false;
-				 } 
-				 else if (commandInt <= currentCommands.size())
-				 {
-					 UserController.Command thisCommand = currentCommands.get(commandInt - 1);
-					 myCurrentState = myUserController.getNextState(myCurrentState, thisCommand);				 
-					 if (myCurrentState == UserController.Command.VIEWCALENDAR)
-					 {
-						 viewCalendarAuctions();
-					 } 
-					 else if (myCurrentState == UserController.Command.VIEWBIDDERAUCTIONS)
-					 {
-						 viewBidderAuctions();
-					 }
+			// print out available commands
+			System.out.println("0) Logout");
+			for (int i = 0; i < currentCommands.size(); i++) {
+				System.out.print(i + 1 + ") ");
+				System.out.println(myUserController
+						.getCommandName(currentCommands.get(i)));
+			}
+			int commandInt = getNumberFromUserWithinRange(0,
+					currentCommands.size());
+			if (commandInt >= 0) {
+				if (commandInt == 0) {
+					notLogout = false;
+				} else if (commandInt <= currentCommands.size()) {
+					UserController.Command thisCommand = currentCommands
+							.get(commandInt - 1);
+					myCurrentState = myUserController.getNextState(
+							myCurrentState, thisCommand);
+					if (myCurrentState == UserController.Command.VIEWCALENDAR) {
+						viewCalendarAuctions();
+					} else if (myCurrentState == UserController.Command.VIEWBIDDERAUCTIONS) {
+						viewBidderAuctions();
+					}
 
-					 if (thisCommand == UserController.Command.VIEWITEM)
-					 {
-						 viewItems();
-					 }					 	
+					if (thisCommand == UserController.Command.VIEWITEM) {
+						viewItems();
+					}
 
-					 myUserController.ExecuteCommand(thisCommand, myCalendar, myCurrentAuction, myCurrentItem);
-						 
-					 if(myUserModel.getUserType() == UserModel.UserType.NPO && thisCommand == UserController.Command.ADDAUCTION)
-					 {
-						 myCurrentAuction = ((NonProfitModel)myUserModel).getAuction();
-					 }				 
-					 // neccessary to transfer the newest auction that was added to the Calendar to our local AuctionList
-					 if(thisCommand.equals(UserController.Command.ADDAUCTION)) {
-							Collection<ArrayList<AuctionModel>> auctions = myCalendar.myAuctionByDateList.values();
-							Iterator<ArrayList<AuctionModel>> it = auctions.iterator();
-							myAuctionList.clear();
-							while(it.hasNext()) {
-								ArrayList<AuctionModel> a = (ArrayList<AuctionModel>) it.next();
-								for(int j = 0; j < a.size(); j++) {
-									AuctionModel auction = a.get(j);
-									myAuctionList.add(auction);
-								}
+					myUserController.ExecuteCommand(thisCommand, myCalendar,
+							myCurrentAuction, myCurrentItem);
+
+					if (myUserModel.getUserType() == UserModel.UserType.NPO
+							&& thisCommand == UserController.Command.ADDAUCTION) {
+						myCurrentAuction = ((NonProfitModel) myUserModel)
+								.getAuction();
+					}
+					// neccessary to transfer the newest auction that was added
+					// to the Calendar to our local AuctionList
+					if (thisCommand.equals(UserController.Command.ADDAUCTION)) {
+						Collection<ArrayList<AuctionModel>> auctions = myCalendar.myAuctionByDateList
+								.values();
+						Iterator<ArrayList<AuctionModel>> it = auctions
+								.iterator();
+						myAuctionList.clear();
+						while (it.hasNext()) {
+							ArrayList<AuctionModel> a = (ArrayList<AuctionModel>) it
+									.next();
+							for (int j = 0; j < a.size(); j++) {
+								AuctionModel auction = a.get(j);
+								myAuctionList.add(auction);
 							}
 						}
-					 }
-					 
-				 } 
-				 else 
-				 {
-					 System.out.println("Please enter a valid selection.");
-				 }
-		} while (notLogout);		
+					}
+				}
+
+			} else {
+				System.out.println("Please enter a valid selection.");
+			}
+		} while (notLogout);
 	}
-	
+
 	private void viewBidderAuctions() {
 		System.out.println("Future Auctions View");
-		ArrayList<AuctionModel> futureAuctions = auctionMapToList(myCalendar.getAllFutureAuctions());
+		ArrayList<AuctionModel> futureAuctions = auctionMapToList(myCalendar
+				.getAllFutureAuctions());
 		if (futureAuctions == null || futureAuctions.size() == 0) {
-			 System.out.println("No Future Auctions Found.");
-		 }
-		 else 
-		 {
-			 int AuctionListNumber = printOutAllAuctions(futureAuctions);
-			 int userAnswer = 0;
-			System.out.println("Enter the number of an auction to view its details.\nPress 0 to go back.");
+			System.out.println("No Future Auctions Found.");
+		} else {
+			int AuctionListNumber = printOutAllAuctions(futureAuctions);
+			int userAnswer = 0;
+			System.out
+					.println("Enter the number of an auction to view its details.\nPress 0 to go back.");
 			userAnswer = getNumberFromUserWithinRange(0, AuctionListNumber);
 			if (userAnswer > 0 && userAnswer <= AuctionListNumber - 1) {
 				myCurrentState = UserController.Command.VIEWAUCTIONDETAILS;
 				myCurrentAuction = futureAuctions.get(userAnswer - 1);
-				System.out.println(myCurrentAuction.toString() + "\n");
+				// System.out.println(AuctionCentralToStrings.auctionToString(myCurrentAuction));
 			} else {
 				myCurrentState = UserController.Command.VIEWMAINMENU;
 			}
-		 }
+		}
 	}
 
 	/**
 	 * Displays/controls menu for viewing items of the current auction.
 	 */
 	private void viewItems() {
-		System.out.println("Item List View");
-		 List<ItemModel> theItems = myCurrentAuction.getAuctionItems();
-		 int theItemIndex = 1;
-		 if (theItems == null || theItems.size() == 0) {
-			 System.out.println("No items found for current auction");
-		 }
-		 else 
-		 {
-			 for (ItemModel theItem: theItems)
-				{
-					System.out.print(theItemIndex + ") ");
-					System.out.println(theItem.getItemName());
-					theItemIndex++;
-				}
+
+		List<ItemModel> theItems = myCurrentAuction.getAuctionItems();
+		int theItemIndex = 1;
+		if (theItems == null || theItems.size() == 0) {
+			System.out.println("No items found for current auction.\n");
+			myCurrentState = UserController.Command.VIEWAUCTIONDETAILS;
+			// System.out.println(AuctionCentralToStrings.auctionToString(myCurrentAuction)
+			// + "\n");
+		} else {
+			System.out.println("Item List View");
+			for (ItemModel theItem : theItems) {
+				System.out.print(theItemIndex + ") ");
+				System.out.println(theItem.getItemName());
+				theItemIndex++;
+			}
 			System.out.println("");
 			int userAnswer = 0;
-			if (myAuctionList.size() > 0) 
-			{
-				System.out.println("Enter the number of an item to view/edit its details.\nEnter 0 to go back.");
-				userAnswer = getNumberFromUserWithinRange(1, theItemIndex - 3);
+			if (myAuctionList.size() > 0) {
+				System.out
+						.println("Enter the number of an item to view/edit its details.\nEnter 0 to go back.");
+				userAnswer = getNumberFromUserWithinRange(0, theItemIndex - 1);
 			}
 			if (userAnswer > 0) {
 				myCurrentState = UserController.Command.VIEWITEM;
 				myCurrentItem = theItems.get(userAnswer - 1);
-				System.out.println(myCurrentItem.toString());
+				System.out.println(AuctionCentralToStrings
+						.itemToString(myCurrentItem));
+			} else {
+				myCurrentState = UserController.Command.VIEWAUCTIONDETAILS;
+				// System.out.println(AuctionCentralToStrings.auctionToString(myCurrentAuction));
 			}
-	 	}		
+		}
 	}
 
 	/**
@@ -320,110 +322,108 @@ public class ProgramLoop {
 	 */
 	private void viewCalendarAuctions() {
 		myAuctionList.clear();
-		ArrayList<AuctionModel> theAuctionList = auctionMapToList(myCalendar.displayCurrentMonth());
-		if (theAuctionList.size() == 0)
-		{
+		ArrayList<AuctionModel> theAuctionList = auctionMapToList(myCalendar
+				.displayCurrentMonth());
+		if (theAuctionList.size() == 0) {
 			System.out.println("No Auctions to view");
-		}
-		else 
-		{
-			System.out.println("Auctions for " + LocalDate.now().getMonth().name());
+		} else {
+			System.out.println("Auctions for "
+					+ LocalDate.now().getMonth().name());
 			int AuctionListNumber = printOutAllAuctions(theAuctionList);
-			
+
 			int userAnswer = 0;
-			System.out.println("Enter the number of an auction to view its details.\nPress 0 to go back.");
+			System.out
+					.println("Enter the number of an auction to view its details.\nPress 0 to go back.");
 			userAnswer = getNumberFromUserWithinRange(0, AuctionListNumber);
 			if (userAnswer > 0 && userAnswer <= AuctionListNumber) {
 				myCurrentState = UserController.Command.VIEWAUCTIONDETAILS;
 				myCurrentAuction = theAuctionList.get(userAnswer - 1);
-				System.out.println(myCurrentAuction.toString() + "\n");
+				// System.out.println(AuctionCentralToStrings.auctionToString(myCurrentAuction));
 			} else {
 				myCurrentState = UserController.Command.VIEWMAINMENU;
 			}
-		}		
+		}
 	}
-	
-	private ArrayList<AuctionModel> auctionMapToList(Map<LocalDate, ArrayList<AuctionModel>> theAuctionMap) 
-	{
+
+	private ArrayList<AuctionModel> auctionMapToList(
+			Map<LocalDate, ArrayList<AuctionModel>> theAuctionMap) {
 		ArrayList<AuctionModel> allAuctions = new ArrayList<AuctionModel>();
 		if (theAuctionMap != null) {
-			for (Entry<LocalDate, ArrayList<AuctionModel>> entry: theAuctionMap.entrySet())
-			{
+			for (Entry<LocalDate, ArrayList<AuctionModel>> entry : theAuctionMap
+					.entrySet()) {
 				allAuctions.addAll(entry.getValue());
 			}
 		}
 		return allAuctions;
 	}
-	
-	private int printOutAllAuctions(ArrayList<AuctionModel> theAuctionList)
-	{
+
+	private int printOutAllAuctions(ArrayList<AuctionModel> theAuctionList) {
 		int AuctionListNumber = 1;
-		for (int i = 0; i < theAuctionList.size(); i++) 
-		{
+		for (int i = 0; i < theAuctionList.size(); i++) {
 			AuctionModel thisAuction = theAuctionList.get(i);
 			myAuctionList.add(thisAuction);
 			System.out.print(AuctionListNumber + ") ");
 			System.out.println(thisAuction.getAuctionName());
-			AuctionListNumber++;				
+			AuctionListNumber++;
 		}
-		System.out.println("");		
+		System.out.println("");
 		return AuctionListNumber;
 	}
-	
+
 	/**
 	 * Gets the user input between a range of integer values.
 	 * 
 	 * @return the user's selection
 	 */
-	private int getNumberFromUserWithinRange(int Start, int End)
-	{
+	private int getNumberFromUserWithinRange(int Start, int End) {
 		return getNumberFromUserWithinRange(Start, End, Start);
 	}
-	
+
 	/**
-	 * Gets the user input between a range of integer values and
-	 * includes a hidden value option.
+	 * Gets the user input between a range of integer values and includes a
+	 * hidden value option.
 	 * 
 	 * @return the user's selection
 	 */
-	private int getNumberFromUserWithinRange(int Start, int End, int HiddenOption) {
+	private int getNumberFromUserWithinRange(int Start, int End,
+			int HiddenOption) {
 		int commandInt = -1;
 		boolean validCommand = false;
-		do
-		{
-			 String TempString = myScanner.nextLine();
-			 try 
-			 {
-				 commandInt = Integer.parseInt(TempString);
-			 } catch (Exception e) {
-				 validCommand = false;
-			 }
-			 if ((commandInt < Start || commandInt > End) && commandInt != HiddenOption) {
-				 validCommand = false;
-				 System.out.println("Enter a Number between " + Start + " and " + End);
-			 } else {
-				 validCommand = true;
-			 }
+		do {
+			String TempString = myScanner.nextLine();
+			try {
+				commandInt = Integer.parseInt(TempString);
+			} catch (Exception e) {
+				validCommand = false;
+			}
+			if ((commandInt < Start || commandInt > End)
+					&& commandInt != HiddenOption) {
+				validCommand = false;
+				System.out.println("Enter a Number between " + Start + " and "
+						+ End);
+			} else {
+				validCommand = true;
+			}
 		} while (!validCommand);
 		return commandInt;
 	}
 
-	
-//	/**
-//	 * Returns whether or not the specified NPO has an auction already.
-//	 * 
-//	 * @param theNPOname the name of the NonProfit Organization we are checking
-//	 * @return true if an auction exists, false otherwise
-//	 */
-//	public boolean hasExistingAuction(String theNPOname) {
-//		AuctionModel auction;
-//		boolean result = false;
-//		for(int i = 0; i < myAuctionList.size(); i++) {
-//			auction = myAuctionList.get(i);
-//			if(auction.myOrgName.equals(theNPOname)) {
-//				result = true;
-//			}
-//		}
-//		return result;
-//	}
+	// /**
+	// * Returns whether or not the specified NPO has an auction already.
+	// *
+	// * @param theNPOname the name of the NonProfit Organization we are
+	// checking
+	// * @return true if an auction exists, false otherwise
+	// */
+	// public boolean hasExistingAuction(String theNPOname) {
+	// AuctionModel auction;
+	// boolean result = false;
+	// for(int i = 0; i < myAuctionList.size(); i++) {
+	// auction = myAuctionList.get(i);
+	// if(auction.myOrgName.equals(theNPOname)) {
+	// result = true;
+	// }
+	// }
+	// return result;
+	// }
 }

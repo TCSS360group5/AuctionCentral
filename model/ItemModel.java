@@ -1,14 +1,19 @@
 package model;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-public class ItemModel
+public class ItemModel  implements Serializable
 {
-  String myItemName;
-  String myDescription;
-  double myStartingBid;
-  Map<UserModel, Double> myBids;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6836348504277068061L;
+	String myItemName;
+	String myDescription;
+	double myStartingBid;
+	Map<UserModel, Double> myBids;
   
   public ItemModel(String theItemName, double theStartingBid, String theDescription)
   {

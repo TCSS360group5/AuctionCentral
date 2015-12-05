@@ -1,10 +1,7 @@
 package model;
 import static org.junit.Assert.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;

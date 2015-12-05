@@ -8,6 +8,11 @@ public class EmployeeModel extends UserModel
 {
 
   /**
+	 * 
+	 */
+	private static final long serialVersionUID = 2270770097531002818L;
+
+/**
  * @param theUsername
  * @param theUserType
  */

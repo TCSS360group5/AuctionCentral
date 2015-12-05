@@ -11,7 +11,11 @@ import java.util.Map;
  */
 public class BidderModel extends UserModel
 {
-  private Map<ItemModel, Double> myBids;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1714111610542462428L;	
+	private Map<ItemModel, Double> myBids;
 
 	/**
 	 * Creates a bidder.
