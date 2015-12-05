@@ -1,4 +1,4 @@
-package model;
+package exceptions;
 
 /**
  * This exception class allows exceptions to be thrown that specify

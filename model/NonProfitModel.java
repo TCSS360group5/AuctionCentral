@@ -1,6 +1,8 @@
 package model;
 import java.time.LocalDate;
 
+import exceptions.AuctionException;
+
 public class NonProfitModel extends UserModel
 {
   private LocalDate myLastAuctionDate;

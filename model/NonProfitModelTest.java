@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import org.junit.Before;
 import org.junit.Test;
 
+import exceptions.AuctionException;
+
 
 public class NonProfitModelTest {
 	NonProfitModel myNPO;

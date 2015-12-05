@@ -11,6 +11,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import exceptions.AuctionBackwardsTimeException;
+import exceptions.AuctionTimeBetweenException;
+import exceptions.AuctionTooFarAwayException;
+import exceptions.AuctionsAtCapacityException;
+import exceptions.AuctionsAtCapacityForWeekException;
+import exceptions.AuctionsPerDayException;
+
 public class CalendarModel
 {
 	public Map<LocalDate, ArrayList<AuctionModel>> myAuctionByDateList;
@@ -29,15 +36,26 @@ public class CalendarModel
 	 * 
 	 * @param theAuction the Auction to be added.
 	 * @return whether or not the auction was added.
+	 * @throws AuctionsPerDayException 
+	 * @throws AuctionTimeBetweenException 
+	 * @throws AuctionBackwardsTimeException 
+	 * @throws AuctionsAtCapacityForWeekException 
+	 * @throws AuctionsAtCapacityException 
+	 * @throws AuctionTooFarAwayException 
 	 */
-	public void addAuction(AuctionModel theAuction) throws AuctionException
+	public void addAuction(AuctionModel theAuction) throws AuctionTimeBetweenException, 
+														   AuctionsPerDayException,
+														   AuctionTooFarAwayException, 
+														   AuctionsAtCapacityException, 
+														   AuctionsAtCapacityForWeekException,
+														   AuctionBackwardsTimeException
 	{
 		LocalDate auctionDate = theAuction.getStartTime().toLocalDate();
 		LocalDateTime auctionStart = theAuction.getStartTime();
 		LocalDateTime auctionEnd = theAuction.getEndTime();
 		
 		boolean futureAuctions = checkFutureAuctions();
-		boolean ninetyDays = checkNinetyDays(auctionStart);
+		boolean ninetyDays = checkDaysAway(auctionStart);
 		boolean weekCheck = checkWeek(auctionDate);
 		boolean timeCheck = checkTimes(auctionStart, auctionEnd);
 		
@@ -68,25 +86,34 @@ public class CalendarModel
 	 * @param theNinetyDays
 	 * @param theWeekCheck
 	 * @param theTimeCheck
-	 * @throws AuctionException
+	 * @throws AuctionTooFarAwayException 
+	 * @throws AuctionsAtCapacityException 
+	 * @throws AuctionsAtCapacityForWeekException 
+	 * @throws AuctionBackwardsTimeException 
 	 */
-	private void determineError(boolean theFutureAuctions, boolean theNinetyDays, boolean theWeekCheck, boolean theTimeCheck) throws AuctionException
+	private void determineError(boolean theFutureAuctions,
+								boolean theNinetyDays, 
+								boolean theWeekCheck, 
+								boolean theTimeCheck) throws AuctionTooFarAwayException, 
+															 AuctionsAtCapacityException,
+															 AuctionsAtCapacityForWeekException, 
+															 AuctionBackwardsTimeException
 	{
 		if(!theFutureAuctions)
 		{
-			throw new AuctionException("The number of future auctions is currently at capacity.");
+			throw new AuctionsAtCapacityException();
 		}
 		else if(!theNinetyDays)
 		{
-			throw new AuctionException("Auctions may not be scheduled more than 90 days from the current date.");
+			throw new AuctionTooFarAwayException();
 		}
 		else if(!theWeekCheck)
 		{
-			throw new AuctionException("There are already 5 auctions scheduled within the week of your auction.");
+			throw new AuctionsAtCapacityForWeekException();
 		}
 		else if(!theTimeCheck)
 		{
-			throw new AuctionException("Auction end is before the beginning.");
+			throw new AuctionBackwardsTimeException();
 		}
 	}
 	/**
@@ -103,9 +130,10 @@ public class CalendarModel
 	}
 	
 	/**
-	 * Checks the "No more than 25 future auctions" business rule.
+	 * Checks the "No more than (number) of future auctions" business rule.
+	 * Number is from the AuctionCapacityException MAX_FUTURE_AUCTIONS constant.
 	 * 
-	 * @return whether or not there are already 25 auctions scheduled for the future.
+	 * @return true iff there are already (number) auctions scheduled for the future.
 	 */
 	private boolean checkFutureAuctions()
 	{
@@ -117,7 +145,7 @@ public class CalendarModel
 				count++;
 			}
 		}
-		if(count >= 25)
+		if(count >= AuctionsAtCapacityException.MAX_FUTURE_AUCTIONS)
 		{
 			return false;
 		}
@@ -126,14 +154,15 @@ public class CalendarModel
 	}
 	
 	/**
-	 * Enforces the "An auction may not be scheduled more than 90 days from the current date" business rule.
+	 * Enforces the "An auction may not be scheduled more than (number) days from the current date" business rule.
+	 * Number is from the AuctionTimeBetweenException MAX_DAYS_AWAY constant.
 	 * 
 	 * @param theAuctionStart the Auction start.
-	 * @return whether or not the Auction start is 90 days after the current date.
+	 * @return true iff Auction start is (number) days after the current date.
 	 */
-	private boolean checkNinetyDays(LocalDateTime theAuctionStart)
+	private boolean checkDaysAway(LocalDateTime theAuctionStart)
 	{
-		if(theAuctionStart.isAfter(LocalDateTime.now().plusDays(90)) || theAuctionStart.isBefore(LocalDateTime.now().minusDays(1)))
+		if(theAuctionStart.isAfter(LocalDateTime.now().plusDays(AuctionTooFarAwayException.MAX_DAYS_AWAY)) || theAuctionStart.isBefore(LocalDateTime.now().minusDays(1)))
 		{
 			return false;
 		}
@@ -142,10 +171,11 @@ public class CalendarModel
 	}
 	
 	/**
-	 * Checks the "no more than 5 auctions may be scheduled for any rolling 7 day period" business rule.
+	 * Checks the "no more than (number) auctions may be scheduled for any rolling 7 day period" business rule.
+	 * Number is from the AuctionsAtCapacityForWeekException MAX_AUCTIONS_FOR_WEEK constant.
 	 * 
 	 * @param theAuctionDate the date of the Auction.
-	 * @return whether or not the 5 Auction rule is exceeded.
+	 * @return true iff there are already (number) auctions scheduled for the 7 day period.
 	 */
 	private boolean checkWeek(LocalDate theAuctionDate)
 	{
@@ -171,20 +201,24 @@ public class CalendarModel
 			}
 		}
 		
-		if(count >= 5)
+		if(count >= AuctionsAtCapacityForWeekException.MAX_AUCTIONS_FOR_WEEK)
 			return false;
 		else
 			return true;
 	}
 	
 	/**
-	 * Enforces the "no more than 2 auctions can be scheduled on the same day, and the star time of the
-	 * second can be no earlier than 2 hours after the end time of the first" business rule.
+	 * Enforces the "no more than (number1) auctions can be scheduled on the same day, and the star time of the
+	 * second can be no earlier than (number2) hours after the end time of the first" business rule.
+	 * Number1 is from the AuctionsPerDayException MAX_AUCTIONS_PER_DAY constant.
+	 * Number2 is from the AuctionTimeBetweenException HOURS_BETWEEN_AUCTION constant.
 	 * 
 	 * @param theAuction the Auction to be added
-	 * @return whether or not the critera metioned in the above description are met.
+	 * @return true iff there is room for the auction in the day and the hours between start and end of the other scheduled auction(s) is okay.
+	 * @throws AuctionTimeBetweenException 
+	 * @throws AuctionsPerDayException 
 	 */
-	private void checkAuctionsForDay(AuctionModel theAuction) throws AuctionException
+	private void checkAuctionsForDay(AuctionModel theAuction) throws AuctionTimeBetweenException, AuctionsPerDayException
 	{
 		LocalDate auctionDate = theAuction.getStartTime().toLocalDate();
 		LocalDateTime auctionStart = theAuction.getStartTime();
@@ -192,40 +226,42 @@ public class CalendarModel
 		  
 		ArrayList<AuctionModel> dayAuctions = myAuctionByDateList.get(auctionDate);
 	
-		if(dayAuctions.size() < 2)
+		if(dayAuctions.size() < AuctionsPerDayException.MAX_AUCTIONS_PER_DAY)
 		{
+			int hoursBetween = AuctionTimeBetweenException.HOURS_BETWEEN_AUCTION;
+			
 			AuctionModel firstAuction = dayAuctions.get(0);
 			if(auctionStart.isBefore(firstAuction.getStartTime()))
 			{
 				// at least 2 hours between actions
-				if(auctionEnd.plusHours(2).minusMinutes(1).isBefore(firstAuction.getStartTime()))
+				if(auctionEnd.plusHours(hoursBetween).minusMinutes(1).isBefore(firstAuction.getStartTime()))
 				{
 					dayAuctions.add(theAuction);
 					myAuctionByDateList.replace(auctionDate, dayAuctions);
 				}	
 				else
 				{
-					throw new AuctionException("Auctions must have at least 2 hours between them.");
+					throw new AuctionTimeBetweenException();
 				}
 			}
 			else
 			{
 				// at least 2 hours between actions
-				if(auctionStart.isAfter(firstAuction.getEndTime().plusHours(2).minusMinutes(1)))
+				if(auctionStart.isAfter(firstAuction.getEndTime().plusHours(hoursBetween).minusMinutes(1)))
 				{
 					dayAuctions.add(theAuction);
 					myAuctionByDateList.replace(auctionDate, dayAuctions);
 				}
 				else
 				{
-					throw new AuctionException("Auctions must have at least 2 hours between them.");
+					throw new AuctionTimeBetweenException();
 				}
 			}
 		}
 		// 2 auctions already scheduled for the day
 		else
 		{
-			throw new AuctionException("There are already 2 auctions scheduled for this day.");
+			throw new AuctionsPerDayException();
 		}
 	}
 	
