@@ -7,10 +7,8 @@ public class ItemModel
 {
   String myItemName;
   String myDescription;
-  double mySellingPrice;
   double myStartingBid;
   Map<UserModel, Double> myBids;
-  double myHighestBid;
   
   public ItemModel(String theItemName, double theStartingBid, String theDescription)
   {
@@ -18,10 +16,6 @@ public class ItemModel
 	  myItemName = theItemName;
 	  myStartingBid = theStartingBid;
 	  myDescription = theDescription;	  
-  }
-  
-  public void setHighestBid(double theBid) {
-	  myHighestBid = theBid;
   }
   
   public boolean setItemName(String theItemName)
@@ -59,7 +53,6 @@ public class ItemModel
   
   public Map<UserModel, Double> getBids()
   {
-	  //LIST ALL BIDS
 	  return myBids;
   }
   
@@ -96,7 +89,6 @@ public class ItemModel
 	  answer.append("Name: " + myItemName + "\n");
 	  answer.append("Description: " + myDescription + "\n");
 	  answer.append("Starting Bid: " + myStartingBid + "\n");
-	  answer.append("Selling Price: " + mySellingPrice + "\n");
 	  for (Entry<UserModel, Double> entry : myBids.entrySet()) 
 	  {
 		  answer.append(entry.getKey() + " " + entry.getValue() + "\n");

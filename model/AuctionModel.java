@@ -1,10 +1,17 @@
 package model;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class AuctionModel
+public class AuctionModel implements Serializable
 {
+  /**
+	 * 
+	 */
+  private static final long serialVersionUID = 1L;
+	
+	
   public List<ItemModel> myInventory;
   public String myOrgName;
   public String myAuctionName;
@@ -12,7 +19,7 @@ public class AuctionModel
   //Fields for local date
   LocalDateTime myStartTime;
   LocalDateTime myEndTime;
-  LocalDateTime myDate;
+  //LocalDateTime myDate;
   String myUserName;
   
   //create auction constructor
@@ -21,10 +28,7 @@ public class AuctionModel
 	  this(theOrgName, theUserName, theStartTime, theEndTime, null);
   }
   
-  private void updateAuctionName() 
-  {
-	  myAuctionName = myOrgName.replace(' ', '-') + "-" + myStartTime.getMonth().name() + "-" + myStartTime.getDayOfMonth() + "-" + myStartTime.getYear();
-  }
+
 
 //create another auction constructor with same inventory list - copy constructor?
   public AuctionModel(String theOrgName, String theUserName, LocalDateTime theStartTime, LocalDateTime theEndTime, List<ItemModel> theInventory)
@@ -42,6 +46,11 @@ public class AuctionModel
 	  {
 		  myInventory = new ArrayList<ItemModel>();
 	  }
+  }
+  
+  private void updateAuctionName() 
+  {
+	  myAuctionName = myOrgName.replace(' ', '-') + "-" + myStartTime.getMonth().name() + "-" + myStartTime.getDayOfMonth() + "-" + myStartTime.getYear();
   }
   
   //get the auction organization
