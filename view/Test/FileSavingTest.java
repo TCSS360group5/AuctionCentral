@@ -1,4 +1,4 @@
-package view;
+package view.Test;
 
 import static org.junit.Assert.*;
 
@@ -13,14 +13,14 @@ import org.junit.Test;
  */
 public class FileSavingTest {
 	
-	FileSaving myTestFileSaver;
+	//FileSaving myTestFileSaver;
 
 	/**
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
-		myTestFileSaver = new FileSaving();
+		//myTestFileSaver = new FileSaving();
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class FileSavingTest {
 	}
 
 	/**
-	 * Test method for {@link view.FileSaving#FindUser(java.lang.String, java.util.ArrayList)}.
+	 * Test method for {@link view.FileSaving#findUserByName(java.lang.String, java.util.ArrayList)}.
 	 */
 	@Test
 	public void testFindUser() {

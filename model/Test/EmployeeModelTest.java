@@ -1,4 +1,4 @@
-package model;
+package model.Test;
 
 public class EmployeeModelTest {
 

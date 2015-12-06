@@ -19,7 +19,7 @@ public class BidderController extends UserController
 	 * Creates a BidderController using the passed BidderModel.
 	 * 
 	 * @param theModel a UserModel (BidderModel) that will be used for the controller.
-	 * @author
+	 * @author Quinn
 	 */
     public BidderController(UserModel theModel) {
 		super("Bidder");
@@ -259,22 +259,4 @@ public class BidderController extends UserController
 	public BidderModel getBidderModel() {
 		return myBidderModel;
 	}
-	
-	/**
-	 * Used for the BidderController to add bids.
-	 * 
-	 * @param theUserInput the Scanner used to read user input from console
-	 * @param theItem the item being bidded on
-	 */
-//	private void bidOnItem(Scanner theUserInput, ItemModel theItem) {
-//		double bid;
-//		System.out.println("Please Enter a Bid:");
-//		bid = theUserInput.nextDouble();
-//		if (theItem.getStartingBid() > bid) {
-//			System.out.println("Bid is below minimum bid for this item.");
-//		}else {
-//			myBidderModel.getBids().put(theItem, bid);
-//			System.out.println("Bid entered.");
-//		}	
-//	}
 }

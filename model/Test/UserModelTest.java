@@ -1,6 +1,11 @@
-package model;
+package model.Test;
 
 import java.time.LocalDate;
+
+import model.BidderModel;
+import model.EmployeeModel;
+import model.NonProfitModel;
+import model.UserModel;
 
 import org.junit.Before;
 
@@ -16,14 +21,6 @@ public class UserModelTest {
 		myBidder = new BidderModel("Sam", UserModel.UserType.BIDDER);
 	}
 
-//	@Test
-//	public void testUser() {
-//		fail("Not yet implemented");
-//	}
-//
-//	@Test
-//	public void testToString() {
-//		fail("Not yet implemented");
-//	}
+	//nothing to test.
 
 }

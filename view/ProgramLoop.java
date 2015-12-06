@@ -20,7 +20,7 @@ import model.NonProfitModel;
 import model.UserModel;
 
 public class ProgramLoop {
-	private FileSaving myFileSaver;
+	//private FileSaving myFileSaver;
 	private UserModel myUserModel;
 	private UserController myUserController;
 	private static CalendarModel myCalendar;
@@ -40,14 +40,14 @@ public class ProgramLoop {
 		myUserList = new ArrayList<UserModel>();
 		myAuctionList = new ArrayList<AuctionModel>();
 		myScanner = new Scanner(System.in);
-		myFileSaver = new FileSaving();
+		//myFileSaver = new FileSaving();
 	}
 
 	/**
 	 * Loads and stores the files, handles user log in, and outputs files.
 	 */
 	public void startProgram() {
-		myFileSaver.loadAll(myUserList, myAuctionList, myCalendar);
+		FileSaving.loadAll(myUserList, myAuctionList, myCalendar);
 		boolean notQuit = true;
 		do {
 			boolean doneWithMenu = false;
@@ -77,7 +77,7 @@ public class ProgramLoop {
 				myCurrentState = UserController.Command.VIEWMAINMENU;
 				executeProgramLoop();
 			}
-			myFileSaver.saveAll(myUserList, myAuctionList, myCalendar);
+			FileSaving.saveAll(myUserList, myAuctionList, myCalendar);
 			System.out.println("Thank you for using Auction Central.\n");
 		} while (notQuit);
 		myScanner.close();
@@ -87,7 +87,7 @@ public class ProgramLoop {
 		boolean foundUser = false;
 		System.out.print("Please enter your username: ");
 		String userName = myScanner.nextLine();
-		UserModel theUser = myFileSaver.FindUser(userName, myUserList);
+		UserModel theUser = FileSaving.findUserByName(userName, myUserList);
 		if (theUser != null) {
 			foundUser = true;
 			myUserModel = theUser;
@@ -114,7 +114,7 @@ public class ProgramLoop {
 		System.out.print("Please enter your username: ");
 		String userName = myScanner.nextLine();
 		// see if this user already has a profile
-		UserModel theUser = myFileSaver.FindUser(userName, myUserList);
+		UserModel theUser = FileSaving.findUserByName(userName, myUserList);
 		if (theUser == null) {
 			System.out
 					.println("Are you an AuctionCentral employee, a non-profit organization member, or a bidder?");

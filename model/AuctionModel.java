@@ -6,12 +6,8 @@ import java.time.LocalDateTime;
 
 public class AuctionModel implements Serializable
 {
-  /**
-	 * 
-	 */
+
   private static final long serialVersionUID = 1L;
-	
-	
   public List<ItemModel> myInventory;
   public String myOrgName;
   public String myAuctionName;
@@ -19,7 +15,6 @@ public class AuctionModel implements Serializable
   //Fields for local date
   LocalDateTime myStartTime;
   LocalDateTime myEndTime;
-  //LocalDateTime myDate;
   String myUserName;
   
   //create auction constructor

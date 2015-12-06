@@ -1,9 +1,12 @@
-package model;
+package model.Test;
 import static org.junit.Assert.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import model.BidderModel;
+import model.ItemModel;
+import model.UserModel;
 import org.junit.Before;
 import org.junit.Test;
 

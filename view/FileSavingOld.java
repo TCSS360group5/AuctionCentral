@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Map.Entry;
 
-import exceptions.*;
 import model.AuctionModel;
 import model.BidderModel;
 import model.CalendarModel;
@@ -215,7 +214,7 @@ public class FileSavingOld {
 			{		
 				NonProfitModel tempNPOUser = (NonProfitModel) tempUser;
 				outputUsers.println(tempNPOUser.getNPOName());
-				if(tempNPOUser.hasAuction()) {
+				if(tempNPOUser.getAuction() != null) {
 					LocalDate LastAuctionDate = tempNPOUser.getLastAuctionDate();
 					outputUsers.println(LastAuctionDate.getYear() + " " + LastAuctionDate.getMonthValue() + " " + LastAuctionDate.getDayOfMonth());
 				}

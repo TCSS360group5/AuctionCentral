@@ -6,7 +6,21 @@ import java.util.List;
 import model.AuctionModel;
 import model.ItemModel;
 
+/**
+ * These are for the console based UI so anywhere in the program, the proper string representing the model can be called.
+ * 
+ * @author UWT group5
+ *
+ */
 public class AuctionCentralToStrings {
+	
+	/**
+	 * This method makes a string that represents how an Auction will be printed to the UI.
+	 * 
+	 * @param theAuctionModel this is the Auction whose information we are displaying
+	 * @return returns the string formated for the UI
+	 * @author Quinn
+	 */
 	public static String auctionToString(AuctionModel theAuctionModel){
 		  StringBuilder answer = new StringBuilder();
 		  answer.append("Name: " + theAuctionModel.getAuctionName() + "\n");
@@ -29,6 +43,13 @@ public class AuctionCentralToStrings {
 		  return answer.toString();
 	  }
 	
+	/**
+	 * This method makes a string that represents how an Item will be printed to the UI.
+	 * 
+	 * @param theItemModel this is the item whose details will be displayed to the UI.
+	 * @return returns the string formated for the UI
+	 * @author Quinn
+	 */
 	  public static String itemToString(ItemModel theItemModel) {
 		  StringBuilder answer = new StringBuilder();
 		  answer.append("Name: " + theItemModel.getItemName() + "\n");

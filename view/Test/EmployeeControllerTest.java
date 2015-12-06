@@ -1,9 +1,11 @@
-package view;
+package view.Test;
 import static org.junit.Assert.*;
 import model.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import view.EmployeeController;
 
 
 public class EmployeeControllerTest {

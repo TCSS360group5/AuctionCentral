@@ -1,7 +1,10 @@
-package model;
+package model.Test;
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
+
+import model.AuctionModel;
+import model.CalendarModel;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package view;
+package view.Test;
 
 import static org.junit.Assert.*;
 
@@ -15,6 +15,14 @@ import model.UserModel;
 import org.junit.Before;
 import org.junit.Test;
 
+import view.Serialization;
+
+/**
+ * This class tests the serialization class functions
+ * 
+ * @author Quinn
+ *
+ */
 public class SerializationTest {
 	AuctionModel myAuction;
 	AuctionModel myAuctionWithItems;
@@ -64,6 +72,12 @@ public class SerializationTest {
 		}
 	}
 
+	/**
+	 * There isn't much to test here, as long as an exception isn't thrown we 
+	 * believe it is good until we test deserialization.
+	 * 
+	 * @author Quinn
+	 */
 	@Test
 	public void testSerialize() {
 		try
@@ -75,9 +89,13 @@ public class SerializationTest {
 		}
 	}
 
+	/**
+	 * This is the basic test of using deserialization to test a simple auction.
+	 * @author Quinn
+	 */
 	@Test
 	public void testDeSerializeAuction() {
-		AuctionModel tempModel = null;//new AuctionModel("", "", myDate.plusDays(3), myDate.plusDays(3).plusHours(3));
+		AuctionModel tempModel = null;
 		try
 		{
 			tempModel = (AuctionModel) Serialization.deSerializeObject("auction.ser");
@@ -92,9 +110,13 @@ public class SerializationTest {
 		assertTrue(compareAuction(tempModel, myAuction));
 	}
 	
+	/**
+	 * This is a more advanced test with an auction that has items.
+	 * @author Quinn
+	 */
 	@Test
 	public void testDeSerializeAuctionWithItems() {
-		AuctionModel tempModel = null;//new AuctionModel("", "", myDate.plusDays(3), myDate.plusDays(3).plusHours(3));
+		AuctionModel tempModel = null;
 		try
 		{
 			tempModel = (AuctionModel) Serialization.deSerializeObject("auctionwithitems.ser");
@@ -109,9 +131,13 @@ public class SerializationTest {
 		assertTrue(compareAuction(tempModel, myAuctionWithItems));
 	}
 	
+	/**
+	 * This is an even more advanced test with an auction that has item and those items have bids.
+	 * @author Quinn
+	 */
 	@Test
 	public void testDeSerializeAuctionWithItemsWithBids() {
-		AuctionModel tempModel = null;//new AuctionModel("", "", myDate.plusDays(3), myDate.plusDays(3).plusHours(3));
+		AuctionModel tempModel = null;
 		try
 		{
 			tempModel = (AuctionModel) Serialization.deSerializeObject("auctionwithitemswithbids.ser");
@@ -126,50 +152,58 @@ public class SerializationTest {
 		assertTrue(compareAuction(tempModel, myAuctionWithItemsWithBids));
 	}
 	
-	private boolean compareAuction(AuctionModel Auction1, AuctionModel Auction2)
+	/**
+	 * This method compares 2 auctions to see if their fields are exactly the same.
+	 * 
+	 * @param theAuction1  This is the first auction to compare.
+	 * @param theAuction2 	This is the second auction to compare.
+	 * @return returns true if the auctions are the same and false otherwise.
+	 * @author Quinn
+	 */
+	private boolean compareAuction(AuctionModel theAuction1, AuctionModel theAuction2)
 	{
 		boolean answer = true;
-		if (Auction1.myAuctionName.compareTo(Auction2.myAuctionName) != 0)
+		if (theAuction1.myAuctionName.compareTo(theAuction2.myAuctionName) != 0)
 		{
 			answer = false;
 		}
-		if (Auction1.myOrgName.compareTo(Auction2.myOrgName) != 0)
+		if (theAuction1.myOrgName.compareTo(theAuction2.myOrgName) != 0)
 		{
 			answer = false;
 		}
-		if (Auction1.getUserName().compareTo(Auction2.getUserName()) != 0)
+		if (theAuction1.getUserName().compareTo(theAuction2.getUserName()) != 0)
 		{
 			answer = false;
 		}
-		if (Auction1.getStartTime().compareTo(Auction2.getStartTime()) != 0)
+		if (theAuction1.getStartTime().compareTo(theAuction2.getStartTime()) != 0)
 		{
 			answer = false;
 		}
-		if (Auction1.getEndTime().compareTo(Auction2.getEndTime()) != 0)
+		if (theAuction1.getEndTime().compareTo(theAuction2.getEndTime()) != 0)
 		{
 			answer = false;
 		}
-		if (Auction1.myInventory != null && Auction2.myInventory == null)
+		if (theAuction1.myInventory != null && theAuction2.myInventory == null)
 		{
 			answer = false;
 		} 
-		else if (Auction1.myInventory == null && Auction2.myInventory != null)
+		else if (theAuction1.myInventory == null && theAuction2.myInventory != null)
 		{
 			answer = false;
 		}
-		else if (Auction1.myInventory == null && Auction2.myInventory == null)
+		else if (theAuction1.myInventory == null && theAuction2.myInventory == null)
 		{
 			answer = true;
 		} 
-		else if (Auction1.myInventory.size() != Auction2.myInventory.size())
+		else if (theAuction1.myInventory.size() != theAuction2.myInventory.size())
 		{
 			answer = false;
 		}
 		else 
 		{
-			for (int i = 0; i < Auction1.myInventory.size(); i++)
+			for (int i = 0; i < theAuction1.myInventory.size(); i++)
 			{
-				boolean tempAnswer = compareItem(Auction1.myInventory.get(i), Auction2.myInventory.get(i));
+				boolean tempAnswer = compareItem(theAuction1.myInventory.get(i), theAuction2.myInventory.get(i));
 				if (!tempAnswer){
 					answer = false;
 				}
@@ -179,54 +213,58 @@ public class SerializationTest {
 		return answer;
 	}
 	
-	private boolean compareItem(ItemModel Item1, ItemModel Item2)
+	/**
+	 * This method compares two items to see if they are the same.
+	 * 
+	 * @param theItem1 This is the first ItemModel 
+	 * @param theItem2 This is the second ItemModel 
+	 * @return returns true if the items are the same, false otherwise.
+	 * @author Quinn
+	 */
+	private boolean compareItem(ItemModel theItem1, ItemModel theItem2)
 	{
 		boolean answer = true;
-//		  String myItemName;
-//		  String myDescription;
-//		  double myStartingBid;
-//		  Map<UserModel, Double> myBids;
-		if (Item1.getItemName().compareTo(Item2.getItemName()) != 0)
+		if (theItem1.getItemName().compareTo(theItem2.getItemName()) != 0)
 		{
 			answer = false;
 		}
-		if (Item1.getDescription().compareTo(Item2.getDescription()) != 0)
+		if (theItem1.getDescription().compareTo(theItem2.getDescription()) != 0)
 		{
 			answer = false;
 		}
-		if (Item1.getStartingBid() != Item2.getStartingBid())
+		if (theItem1.getStartingBid() != theItem2.getStartingBid())
 		{
 			answer = false;
 		}
-		if (Item1.getDescription().compareTo(Item2.getDescription()) != 0)
+		if (theItem1.getDescription().compareTo(theItem2.getDescription()) != 0)
 		{
 			answer = false;
 		}
-		if (Item1.getDescription().compareTo(Item2.getDescription()) != 0)
+		if (theItem1.getDescription().compareTo(theItem2.getDescription()) != 0)
 		{
 			answer = false;
 		}
-		if (Item1.getBids() != null && Item2.getBids() == null)
+		if (theItem1.getBids() != null && theItem2.getBids() == null)
 		{
 			answer = false;
 		} 
-		else if (Item1.getBids() == null && Item2.getBids() != null)
+		else if (theItem1.getBids() == null && theItem2.getBids() != null)
 		{
 			answer = false;
 		}
-		else if (Item1.getBids() == null && Item2.getBids() == null)
+		else if (theItem1.getBids() == null && theItem2.getBids() == null)
 		{
 			answer = true;
 		} 
-		else if (Item1.getBids().size() != Item2.getBids().size())
+		else if (theItem1.getBids().size() != theItem2.getBids().size())
 		{
 			answer = false;
 		}
 		else 
 		{
-			for (int i = 0; i < Item1.getBids().size(); i++)				
+			for (int i = 0; i < theItem1.getBids().size(); i++)				
 			{
-				boolean tempAnswer = compareBid(Item1.getBids(), Item2.getBids());
+				boolean tempAnswer = compareBid(theItem1.getBids(), theItem2.getBids());
 				if (!tempAnswer)
 				{
 					answer = false;
@@ -236,18 +274,27 @@ public class SerializationTest {
 		return answer;		
 	}
 	
-	private boolean compareBid(Map<UserModel, Double> Bids1, Map<UserModel, Double> Bids2)
+	/**
+	 * This method compares 2 bid lists to see if they are the same.
+	 * 
+	 * @param theBidsList1 This is the first bid list to compare
+	 * @param theBidsList2 This is the second bid list to compare
+	 * @return returns true if the bid lists are the same
+	 * @author Quinn
+	 */
+	private boolean compareBid(Map<UserModel, Double> theBidsList1, Map<UserModel, Double> theBidsList2)
 	{
 		boolean answer = true;
-		for (Entry<UserModel, Double> theEntry: Bids1.entrySet())
+		for (Entry<UserModel, Double> theEntry: theBidsList1.entrySet())
 		{
-			if (Bids2.containsKey(theEntry.getKey()) && Bids1.containsKey(theEntry.getKey()))
+			if (theBidsList2.containsKey(theEntry.getKey()) && theBidsList1.containsKey(theEntry.getKey()))
 			{
-				if (Bids2.get(theEntry.getKey()).compareTo(theEntry.getValue()) != 0)
+				if (theBidsList2.get(theEntry.getKey()).compareTo(theEntry.getValue()) != 0)
 				{
 					answer = false;
 				}
-			} else {
+			} else 
+			{
 				answer = false;
 			}
 		}

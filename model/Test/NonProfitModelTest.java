@@ -1,8 +1,12 @@
-package model;
+package model.Test;
 import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import model.AuctionModel;
+import model.NonProfitModel;
+import model.UserModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +49,7 @@ public class NonProfitModelTest {
 		    thrown = true;
 		  }
 
-		  assertTrue(thrown);
+		  assertFalse(thrown);
 	}
 	
 	@Test
@@ -60,7 +64,7 @@ public class NonProfitModelTest {
 		    thrown = true;
 		  }
 
-		  assertTrue(thrown);
+		  assertFalse(thrown);
 	}
 	
 	@Test

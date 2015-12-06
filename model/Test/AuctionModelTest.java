@@ -1,9 +1,12 @@
-package model;
+package model.Test;
 import static org.junit.Assert.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import model.AuctionModel;
+import model.ItemModel;
 
 import org.junit.Before;
 import org.junit.Test;
