@@ -2,13 +2,13 @@ package model;
 
 /**
  * This class represents an Auction Central Employee.
- * Since it doesn't do much, there is really no functionality
  * 
+ * @author TCSS 360 Group 5
  */
 public class EmployeeModel extends UserModel {
 
 	/**
-	 * required for serialization
+	 * Required for serialization
 	 */
 	private static final long serialVersionUID = 2270770097531002818L;
 

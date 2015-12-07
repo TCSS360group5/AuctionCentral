@@ -8,37 +8,31 @@ import exceptions.AuctionException;
  * This class represents the model of an Non Profit user with storage of 
  * required fields and checks for business rules.
  * 
- * @author UWT group 5
+ * @author TCSS 360 Group 5
  */
 public class NonProfitModel extends UserModel {
 
-	/**
-	 * required for serialization
-	 */
+	/** Required for serialization */
 	private static final long serialVersionUID = 6214725495197646748L;
 
-	/**
-	 * This is the last auction date of the user.  Used to determine if they
-	 * can add a new auction or not.
-	 */
+	/** The last auction date of the user. Used to determine if they
+	 * 	can add a new auction or not. */
 	private LocalDate myLastAuctionDate;
-	/**
-	 * This is the current Auction of the user.
-	 */
+	
+	/** The current Auction of the user. */
 	private AuctionModel myAuction;
-	/**
-	 * This is the name of the user's NPO
-	 */
+	
+	/** The name of the user's NPO. */
 	private String myNPOName;
 
 	/**
 	 * This constructor ensures that the NonProfit has an NPO name and date for last
 	 * Auction as a LocalDate.
 	 * 
-	 * @param theUserName  This is the name of the user.
-	 * @param theUserType  This is the user's type.
-	 * @param theNPOName  This is the name of the user's NPO.
-	 * @param theLastAuctionDate  This is the date of the Last Auction for this user.
+	 * @param theUserName the name of the user.
+	 * @param theUserType the user's type.
+	 * @param theNPOName the name of the user's NPO.
+	 * @param theLastAuctionDate the date of the Last Auction for this user.
 	 * @author Quinn
 	 */
 	public NonProfitModel(String theUserName, UserType theUserType,
@@ -52,10 +46,8 @@ public class NonProfitModel extends UserModel {
 	 * This method checks that the year that the user would like an 
 	 * auction to is valid.
 	 * 
-	 * @param theYear
-	 *            This checks if the year of a new auction would be valid.
-	 * @throws AuctionException
-	 *             This lets the user know why the auction couldn't be added.
+	 * @param theYear checks if the year of a new auction would be valid.
+	 * @throws AuctionException lets the user know why the auction couldn't be added.
 	 * @author Quinn
 	 */
 	public void checkYear(int theYear) throws AuctionException {
@@ -69,10 +61,8 @@ public class NonProfitModel extends UserModel {
 	/**
 	 * This checks the 365 day until you can add an auction business rule.
 	 * 
-	 * @param theDate
-	 *            This is the date that the new auction would be on.
-	 * @throws AuctionException
-	 *             This lets the user know why the auction couldn't be added.
+	 * @param theDate the date that the new auction would be on.
+	 * @throws AuctionException lets the user know why the auction couldn't be added.
 	 * @author Quinn
 	 */
 	public void check365(LocalDate theDate) throws AuctionException {
@@ -120,8 +110,7 @@ public class NonProfitModel extends UserModel {
 	/**
 	 * This method is a setter for the last auction date of the user.
 	 * 
-	 * @param myLastAuctionDate
-	 *            This is the date that the user last had an auction
+	 * @param myLastAuctionDate the date that the user last had an auction
 	 * @author Quinn
 	 */
 	public void setLastAuctionDate(LocalDate myLastAuctionDate) {
@@ -141,8 +130,7 @@ public class NonProfitModel extends UserModel {
 	/**
 	 * Sets the Auction for this user to a new auction
 	 * 
-	 * @param theAuction
-	 *            This is the auction that will be set as the users auction
+	 * @param theAuction the auction that will be set as the users auction
 	 * @author Quinn
 	 */
 	public void setAuction(AuctionModel theAuction) {
@@ -152,9 +140,8 @@ public class NonProfitModel extends UserModel {
 	/**
 	 * Compares this object to another object.
 	 * 
-	 * @param theOther
-	 *            this is the other object being compared.
-	 * @return returns true if the objects have the same values in their fields
+	 * @param theOther the other object being compared.
+	 * @return returns true IFF the objects have the same values in their fields
 	 * @author Quinn
 	 */
 	@Override

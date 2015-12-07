@@ -4,16 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+/**
+ * This class represents an item for AuctionCentral.
+ * 
+ * @author TCSS 360 Group 5
+ */
 public class ItemModel  implements Serializable
 {
-  /**
-	 * 
-	 */
+	/** Required for serialization */
 	private static final long serialVersionUID = -6836348504277068061L;
-	String myItemName;
-	String myDescription;
-	double myStartingBid;
-	Map<UserModel, Double> myBids;
+	
+	private String myItemName;
+	private String myDescription;
+	private double myStartingBid;
+	private Map<UserModel, Double> myBids;
   
   public ItemModel(String theItemName, double theStartingBid, String theDescription)
   {

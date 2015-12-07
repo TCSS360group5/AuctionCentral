@@ -4,28 +4,46 @@ import java.util.List;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * This class represents an auction.
+ * 
+ * @author TCSS 360 Group 5
+ */
 public class AuctionModel implements Serializable
 {
 
   private static final long serialVersionUID = 1L;
   public List<ItemModel> myInventory;
-  public String myOrgName;
-  public String myAuctionName;
+  private String myOrgName;
+  private String myAuctionName;
   
   //Fields for local date
-  LocalDateTime myStartTime;
-  LocalDateTime myEndTime;
-  String myUserName;
+  private LocalDateTime myStartTime;
+  private LocalDateTime myEndTime;
+  private String myUserName;
   
-  //create auction constructor
+  /**
+   * Constructor to create a new auction with no items.
+   * 
+   * @param theOrgName the organization name for this auction.
+   * @param theUserName the username for the user who created this auction.
+   * @param theStartTime the starting time for this auction.
+   * @param theEndTime the ending time for this auction.
+   */
   public AuctionModel(String theOrgName, String theUserName, LocalDateTime theStartTime, LocalDateTime theEndTime)
   {
 	  this(theOrgName, theUserName, theStartTime, theEndTime, null);
   }
   
-
-
-//create another auction constructor with same inventory list - copy constructor?
+  /**
+   * Copy constructor for a new auction to include items.
+   * 
+   * @param theOrgName the organization name for this auction.
+   * @param theUserName the username for the user who created this auction.
+   * @param theStartTime the starting time for this auction.
+   * @param theEndTime the ending time for this auction.
+   * @param theInventory the list of items for this auction's inventory.
+   */
   public AuctionModel(String theOrgName, String theUserName, LocalDateTime theStartTime, LocalDateTime theEndTime, List<ItemModel> theInventory)
   {
 	  myOrgName = theOrgName;  
@@ -43,90 +61,132 @@ public class AuctionModel implements Serializable
 	  }
   }
   
+  /**
+   * Helper method to update the auction's name.
+   */
   private void updateAuctionName() 
   {
 	  myAuctionName = myOrgName.replace(' ', '-') + "-" + myStartTime.getMonth().name() + "-" + myStartTime.getDayOfMonth() + "-" + myStartTime.getYear();
   }
   
-  //get the auction organization
+  /**
+   * Returns the organization name.
+   * 
+   * @return a String of the organization name.
+   */
   public String getAuctionOrg()
   {
     return myOrgName;
   }
   
-  //set the auction's organization name
-  public boolean setAuctionOrg(String theOrgName)
-  {
-    myOrgName = theOrgName;
-    updateAuctionName();
-    return true;
-  }
-  
-  //return the list of auction items
+  /**
+   * Returns the list of inventory items for this auction.
+   * 
+   * @return a List of ItemModel items belonging to this auction.
+   */
   public List<ItemModel> getAuctionItems()
   {
     return myInventory;
   }
   
-  //add item to auction inventory list
-  public boolean addItem(ItemModel theItem)
+  /**
+   * Adds an item to this auction's inventory.
+   * 
+   * @param theItem the item to be added.
+   */
+  public void addItem(ItemModel theItem)
   {
 	  myInventory.add(theItem);
-	  return true;
   }
   
-  //remove item
-  public boolean removeItem(ItemModel theItem) {
+  /**
+   * Removes an item from this auction's inventory.
+   * 
+   * @param theItem the item to be removed.
+   */
+  public void removeItem(ItemModel theItem) {
 	  myInventory.remove(theItem);
-	  return true;
   }
   
-  //get auction name
+  /**
+   * Returns a string representing this auction.
+   * 
+   * @return a string of the auction's name.
+   */
   public String getAuctionName()
   {
 	  return myAuctionName;
   }
   
-  //returns start time of the auction
+  /**
+   * Returns the start time for this auction.
+   * 
+   * @return a LocalDateTime for the start time.
+   */
   public LocalDateTime getStartTime()
   {
 	  return myStartTime;
   }
   
-  //sets the starting time of the auction
-  public boolean setStartTime(LocalDateTime theStartTime)
+  /**
+   * Sets the start time for this auction.
+   * 
+   * @param theStartTime the updated start time.
+   * @return
+   */
+  public void setStartTime(LocalDateTime theStartTime)
   {
 	  myStartTime = theStartTime;
 	  updateAuctionName();
-	  return true;	  
   }
   
-  //returns the ending time of the auction
+  /**
+   * Returns the end time for this auction.
+   * 
+   * @return a LocalDateTime for the end time.
+   */
   public LocalDateTime getEndTime()
   {
 	  return myEndTime;
   }
   
-  //set end time of the auction
-  public boolean setEndTime(LocalDateTime theEndTime)
+  /**
+   * Sets the end time for this auction.
+   * 
+   * @param theEndTime the updated end time.
+   */
+  public void setEndTime(LocalDateTime theEndTime)
   {
 	  myEndTime = theEndTime;
-	  return true;	  
   }
   
-  //sets the auction date
+  /**
+   * Sets the date for this auction.
+   * 
+   * @param theAuctionStart a LocalDateTime for the start of the auction
+   * @param theAuctionEnd a LocalDateTime for the end of the auction
+   */
   public void setAuctionDate(LocalDateTime theAuctionStart, LocalDateTime theAuctionEnd) {
 	myEndTime = theAuctionEnd;
 	myStartTime = theAuctionStart;
 	updateAuctionName();
   }
   
-  //returns the user name
+  /**
+   * Returns the username for the user who created this auction.
+   * 
+   * @return a string of the username.
+   */
   public String getUserName() {
 	  return myUserName;
   }
 
-
+  
+  /**
+   * Returns a simple to String for this auction.
+   * 
+   * @return the auction name and date.
+   */
   public String toStringSimple(){
 	  StringBuilder answer = new StringBuilder();
 	  answer.append("Name: " + myAuctionName + "\n");
@@ -134,6 +194,11 @@ public class AuctionModel implements Serializable
 	  return answer.toString();  
   }
   
+  /**
+   * Returns a String representation of this auction.
+   * 
+   * @return the name, org name, date, and inventory.
+   */
   public String toString(){
 	  StringBuilder answer = new StringBuilder();
 	  answer.append("Name: " + myAuctionName + "\n");

@@ -7,7 +7,7 @@ import java.util.Map;
  * The bidder class represents the bidders that use our system and produces the
  * menus and allows the bidder to bid and edit his bid.
  * 
- * @author Group5
+ * @author TCSS 360 Group 5
  */
 public class BidderModel extends UserModel {
 

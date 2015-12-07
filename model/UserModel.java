@@ -4,13 +4,12 @@ import java.io.Serializable;
 
 /**
  * This is the parent class for all users and stores each users name and type.
- * @author UWT Group 5
+ * 
+ * @author TCSS 360 Group 5
  */
 public class UserModel implements Serializable {
 	
-	/**
-	 * required for serialization
-	 */
+	/** Required for serialization */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -22,13 +21,10 @@ public class UserModel implements Serializable {
 		NPO, EMPLOYEE, BIDDER
 	}
 
-	/**
-	 * This is what type the user is.
-	 */
+	/** This user's type (NPO, EMPLOYEE, BIDDER) */
 	private UserType myUserType;
-	/**
-	 * This is the name of the user.
-	 */
+	
+	/** The username for the user. */
 	private String myUserName;
 
 	/**

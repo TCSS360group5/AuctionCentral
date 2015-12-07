@@ -1,9 +1,3 @@
-/**
- * This class creates a calendar that contains all of the auctions and checks business rules before
- * adding an auction.
- * 
- * @author Demetra Loulias, UWT Group 5
- */
 package model;
 
 import java.time.LocalDateTime;
@@ -21,6 +15,12 @@ import exceptions.AuctionsAtCapacityException;
 import exceptions.AuctionsAtCapacityForWeekException;
 import exceptions.AuctionsPerDayException;
 
+/**
+ * This class creates a calendar that contains all of the auctions and checks business rules before
+ * adding an auction.
+ * 
+ * @author Demetra Loulias, UWT Group 5
+ */
 public class CalendarModel
 {
 	public Map<LocalDate, ArrayList<AuctionModel>> myAuctionByDateList;
