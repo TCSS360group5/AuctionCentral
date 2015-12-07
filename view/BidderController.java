@@ -126,7 +126,7 @@ public class BidderController extends UserController
 		{
 			boolean validDouble = false;
 			System.out.println(actionMessage);
-			String UserInputString = user_input.nextLine();
+			String UserInputString = user_input.next();
 			if (UserInputString.startsWith(exitString))
 			{
 				exitBid = true;
