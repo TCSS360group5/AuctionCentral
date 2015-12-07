@@ -1,6 +1,3 @@
-/**
- * 
- */
 package model.Test;
 
 import static org.junit.Assert.*;
@@ -35,7 +32,7 @@ public class BidderModelTest {
 	}
 
 	/**
-	 * Test method for {@link model.BidderModel#BidderModel(java.lang.String, model.UserModel.UserType)}.
+	 * Test method for the Constructor.
 	 * 
 	 * @author Shannon
 	 */
@@ -46,7 +43,7 @@ public class BidderModelTest {
 	}
 
 	/**
-	 * Test method for {@link model.BidderModel#getBids()}.
+	 * Test method for the getBids() method.
 	 * 
 	 * @author Shannon
 	 */
@@ -60,7 +57,7 @@ public class BidderModelTest {
 	}
 
 	/**
-	 * Test method for {@link model.BidderModel#addBid(model.ItemModel, double)}.
+	 * Test method for the addBid() method.
 	 * 
 	 * @author Shannon
 	 */
@@ -72,5 +69,4 @@ public class BidderModelTest {
 		myTestBidder.addBid(item, 250);
 		assertEquals(myTestBidder.getBids(), bids);
 	}
-
 }

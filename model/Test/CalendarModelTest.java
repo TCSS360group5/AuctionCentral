@@ -1,8 +1,3 @@
-/**
- * JUnit test for the CalendarModel class. Tests all of the business rules.
- * 
- * @author Demetra Loulias, UWT Group 5
- */
 package model.Test;
 
 import static org.junit.Assert.*;
@@ -16,6 +11,11 @@ import model.*;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * JUnit test for the CalendarModel class. Tests all of the business rules.
+ * 
+ * @author Demetra Loulias, UWT Group 5
+ */
 public class CalendarModelTest {
 	
 	// calendar to add to

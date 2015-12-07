@@ -11,13 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Tests for the ItemModel test.
  * 
- */
-
-/**
- * 
- * @author Brendan, Shannon
- *
+ * @author TCSS 360 Group 5
  */
 public class ItemModelTest {
 
@@ -27,6 +23,8 @@ public class ItemModelTest {
 	double theNextBid = 41;
 	
 	/**
+	 * Sets up the fields for the tests.
+	 * 
 	 * @throws java.lang.Exception
 	 * 
 	 * @author Brendan, Shannon
@@ -38,7 +36,7 @@ public class ItemModelTest {
 	}
 
 	/**
-	 * Test method for {@link ItemModel#Item(java.lang.String, double, java.lang.String)}.
+	 * Test method for the ItemModel constructor.
 	 * 
 	 * @author Shannon
 	 */
@@ -46,22 +44,11 @@ public class ItemModelTest {
 	public void testItemConstructor() {
 		assertEquals(myTestItem.getItemName(), "Shirt");
 	}
-
-//	/**
-//	 * Test method for adding one bid
-//	 * 
-//	 * @author Shannon
-//	 */
-//	@Test
-//	public void testItemBidAddedOneBid() {
-//		myTestItem.bidOnItem(myTestBidder, theNextBid);
-//		assertEquals(myTestItem.getBids().get(myTestBidder).doubleValue(), theNextBid, 0);			
-//	}
 	
 	/**
 	 * Test method for making sure the bids are updated when the item is bidded on.
 	 * 
-	 * @author 
+	 * @author Shannon
 	 */
 	@Test
 	public void testItemBidBidChanged() {
@@ -72,7 +59,7 @@ public class ItemModelTest {
 
 
 	/**
-	 * Test method for {@link ItemModel#getBids()}.
+	 * Test method for the getBids() methods.
 	 * 
 	 * @author Shannon
 	 */
@@ -85,7 +72,7 @@ public class ItemModelTest {
 	}
 
 	/**
-	 * Test method for {@link ItemModel#bidOnItem(UserModel, double)}.
+	 * Test method for bidOnItem() method.
 	 * 
 	 * @author Shannon
 	 */
@@ -96,7 +83,7 @@ public class ItemModelTest {
 	}
 
 	/**
-	 * Test method for {@link ItemModel#updateBid(UserModel, double)}.
+	 * Test method for the updateBid() method.
 	 * 
 	 * @author Shannon
 	 */

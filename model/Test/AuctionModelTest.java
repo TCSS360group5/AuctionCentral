@@ -12,12 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * 
- */
-
-/**
  * Tests for the AuctionModel class.
  *
+ * @author TCSS 360 Group 5
  */
 public class AuctionModelTest {
 
@@ -27,6 +24,8 @@ public class AuctionModelTest {
 	LocalDateTime now = LocalDateTime.now();
 	
 	/**
+	 * Sets up the test fields for the tests.
+	 * 
 	 * @throws java.lang.Exception
 	 * @author Shannon
 	 */
@@ -42,7 +41,8 @@ public class AuctionModelTest {
 	}
 	
 	/**
-	 * Test method for {@link Auction#Auction(java.lang.String, java.lang.String, java.time.LocalDateTime, java.time.LocalDateTime, java.util.List)}.
+	 * Test method for the constructor that takes a list of items.
+	 * 
 	 * @author Shannon
 	 */
 	@Test
@@ -63,19 +63,10 @@ public class AuctionModelTest {
 	}
 	
 	/**
-	 * Test method for the setAuctionOrg() method.
-	 * @author Shannon
-	 */
-	@Test
-	public void testSetAuctionOrg() {
-		testAuction.setAuctionOrg("Cats");
-		assertEquals(testAuction.getAuctionOrg(), "Cats");
-	}
-	
-	/**
-	 * Test method for {@link AuctionModel#addItem(ItemModel)}.
+	 * Test method for the addItem() method.
+	 * Checks to see if the item was added by checking the size of the auction inventory.
 	 * 
-	 * @author 
+	 * @author Shannon
 	 */
 	@Test
 	public void testAddItem() {
@@ -87,8 +78,8 @@ public class AuctionModelTest {
 	}
 
 	/**
-	 * Test method for {@link Auction#getStartTime()}.
-	 * 
+	 * Test method for the getStartTime() method.
+	 *  
 	 * @author Shannon
 	 */
 	@Test
@@ -97,7 +88,7 @@ public class AuctionModelTest {
 	}
 
 	/**
-	 * Test method for {@link Auction#setStartTime(java.time.LocalDateTime)}.
+	 * Test method for the setStartTime() method.
 	 * 
 	 * @author Shannon
 	 */
@@ -108,7 +99,7 @@ public class AuctionModelTest {
 	}
 
 	/**
-	 * Test method for {@link Auction#getEndTime()}.
+	 * Test method for the getEndTime() method.
 	 * 
 	 * @author Shannon
 	 */
@@ -118,7 +109,7 @@ public class AuctionModelTest {
 	}
 
 	/**
-	 * Test method for {@link Auction#setEndTime(java.time.LocalDateTime)}.
+	 * Test method for the setEndTime() method.
 	 * 
 	 * @author Shannon
 	 */
@@ -129,7 +120,7 @@ public class AuctionModelTest {
 	}
 
 	/**
-	 * Test method for {@link Auction#setAuctionDate(java.time.LocalDateTime, java.time.LocalDateTime)}.
+	 * Test method for the setAuctionDate() method.
 	 *
 	 * @author Shannon
 	 */
@@ -152,6 +143,7 @@ public class AuctionModelTest {
 	
 	/**
 	 * Test method for the removeItem() method.
+	 * 
 	 * @author Shannon
 	 */
 	@Test
