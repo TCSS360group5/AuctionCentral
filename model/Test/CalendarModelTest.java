@@ -3,9 +3,9 @@
  * 
  * @author Demetra Loulias, UWT Group 5
  */
-package model;
+package model.Test;
 import static org.junit.Assert.*;
-
+import model.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
