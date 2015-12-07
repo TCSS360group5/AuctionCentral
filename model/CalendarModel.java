@@ -1,7 +1,10 @@
-package model;
-/*
- * This class creates a Calendar that can be used by main to schedule and hold auctions.
+/**
+ * This class creates a calendar that contains all of the auctions and checks business rules before
+ * adding an auction.
+ * 
+ * @author Demetra Loulias, UWT Group 5
  */
+package model;
 
 import java.time.LocalDateTime;
 import java.time.LocalDate;
@@ -137,14 +140,8 @@ public class CalendarModel
 	 */
 	private boolean checkFutureAuctions()
 	{
-		int count = 0;
-		for(Entry<LocalDate, ArrayList<AuctionModel>> entry : myAuctionByDateList.entrySet())
-		{
-			if(entry.getKey().isAfter(LocalDate.now()))
-			{
-				count++;
-			}
-		}
+		int count = numFutureAuctions();
+
 		if(count >= AuctionsAtCapacityException.MAX_FUTURE_AUCTIONS)
 		{
 			return false;
@@ -433,33 +430,22 @@ public class CalendarModel
 	}
 	
 	/**
-	 * Returns a String of the auctions for the current month.
-	 * 
-	 * @return String representation for the current month.
+	 * Counts up the total number of future auctions.
+	 * @return  number of auctions in the future.
 	 */
-	public String toString()
+	public int numFutureAuctions()
 	{
-		// returns a sorted treemap
-		Map<LocalDate, ArrayList<AuctionModel>> displayMap = displayCurrentMonth();
-		StringBuilder sb = new StringBuilder();
-		int i = 1;
-		for(Entry<LocalDate, ArrayList<AuctionModel>> entry : displayMap.entrySet())
+		int count = 0;
+				
+		for(Entry<LocalDate, ArrayList<AuctionModel>> entry : myAuctionByDateList.entrySet())
 		{
-			LocalDate date = entry.getKey();
-			ArrayList<AuctionModel> dayAuctions = entry.getValue();
-			sb.append(i + ": " + date.getMonth().toString() + " " + date.getDayOfMonth() + ", " + date.getYear() + "\n");
-			  
-			char title = 'a';
-			for(int j = 0; j < dayAuctions.size(); j++)
+			if(entry.getKey().isAfter(LocalDate.now().minusDays(1)))
 			{
-				sb.append(title + ") " + dayAuctions.get(j).getAuctionName() + "\n");
-				title = 'b';
+				count += entry.getValue().size();
 			}
-			sb.append("\n");
-			i++;
 		}
-		  
-		return sb.toString();
+		
+		return count;
 	}
   
 }

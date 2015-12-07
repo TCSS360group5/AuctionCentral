@@ -1,44 +1,42 @@
-package model.Test;
+/**
+ * JUnit test for the CalendarModel class. Tests all of the business rules.
+ * 
+ * @author Demetra Loulias, UWT Group 5
+ */
+package model;
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import model.AuctionModel;
-import model.CalendarModel;
+import java.time.LocalTime;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import exceptions.*;
-
 public class CalendarModelTest {
 	CalendarModel myCalendar;
-	
-	/**
-	 * @throws java.lang.Exception
-	 */
-	
-	int maxFutureAuctions;
-	int maxDaysInFuture;
-	int maxAuctionsPerWeek;
-	int maxAuctionsPerDay;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp()
+	{
 		myCalendar = new CalendarModel();
-		maxFutureAuctions = AuctionsAtCapacityException.MAX_FUTURE_AUCTIONS;
-		maxDaysInFuture = AuctionTooFarAwayException.MAX_DAYS_AWAY;
-		maxAuctionsPerWeek = AuctionsAtCapacityForWeekException.MAX_AUCTIONS_FOR_WEEK;
-		maxAuctionsPerDay = AuctionsPerDayException.MAX_AUCTIONS_PER_DAY;
 	}
 	
+	/**
+	 * Add one auction to an empty calendar.
+	 * 
+	 * @result the Auction will successfully be added to the calendar.
+	 */
 	@Test
 	public void testAddAuctionOnEmptyCalendar()
 	{
 		boolean exceptionThrown;
 		
-		assertEquals(myCalendar.getAllFutureAuctions().size(), 0);
+		// no auctions initially in calendar
+		assertEquals(myCalendar.numFutureAuctions(), 0);
+		
 		AuctionModel auctionToAdd = new AuctionModel("testOrg", "testUserName", LocalDateTime.of(2015, 12, 25, 12, 30), LocalDateTime.of(2015, 12, 25, 14, 30));
+		
 		try
 		{
 			myCalendar.addAuction(auctionToAdd);
@@ -48,17 +46,26 @@ public class CalendarModelTest {
 		{
 			exceptionThrown = true;
 		}
-		assertEquals(myCalendar.getAllFutureAuctions().size(), 1);
+		
+		// number of auctions increases by 1
+		assertEquals(myCalendar.numFutureAuctions(), 1);
+		// no exception thrown
 		assertFalse(exceptionThrown);
 	}
 	
+	/**
+	 * Add all 25 auctions, the try to add another one.
+	 * 
+	 * @result the final auction will not be added.
+	 */
 	@Test
 	public void testAddAuctionOnCalendarWithAuctionsAtCapacity()
 	{
 		boolean errorMessage;
 		LocalDateTime startDate = LocalDateTime.now();
 		
-		for(int i = 1; i <= maxFutureAuctions; i++)
+		// add 25 auctions
+		for(int i = 1; i <= 25; i++)
 		{
 			try
 			{
@@ -66,37 +73,49 @@ public class CalendarModelTest {
 			}
 			catch(Exception e)
 			{
-				errorMessage = false;
+				
 			}
 		}
 		
-		assertEquals(myCalendar.getAllFutureAuctions().size(), maxFutureAuctions);
+		// there should now be 25 auctions in the calendar
+		assertEquals(myCalendar.numFutureAuctions(), 25);
+		
+		// add one more auction
 		try
 		{
-			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", startDate.plusDays(maxFutureAuctions + 1),  startDate.plusDays(maxFutureAuctions + 1).plusHours(1)));
+			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", startDate.plusDays(25 + 1),  startDate.plusDays(25 + 1).plusHours(1)));
 			errorMessage = false;
 		}
 		catch(Exception e)
 		{
-			if(e.getMessage().equals("The number of future auctions is already at its capacity of " + maxFutureAuctions))
+			if(e.getMessage().equals("The number of future auctions is already at its capacity of 25."))
 			{
+				// true if this error message is received
 				errorMessage = true;
 			}
 			else
 				errorMessage = false;
 		}
 		
+		// assert proper error message
 		assertTrue(errorMessage);
-		assertEquals(myCalendar.getAllFutureAuctions().size(), maxFutureAuctions);
+		// assert auction actually not added
+		assertEquals(myCalendar.numFutureAuctions(), 25);
 	}
 	
+	/**
+	 * Add 24 auctions, then add one more.
+	 * 
+	 * @result the auction will be successfully added.
+	 */
 	@Test
 	public void testAddAuctionOnCalendarWithAuctionsOneBelowCapacity()
 	{	
 		boolean exceptionThrown;
 		LocalDateTime startDate = LocalDateTime.now();
 		
-		for(int i = 1; i < maxFutureAuctions; i++)
+		// add 24 auctions
+		for(int i = 1; i < 25; i++)
 		{
 			try
 			{
@@ -107,11 +126,14 @@ public class CalendarModelTest {
 				exceptionThrown = true;
 			}
 		}
-		assertEquals(myCalendar.getAllFutureAuctions().size(), (maxFutureAuctions - 1));
 		
+		// assert that all auctions have been added
+		assertEquals(myCalendar.numFutureAuctions(), 24);
+		
+		// add one final auction
 		try
 		{
-			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", startDate.plusDays(maxFutureAuctions), startDate.plusDays(maxFutureAuctions).plusHours(1)));
+			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", startDate.plusDays(25), startDate.plusDays(25).plusHours(1)));
 			exceptionThrown = false;
 		}
 		catch(Exception e)
@@ -119,16 +141,27 @@ public class CalendarModelTest {
 			exceptionThrown = true;
 		}
 		
-		assertEquals(myCalendar.getAllFutureAuctions().size(), maxFutureAuctions);
+		// assert that final auction was actually added
+		assertEquals(myCalendar.numFutureAuctions(), 25);
+		// assert that no exception was thrown
 		assertFalse(exceptionThrown);
 	}
 	
+	/**
+	 * Add an auction less than 90 days in the future.
+	 * 
+	 * @result the auction will be successfully added.
+	 */
 	@Test
 	public void testAddAuctionOnAuctionDateLessThanSpecifiedDaysInFuture()
 	{
 		boolean exceptionThrown;
+		
+		// assert empty calendar
 		assertEquals(myCalendar.getAllFutureAuctions().size(), 0);
-		AuctionModel auctionToAdd = new AuctionModel("testOrg", "testUserName", LocalDateTime.now().plusDays(maxDaysInFuture - 10), LocalDateTime.now().plusDays(maxDaysInFuture - 10).plusHours(2));
+		
+		// create auction 80 days in the future
+		AuctionModel auctionToAdd = new AuctionModel("testOrg", "testUserName", LocalDateTime.now().plusDays(80), LocalDateTime.now().plusDays(80).plusHours(2));
 		try
 		{
 			myCalendar.addAuction(auctionToAdd);
@@ -138,20 +171,30 @@ public class CalendarModelTest {
 		{
 			exceptionThrown = true;
 		}
-		assertEquals(myCalendar.getAllFutureAuctions().size(), 1);
-		assertFalse(exceptionThrown);
 		
+		// assert that auction was actually added
+		assertEquals(myCalendar.numFutureAuctions(), 1);
+		// assert no error thrown
+		assertFalse(exceptionThrown);
 	}
 	
+	/**
+	 * Add an auction 90 days in the future.
+	 * 
+	 * @result the auction will be successfully added.
+	 */
 	@Test
 	public void testAddAuctionOnAuctionDateAtNumberOfSpecifiedDaysInFuture()
 	{
 		boolean exceptionThrown;
+		
+		//assert empty calendar
 		assertEquals(myCalendar.getAllFutureAuctions().size(), 0);
 		
 		try
 		{
-			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", LocalDateTime.now().plusDays(maxDaysInFuture),  LocalDateTime.now().plusDays(maxDaysInFuture).plusHours(1)));
+			// add auction 90 days in future
+			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", LocalDateTime.now().plusDays(90),  LocalDateTime.now().plusDays(90).plusHours(1)));
 			exceptionThrown = false;
 		}
 		catch(Exception e)
@@ -159,161 +202,499 @@ public class CalendarModelTest {
 			exceptionThrown = true;
 		}
 		
+		// assert no exception thrown
 		assertFalse(exceptionThrown);
+		// assert auction was acutally added
 		assertEquals(myCalendar.getAllFutureAuctions().size(), 1);
 		
 	}
 	
+	/**
+	 * Add an auction 91 days in the future.
+	 * 
+	 * @return the auction will not be added.
+	 */
 	@Test
 	public void testAddAuctionOnAuctionDateMoreThanSpecifiedDaysInFuture()
 	{
 		boolean errorMessage;
+		
+		// assert empty calendar
 		assertEquals(myCalendar.getAllFutureAuctions().size(), 0);
 		
 		try
 		{
-			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", LocalDateTime.now().plusDays(maxDaysInFuture).plusDays(1),  LocalDateTime.now().plusDays(maxDaysInFuture).plusDays(1).plusHours(1)));
+			// add auction 90 days in future
+			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", LocalDateTime.now().plusDays(90).plusDays(1),  LocalDateTime.now().plusDays(90).plusDays(1).plusHours(1)));
 			errorMessage = false;
 		}
 		catch(Exception e)
 		{
-			System.out.println(e.getMessage());
-			if(e.getMessage().equals("An auction may not be scheduled more than " + maxDaysInFuture + " days in the future."))
+			if(e.getMessage().equals("An auction may not be scheduled more than " + 90 + " days in the future."))
 			{
+				// only true if this error message is received
 				errorMessage = true;
 			}
 			else
 				errorMessage = false;
 		}
 		
+		// assert proper error message received
 		assertTrue(errorMessage);
-		assertEquals(myCalendar.getAllFutureAuctions().size(), 0);
+		// assert auction wasn't added
+		assertEquals(myCalendar.numFutureAuctions(), 0);
 		
 	}
 	
-	/*
+	/**
+	 * Add auctions with exactly 2 hours between them.
+	 * 
+	 * @result the auction will be successfully added.
+	 */
 	@Test
-	public void testAddAuctionOnWeekCapacityLessThanOne()
+	public void testAddAuctionOnAuctionsWithTwoHoursBetween()
 	{
-		LocalDateTime weekStart = LocalDateTime.now();
-		LocalDateTime midWeek = LocalDateTime.
-				
-		if(maxAuctionsPerWeek >= (maxAuctionsPerDay * 7))
-		{
-			
-		}
-		else
-		{
-			
-		}
-		for(int i = 1; i < maxAuctionsPerWeek; i++)
-		{
-			
-		}
-	}*/
-	
-	
-	
-	//@Test
-	//public void testAddAuctionOnAuctionDateWithOneLessThanSpecifiedWeekCapacity
-	
-	/*
-	@Test
-	public void testAddAuction()
-	{
-		AuctionModel testAuction1 = new AuctionModel("testOrg1" , "testAuction1", LocalDateTime.of(2015, 11, 20, 11, 30), LocalDateTime.of(2015, 11, 20, 13, 30));
-		assertTrue("Auction added.", myCalendar.addAuction(testAuction1));
-		assertNotEquals(myCalendar.toString(), "");
-	}
-	@Test
-	public void testNinetyDayBusinessRule()
-	{
-		AuctionModel pastNinetyDays = new AuctionModel("testOrg" , "testAuction", LocalDateTime.of(2015, 2, 11, 11, 30), LocalDateTime.of(2015, 2, 11, 13, 30));
-		assertFalse("Past 90 days", myCalendar.addAuction(pastNinetyDays));
-	}
-	
-	@Test
-	public void testWeekBusinessRule()
-	{
-		AuctionModel testAuction1 = new AuctionModel("testOrg1" , "testAuction1", LocalDateTime.of(2015, 11, 20, 11, 30), LocalDateTime.of(2015, 11, 20, 13, 30));
-		AuctionModel testAuction2 = new AuctionModel("testOrg2" , "testAuction2", LocalDateTime.of(2015, 11, 21, 11, 30), LocalDateTime.of(2015, 11, 21, 13, 30));
-		AuctionModel testAuction3 = new AuctionModel("testOrg3" , "testAuction3", LocalDateTime.of(2015, 11, 21, 6, 30), LocalDateTime.of(2015, 11, 21, 8, 30));
-		AuctionModel testAuction4 = new AuctionModel("testOrg4" , "testAuction4", LocalDateTime.of(2015, 11, 22, 11, 30), LocalDateTime.of(2015, 11, 22, 13, 30));
-		AuctionModel testAuction5 = new AuctionModel("testOrg5" , "testAuction5", LocalDateTime.of(2015, 11, 24, 11, 30), LocalDateTime.of(2015, 11, 24, 13, 30));
-		AuctionModel testAuction6 = new AuctionModel("testOrg6" , "testAuction6", LocalDateTime.of(2015, 11, 23, 11, 30), LocalDateTime.of(2015, 11, 23, 13, 30));
-		AuctionModel testAuction7 = new AuctionModel("testOrg7" , "testAuction7", LocalDateTime.of(2015, 11, 24, 16, 30), LocalDateTime.of(2015, 11, 24, 20, 30));
+		boolean firstAdded;
+		boolean secondAdded;
 		
-		assertTrue("Auction added.", myCalendar.addAuction(testAuction1));
-		assertTrue("Auction added.", myCalendar.addAuction(testAuction2));
-		assertTrue("Auction added.", myCalendar.addAuction(testAuction3));
-		assertTrue("Auction added.", myCalendar.addAuction(testAuction4));
-		assertTrue("Auction added.", myCalendar.addAuction(testAuction5));
-		assertFalse("Auction not added.", myCalendar.addAuction(testAuction6));
-		assertTrue("Auction added.", myCalendar.addAuction(testAuction7));
+		// auctions to add
+		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", LocalDateTime.now(), LocalDateTime.now().plusHours(3));
+		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", LocalDateTime.now().plusHours(5), LocalDateTime.now().plusHours(6));
+		
+		// add first auction
+		try
+		{
+			myCalendar.addAuction(testAuction1);
+			firstAdded = true;
+		}
+		catch(Exception e)
+		{
+			firstAdded = false;
+		}
+		
+		// assert auction actually added to calendar
+		assertEquals(myCalendar.numFutureAuctions(),1);
+		// assert no exception thrown
+		assertTrue(firstAdded);
+		
+		// add second auction
+		try
+		{
+			myCalendar.addAuction(testAuction2);
+			secondAdded = true;
+		}
+		catch(Exception e)
+		{
+			secondAdded = false;
+		}
+		
+		// assert no exception thrown
+		assertTrue(secondAdded);
+		// assert second auction actually added
+		assertEquals(2, myCalendar.numFutureAuctions());
 	}
 	
+	/**
+	 * Add two auctions with 1 hour and 59 minutes between them.
+	 * 
+	 * @result the second auction will not be added.
+	 */
 	@Test
-	public void testFutureAuctionsBusinessRule()
+	public void testAddAuctionOnAuctionsWithOneMinuteUnderTimeBetween()
 	{
-		AuctionModel[] testAuctions = new AuctionModel[30];
-		LocalDateTime firstDayStart = LocalDateTime.of(2015, 11, 20, 11, 30);
-		LocalDateTime firstDayEnd = firstDayStart.plusHours(2);
+		boolean firstAdded;
+		boolean errorMessage;
 		
-		for(int i = 0; i < 30; i++)
+		// auctions to add
+		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", LocalDateTime.now(), LocalDateTime.now().plusHours(3));
+		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", LocalDateTime.now().plusHours(5).minusMinutes(1), LocalDateTime.now().plusHours(6));
+		
+		// add first auction
+		try
 		{
-			testAuctions[i] = new AuctionModel("testOrg" + i, "testAuction" + i, firstDayStart.plusDays(i), firstDayEnd.plusDays(i));
+			myCalendar.addAuction(testAuction1);
+			firstAdded = true;
+		}
+		catch(Exception e)
+		{
+			firstAdded = false;
 		}
 		
-		for(int i = 0; i < 25; i++)
+		// assert no exception thrown
+		assertTrue(firstAdded);
+		// assert auction added
+		assertEquals(1, myCalendar.numFutureAuctions());
+		
+		// add second auction
+		try
 		{
-			assertTrue("Auction added", myCalendar.addAuction(testAuctions[i]));
+			myCalendar.addAuction(testAuction2);
+			errorMessage = false;
+		}
+		catch(Exception e)
+		{
+			if(e.getMessage().equals("There must be at least " + 2 + " hours between the end of one auction and the start of another."))
+			{
+				// true if this particular error message received
+				errorMessage = true;
+			}
+			else
+				errorMessage = false;
 		}
 		
-		for(int i = 25; i < 30; i++)
-		{
-			assertFalse("Auction not added.", myCalendar.addAuction(testAuctions[i]));
-		}
+		// assert proper error message
+		assertTrue(errorMessage);
+		// assert auction not actually added
+		assertEquals(1, myCalendar.numFutureAuctions());
 	}
 	
+	/**
+	 * Add two auctions with 2 hours and 1 minute between them.
+	 * 
+	 * @result both auctions will be added.
+	 */
 	@Test
-	public void testNumberOfAuctionsPerDayBusinessRule()
+	public void testAddAuctionOnAuctionsWithOneMinuteOverTimeBetween()
 	{
-		AuctionModel testAuction1 = new AuctionModel("testOrg1" , "testAuction1", LocalDateTime.of(2015, 11, 20, 5, 30), LocalDateTime.of(2015, 11, 20, 7, 30));
-		AuctionModel testAuction2 = new AuctionModel("testOrg2" , "testAuction2", LocalDateTime.of(2015, 11, 20, 11, 30), LocalDateTime.of(2015, 11, 20, 12, 30));
-		AuctionModel testAuction3 = new AuctionModel("testOrg3" , "testAuction3", LocalDateTime.of(2015, 11, 20, 15, 30), LocalDateTime.of(2015, 11, 20, 17, 30));
-		AuctionModel testAuction4 = new AuctionModel("testOrg4" , "testAuction4", LocalDateTime.of(2015, 11, 20, 21, 30), LocalDateTime.of(2015, 11, 20, 22, 30));
+		boolean firstAdded;
+		boolean secondAdded;
 		
-		assertTrue("Auction added.", myCalendar.addAuction(testAuction1));
-		assertTrue("Auction added.", myCalendar.addAuction(testAuction2));
-		assertFalse("Auction not added.", myCalendar.addAuction(testAuction3));
-		assertFalse("Auction not added.", myCalendar.addAuction(testAuction4));
+		// auctions to be added
+		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", LocalDateTime.now(), LocalDateTime.now().plusHours(3));
+		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", LocalDateTime.now().plusHours(5).plusMinutes(1), LocalDateTime.now().plusHours(6));
+		
+		// add first auction
+		try
+		{
+			myCalendar.addAuction(testAuction1);
+			firstAdded = true;
+		}
+		catch(Exception e)
+		{
+			firstAdded = false;
+		}
+		
+		// assert no exception thrown
+		assertTrue(firstAdded);
+		// assert auction added
+		assertEquals(1, myCalendar.numFutureAuctions());
+		
+		// add second auction 
+		try
+		{
+			myCalendar.addAuction(testAuction2);
+			secondAdded = true;
+		}
+		catch(Exception e)
+		{
+			secondAdded = false;
+		}
+		
+		// assert no exception thrown
+		assertTrue(secondAdded);
+		// assert auction added
+		assertEquals(2, myCalendar.numFutureAuctions());
 	}
 	
+	/**
+	 * Add auctions with overlapping times.
+	 * 
+	 * @result the second auction will be added
+	 */
 	@Test
-	public void testTwoHourBusinessRule()
+	public void testAddAuctionOnAuctionsWithOverlappingTimes()
 	{
-		AuctionModel testAuction1 = new AuctionModel("testOrg1" , "testAuction1", LocalDateTime.of(2015, 11, 20, 5, 30), LocalDateTime.of(2015, 11, 20, 7, 30));
-		AuctionModel testAuction2 = new AuctionModel("testOrg2" , "testAuction2", LocalDateTime.of(2015, 11, 20, 11, 30), LocalDateTime.of(2015, 11, 20, 12, 30));
+		boolean firstAdded;
+		boolean errorMessage;
 		
-		assertTrue(myCalendar.addAuction(testAuction1));
-		assertTrue(myCalendar.addAuction(testAuction2));
+		// the auctions to be added
+		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", LocalDateTime.now(), LocalDateTime.now().plusHours(3));
+		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", LocalDateTime.now().plusHours(1), LocalDateTime.now().plusHours(4));
 		
-		AuctionModel testAuction3 = new AuctionModel("testOrg3" , "testAuction3", LocalDateTime.of(2015, 11, 21, 5, 30), LocalDateTime.of(2015, 11, 21, 7, 30));
-		AuctionModel testAuction4 = new AuctionModel("testOrg4" , "testAuction4", LocalDateTime.of(2015, 11, 21, 8, 30), LocalDateTime.of(2015, 11, 21, 12, 30));
-		AuctionModel testAuction5 = new AuctionModel("testOrg5" , "testAuction5", LocalDateTime.of(2015, 11, 21, 9, 30), LocalDateTime.of(2015, 11, 21, 12, 30));
+		// add first auction
+		try
+		{
+			myCalendar.addAuction(testAuction1);
+			firstAdded = true;
+		}
+		catch(Exception e)
+		{
+			firstAdded = false;
+		}
 		
-		assertTrue(myCalendar.addAuction(testAuction3));
-		assertFalse(myCalendar.addAuction(testAuction4));
-		assertTrue(myCalendar.addAuction(testAuction5));
+		// assert no exception thrown
+		assertTrue(firstAdded);
+		// assert auction added
+		assertEquals(1, myCalendar.numFutureAuctions());
 		
-		AuctionModel testAuction6 = new AuctionModel("testOrg6" , "testAuction6", LocalDateTime.of(2015, 11, 30, 11, 30), LocalDateTime.of(2015, 11, 30, 13, 30));
-		AuctionModel testAuction7 = new AuctionModel("testOrg7" , "testAuction7", LocalDateTime.of(2015, 11, 30, 8, 30), LocalDateTime.of(2015, 11, 30, 12, 30));
-		AuctionModel testAuction8 = new AuctionModel("testOrg8" , "testAuction8", LocalDateTime.of(2015, 11, 30, 7, 30), LocalDateTime.of(2015, 11, 30, 9, 30));
+		// add second auction
+		try
+		{
+			myCalendar.addAuction(testAuction2);
+			errorMessage = false;
+		}
+		catch(Exception e)
+		{
+			if(e.getMessage().equals("There must be at least " + 2 + " hours between the end of one auction and the start of another."))
+			{
+				// true only if this error message received
+				errorMessage = true;
+			}
+			else
+				errorMessage = false;
+		}
 		
-		assertTrue(myCalendar.addAuction(testAuction6));
-		assertFalse(myCalendar.addAuction(testAuction7));
-		assertTrue(myCalendar.addAuction(testAuction8));
-	}*/
+		// assert proper error message received
+		assertTrue(errorMessage);
+		// assert auction not added
+		assertEquals(1, myCalendar.numFutureAuctions());
+		
+	}
 	
-
+	/**
+	 * Add 2 auctions on the same day, then try to add a 3rd.
+	 * 
+	 * @result 3rd auction will not be added.
+	 */
+	@Test
+	public void testAddAuctionOnCalendarDayWithAuctionsAtCapacityForDay()
+	{
+		boolean firstAdded;
+		boolean secondAdded;
+		boolean errorMessage;
+		
+		LocalDateTime dayStart = LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(0, 0));
+		
+		// the auctions to be added
+		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", dayStart, dayStart.plusHours(1));
+		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", dayStart.plusHours(3), dayStart.plusHours(4));
+		AuctionModel testAuction3 = new AuctionModel("testOrg3", "testUserName3", dayStart.plusHours(6), dayStart.plusHours(7));
+		
+		// add first auction
+		try
+		{
+			myCalendar.addAuction(testAuction1);
+			firstAdded = true;
+		}
+		catch(Exception e)
+		{
+			firstAdded = false;
+		}
+		
+		// assert first auction actually added
+		assertEquals(1, myCalendar.numFutureAuctions());
+		// assert no error thrown
+		assertTrue(firstAdded);
+		
+		// add second auction
+		try
+		{
+			myCalendar.addAuction(testAuction2);
+			secondAdded = true;
+		}
+		catch(Exception e)
+		{
+			secondAdded = false;
+		}
+		
+		// assert second auction actually added
+		assertEquals(2, myCalendar.numFutureAuctions());
+		// assert no error thrown
+		assertTrue(secondAdded);
+		
+		// add third auction
+		try
+		{
+			myCalendar.addAuction(testAuction3);
+			errorMessage = false;
+		}
+		catch(Exception e)
+		{
+			if(e.getMessage().equals("There are already " + 2 + " scheduled for the date you entered."))
+			{
+				// true if proper error message is received
+				errorMessage = true;
+			}
+			else
+				errorMessage = false;
+		}
+		
+		// assert proper error message thrown
+		assertTrue(errorMessage);
+		// assert third auction not added
+		assertEquals(2, myCalendar.numFutureAuctions());
+		
+	}	
+	
+	/**
+	 * Add one auction on a day, then try to add a second.
+	 * 
+	 * @result the auctions will both be added.
+	 */
+	@Test
+	public void testAddAuctionOnCalendarDayWithAuctionsOneUnderCapacityForDay()
+	{
+		boolean firstAdded;
+		boolean secondAdded;
+		
+		LocalDateTime dayStart = LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(0, 0));
+		
+		// the auctions to be added
+		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", dayStart, dayStart.plusHours(1));
+		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", dayStart.plusHours(3), dayStart.plusHours(4));
+		
+		// add first auction
+		try
+		{
+			myCalendar.addAuction(testAuction1);
+			firstAdded = true;
+		}
+		catch(Exception e)
+		{
+			firstAdded = false;
+		}
+		
+		// assert first auction actually added
+		assertEquals(1, myCalendar.numFutureAuctions());
+		// assert no error thrown
+		assertTrue(firstAdded);
+		
+		// add second auction
+		try
+		{
+			myCalendar.addAuction(testAuction2);
+			secondAdded = true;
+		}
+		catch(Exception e)
+		{
+			secondAdded = false;
+		}
+		
+		// assert second auction actually added
+		assertEquals(2, myCalendar.numFutureAuctions());
+		// assert no error thrown
+		assertTrue(secondAdded);
+	}
+	
+	/**
+	 * Add 4 auctions in a 3 day before and 3 day after time period of an auction to be added.
+	 * 
+	 * @result the 5th auction will be added.
+	 */
+	@Test
+	public void testAddAuctionOnCalendarWeekWithAuctionsOneUnderWeekCapacity()
+	{
+		AuctionModel[] auctions = new AuctionModel[4];
+		boolean auctionsAdded[] = new boolean[4];
+		boolean finalAdded;
+		
+		LocalDateTime dayStart = LocalDateTime.of(LocalDate.now().plusDays(3), LocalTime.of(0, 0));
+		
+		// the auctions to be added
+		auctions[0] = new AuctionModel("testOrg1", "testUserName1", dayStart.minusDays(2), dayStart.minusDays(2).plusHours(1));
+		auctions[1] = new AuctionModel("testOrg2", "testUserName2", dayStart.minusDays(2).plusHours(3), dayStart.minusDays(2).plusHours(4));
+		auctions[2] = new AuctionModel("testOrg3", "testUserName3", dayStart.minusDays(1), dayStart.minusDays(1).plusHours(1));
+		auctions[3] = new AuctionModel("testOrg4", "testUserName4", dayStart.minusDays(1).plusHours(3), dayStart.minusDays(1).plusHours(4));
+		AuctionModel finalAuction = new AuctionModel("testOrg5", "testUserName5", dayStart, dayStart.plusHours(1));
+		
+		// add 4 auctions
+		for(int i = 0; i < 4; i++)
+		{
+			try
+			{
+				myCalendar.addAuction(auctions[i]);
+				auctionsAdded[i] = true;
+			}
+			catch(Exception e)
+			{
+				auctionsAdded[i] = false;
+			}
+		}
+		// check that no exceptions were thrown
+		for(int i = 0; i < 4; i++)
+		{
+			assertTrue(auctionsAdded[i]);
+		}
+		
+		// assert that there are actually 4 auctions in the calendar
+		assertEquals(4, myCalendar.numFutureAuctions());
+		
+		try
+		{
+			myCalendar.addAuction(finalAuction);
+			finalAdded = true;
+		}
+		catch(Exception e)
+		{
+			finalAdded = false;
+		}
+		
+		// assert no errors thrown
+		assertTrue(finalAdded);
+		// assert that auction was actually added to calendar
+		assertEquals(5, myCalendar.numFutureAuctions());
+	}
+	
+	/**
+	 * Add 5 auctions in a 3 day before and 3 day after time period of an auction to be added. 
+	 * 
+	 * @result the 6th auction will not be added.
+	 */
+	@Test
+	public void testAddAuctionOnCalendarWeekWithAuctionsAtWeekCapacity()
+	{
+		AuctionModel[] auctions = new AuctionModel[5];
+		boolean auctionsAdded[] = new boolean[5];
+		boolean errorMessage;
+		
+		LocalDateTime dayStart = LocalDateTime.of(LocalDate.now().plusDays(3), LocalTime.of(0, 0));
+		
+		// the auctions to be added
+		auctions[0] = new AuctionModel("testOrg1", "testUserName1", dayStart.minusDays(2), dayStart.minusDays(2).plusHours(1));
+		auctions[1] = new AuctionModel("testOrg2", "testUserName2", dayStart.minusDays(2).plusHours(3), dayStart.minusDays(2).plusHours(4));
+		auctions[2] = new AuctionModel("testOrg3", "testUserName3", dayStart.minusDays(1), dayStart.minusDays(1).plusHours(1));
+		auctions[3] = new AuctionModel("testOrg4", "testUserName4", dayStart.minusDays(1).plusHours(3), dayStart.minusDays(1).plusHours(4));
+		auctions[4] = new AuctionModel("testOrg5", "testUserName5", dayStart, dayStart.plusHours(1));
+		AuctionModel finalAuction = new AuctionModel("testOrg6", "testUserName6", dayStart, dayStart.plusHours(1));
+		
+		// add 5 auctions
+		for(int i = 0; i < 5; i++)
+		{
+			try
+			{
+				myCalendar.addAuction(auctions[i]);
+				auctionsAdded[i] = true;
+			}
+			catch(Exception e)
+			{
+				auctionsAdded[i] = false;
+			}
+		}
+		// check that no exceptions were thrown
+		for(int i = 0; i < 5; i++)
+		{
+			assertTrue(auctionsAdded[i]);
+		}
+		
+		// assert that there are actually 5 auctions in the calendar
+		assertEquals(5, myCalendar.numFutureAuctions());
+		
+		try
+		{
+			myCalendar.addAuction(finalAuction);
+			errorMessage = false;
+		}
+		catch(Exception e)
+		{
+			if(e.getMessage().equals("There area already " + 5 + " auctions scheduled in the 3 days before and after the date of this auction."))
+				errorMessage = true;
+			else
+				errorMessage = false;
+		}
+		
+		// assert proper error thrown
+		assertTrue(errorMessage);
+		// assert that auction was not calendar
+		assertEquals(5, myCalendar.numFutureAuctions());
+	}
 }

@@ -12,7 +12,7 @@ public class AuctionsAtCapacityException extends Exception {
 	String myExceptionString = "";
 	
 	public AuctionsAtCapacityException () {
-		myExceptionString = "The number of future auctions is already at its capacity of " + MAX_FUTURE_AUCTIONS;
+		myExceptionString = "The number of future auctions is already at its capacity of " + MAX_FUTURE_AUCTIONS + ".";
 	}
 	
 	public String getMessage()
