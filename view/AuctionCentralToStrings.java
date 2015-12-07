@@ -7,7 +7,8 @@ import model.AuctionModel;
 import model.ItemModel;
 
 /**
- * These are for the console based UI so anywhere in the program, the proper string representing the model can be called.
+ * These are for the console based UI so anywhere in the program,
+ * the proper string representing the model can be called.
  * 
  * @author UWT group5
  *
@@ -28,7 +29,7 @@ public class AuctionCentralToStrings {
 		  LocalDateTime theStartDateTime = theAuctionModel.getStartTime();
 		  answer.append("Date: " + theStartDateTime.getMonth() + " " + theStartDateTime.getDayOfMonth() +", " + theStartDateTime.getYear() + "\n");
 		  answer.append("Start time: " + theStartDateTime.getHour() + ":" + theStartDateTime.getMinute() + "\n");
-		  LocalDateTime theEndDateTime = theAuctionModel.getStartTime();
+		  LocalDateTime theEndDateTime = theAuctionModel.getEndTime();
 		  answer.append("End: " + theEndDateTime.getHour() + ":" + theEndDateTime.getMinute() + "\n");
 		  
 		  List<ItemModel> items = theAuctionModel.getAuctionItems();  
