@@ -14,8 +14,8 @@ public class AuctionModel implements Serializable
 
   private static final long serialVersionUID = 1L;
   public List<ItemModel> myInventory;
-  private String myOrgName;
-  private String myAuctionName;
+  public String myOrgName;
+  public String myAuctionName;
   
   //Fields for local date
   private LocalDateTime myStartTime;

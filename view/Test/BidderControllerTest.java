@@ -1,3 +1,9 @@
+/**
+ * JUnit tests for the BidderController class.
+ * 
+ * @author TCSS 360 Group 5
+ */
+
 package view.Test;
 import static org.junit.Assert.*;
 
@@ -7,11 +13,6 @@ import org.junit.Test;
 import view.BidderController;
 import model.*;
 
-/**
- * Tests for the BidderController class.
- * 
- * @author TCSS 360 Group 5
- */
 public class BidderControllerTest {
 	
 	BidderController myBidder;
@@ -23,7 +24,8 @@ public class BidderControllerTest {
 	 * @author Shannon
 	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws Exception 
+	{
 		BidderModel bidderModel = new BidderModel("charlie", UserModel.UserType.BIDDER);
 		myBidder = new BidderController(bidderModel);
 	}
@@ -34,7 +36,8 @@ public class BidderControllerTest {
 	 * @author Shannon
 	 */
 	@Test
-	public void testBidderController() {
+	public void testBidderController() 
+	{
 		assertTrue(myBidder.getBidderModel().getUserName().equals("charlie"));
 		assertTrue(myBidder.getBidderModel().getUserType().equals(UserModel.UserType.BIDDER));
 	}
@@ -46,7 +49,8 @@ public class BidderControllerTest {
 	 * @author Shannon
 	 */
 	@Test
-	public void testBidAddedOne() {
+	public void testBidOnAddedOne() 
+	{
 		ItemModel testItem = new ItemModel("vase", 20, "puple vase");
 		int bidsBefore = testItem.getBids().size();
 		myBidder.bid(testItem, 25);
@@ -55,27 +59,27 @@ public class BidderControllerTest {
 	}
 	
 	/**
-	 * Test for the bid(Item, double) method.
-	 * Tests that the Bidder's bid is updated correctly to the new bid.
+	 * Tests the bid method when a bidder places a bid one cent higher than the minimum.
 	 * 
-	 * @author Shannon
+	 * @author Shannon, Demy
+	 * @result Bid added.
 	 */
 	@Test
-	public void testBidAddedValue() {
+	public void testBidOnOneCentHigherThanMin() 
+	{
 		ItemModel testItem = new ItemModel("vase", 20, "puple vase");
-		myBidder.bid(testItem, 25);
-		double bidAmount = testItem.getBids().get(myBidder.getBidderModel());
-		assertEquals(bidAmount, 25, 0);
+		assertTrue(myBidder.bid(testItem, 20.01));
 	}
 	
 	/**
-	 * Test for the bid(ItemModel, double) method.
-	 * Tests that a bid should fail when the bid is lower than the minimum bid.
+	 * Tests the bid method when a bidder bids the minimum bid.
 	 * 
-	 * @author Shannon
+	 * @author Shannon, Demy
+	 * @result Bid is not added.
 	 */
 	@Test
-	public void testBidBidTooLow() {
+	public void testBidOnMinBid() 
+	{
 		ItemModel testItem = new ItemModel("vase", 20, "puple vase");
 		assertFalse(myBidder.bid(testItem, 15));
 	}

@@ -1,4 +1,4 @@
-package view;
+package view.Test;
 
 import static org.junit.Assert.*;
 
@@ -10,6 +10,8 @@ import model.ItemModel;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import view.AuctionCentralToStrings;
 
 /**
  * Tests for the AuctionCentralToString class.
@@ -43,7 +45,7 @@ public class AuctionCentralToStringsTest {
 				myTime.plusHours(2), items);
 		LocalDateTime startDateTime = auction.getStartTime();
 		LocalDateTime endDateTime = auction.getEndTime();
-		assertEquals(myTestString.auctionToString(auction), "Name: " + auction.getAuctionName() + "\n" +
+		assertEquals(AuctionCentralToStrings.auctionToString(auction), "Name: " + auction.getAuctionName() + "\n" +
 				"Organization name: " + auction.getAuctionOrg() + "\n" + 
 				 "Date: " + startDateTime.getMonth() + " " + startDateTime.getDayOfMonth() +", " + startDateTime.getYear() + "\n" +
 				"Start time: " + startDateTime.getHour() + ":" + startDateTime.getMinute() + "\n" +
@@ -58,9 +60,9 @@ public class AuctionCentralToStringsTest {
 	@Test
 	public void testItemToString() {
 		ItemModel item = new ItemModel("Cat", 20, "Fluffy");
-		assertEquals(myTestString.itemToString(item), "Name: " + item.getItemName() + "\n" +
+		assertEquals(AuctionCentralToStrings.itemToString(item), "Name: " + item.getItemName() + "\n" +
 		"Description: " + item.getDescription() + "\n" + 
-		"Starting Bid: " + String.format("%.2f", item.getStartingBid()) + "\n");
+		"Starting Bid: $" + String.format("%.2f", item.getStartingBid()) + "\n");
 	}
 
 }

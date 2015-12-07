@@ -55,7 +55,7 @@ public class AuctionCentralToStrings {
 		  StringBuilder answer = new StringBuilder();
 		  answer.append("Name: " + theItemModel.getItemName() + "\n");
 		  answer.append("Description: " + theItemModel.getDescription() + "\n");
-		  answer.append("Starting Bid: " + String.format("%.2f", theItemModel.getStartingBid())   + "\n");
+		  answer.append("Starting Bid: $" + String.format("%.2f", theItemModel.getStartingBid())   + "\n");
 		  return answer.toString();
 	  }
 }

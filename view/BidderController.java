@@ -1,4 +1,5 @@
 package view;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.Scanner;
@@ -80,12 +81,13 @@ public class BidderController extends UserController
 					System.out.println("You have not placed any bids yet.");
 				}
 				else{
+					DecimalFormat df = new DecimalFormat("#.00");
 					ArrayList<ItemModel> bidsToEdit = new ArrayList<ItemModel>();
 					System.out.println("Bids you have placed:");
 					int i = 1;
 					for(Entry<ItemModel, Double> entry : myBidderModel.getBids().entrySet())
 					{
-						System.out.println(i + ") Item Name: " + entry.getKey().getItemName() + " Your bid: " + entry.getValue());
+						System.out.println(i + ") Item Name: " + entry.getKey().getItemName() + " Your bid: $" + df.format(entry.getValue()));
 						bidsToEdit.add(entry.getKey());
 					}
 					System.out.println("Which would you like to edit?");

@@ -55,6 +55,8 @@ public class NonProfitController extends UserController {
 		ArrayList<Command> answer = new ArrayList<Command>();
 		switch (theCommand) {
 		case VIEWMYAUCTION:
+			if(((NonProfitModel)theUser).getAuction() != null)
+			{
 			System.out.println("\n"
 					+ AuctionCentralToStrings
 							.auctionToString(((NonProfitModel) theUser)
@@ -63,6 +65,13 @@ public class NonProfitController extends UserController {
 			answer.add(UserController.Command.EDITAUCTION);
 			answer.add(UserController.Command.VIEWITEM);
 			answer.add(UserController.Command.ADDITEM);
+			}
+			else
+			{
+				System.out.println("You do not have an auction scheduled to edit.");
+				answer.add(UserController.Command.ADDAUCTION);
+				answer.add(UserController.Command.GOBACK);
+			}
 			break;
 		case VIEWITEM:
 			answer.add(UserController.Command.GOBACK);

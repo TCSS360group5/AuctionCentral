@@ -323,7 +323,7 @@ public class ProgramLoop {
 	private void viewCalendarAuctions() {
 		myAuctionList.clear();
 		ArrayList<AuctionModel> theAuctionList = auctionMapToList(myCalendar
-				.displayCurrentMonth());
+				.getAuctionsForCurrentMonth());
 		if (theAuctionList.size() == 0) {
 			System.out.println("No Auctions to view");
 		} else {

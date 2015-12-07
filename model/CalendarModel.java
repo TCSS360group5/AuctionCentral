@@ -313,9 +313,9 @@ public class CalendarModel
 	 * 
 	 * @return sorted by date map of auctions for the current month.
 	 */
-	public Map<LocalDate, ArrayList<AuctionModel>> displayCurrentMonth()
+	public Map<LocalDate, ArrayList<AuctionModel>> getAuctionsForCurrentMonth()
 	{
-		return displayChosenMonth(LocalDate.now());
+		return getAuctionsForChosenMonth(LocalDate.now());
 	}
 	
 	/**
@@ -324,7 +324,7 @@ public class CalendarModel
 	 * @param theMonth the month to get a map for.
 	 * @return sorted by date map of auctions for the entered month.
 	 */
-	public Map<LocalDate, ArrayList<AuctionModel>> displayChosenMonth(LocalDate theMonth)
+	public Map<LocalDate, ArrayList<AuctionModel>> getAuctionsForChosenMonth(LocalDate theMonth)
 	{
 		Map<LocalDate, ArrayList<AuctionModel>> returnMap = new TreeMap<LocalDate,ArrayList<AuctionModel>>();
 		for(Entry<LocalDate, ArrayList<AuctionModel>> entry : myAuctionByDateList.entrySet())
@@ -415,7 +415,7 @@ public class CalendarModel
 	 */
 	public String toString(LocalDate theDate) 
 	{
-		Map<LocalDate, ArrayList<AuctionModel>> displayMap = displayChosenMonth(theDate);
+		Map<LocalDate, ArrayList<AuctionModel>> displayMap = getAuctionsForChosenMonth(theDate);
 		StringBuilder answer = new StringBuilder();
 		for (Map.Entry<LocalDate,ArrayList<AuctionModel>> entry : displayMap.entrySet()) 
 		{
