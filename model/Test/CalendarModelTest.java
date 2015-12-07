@@ -4,22 +4,30 @@
  * @author Demetra Loulias, UWT Group 5
  */
 package model.Test;
+
 import static org.junit.Assert.*;
-import model.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+
+import model.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class CalendarModelTest {
+	
+	// calendar to add to
 	CalendarModel myCalendar;
+	// tomorrow's localdatetime starting at midnight, makes tests less time-dependent on when they are run
+	LocalDateTime dayStart;
 
 	@Before
 	public void setUp()
 	{
 		myCalendar = new CalendarModel();
+		dayStart = LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(0, 0));
 	}
 	
 	/**
@@ -62,14 +70,13 @@ public class CalendarModelTest {
 	public void testAddAuctionOnCalendarWithAuctionsAtCapacity()
 	{
 		boolean errorMessage;
-		LocalDateTime startDate = LocalDateTime.now();
 		
 		// add 25 auctions
 		for(int i = 1; i <= 25; i++)
 		{
 			try
 			{
-				myCalendar.addAuction(new AuctionModel("testOrg" + i, "testUserName" + i, startDate.plusDays(i), startDate.plusDays(i).plusHours(1)));
+				myCalendar.addAuction(new AuctionModel("testOrg" + i, "testUserName" + i, dayStart.plusDays(i), dayStart.plusDays(i).plusHours(1)));
 			}
 			catch(Exception e)
 			{
@@ -83,7 +90,7 @@ public class CalendarModelTest {
 		// add one more auction
 		try
 		{
-			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", startDate.plusDays(25 + 1),  startDate.plusDays(25 + 1).plusHours(1)));
+			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", dayStart.plusDays(25 + 1),  dayStart.plusDays(25 + 1).plusHours(1)));
 			errorMessage = false;
 		}
 		catch(Exception e)
@@ -112,14 +119,13 @@ public class CalendarModelTest {
 	public void testAddAuctionOnCalendarWithAuctionsOneBelowCapacity()
 	{	
 		boolean exceptionThrown;
-		LocalDateTime startDate = LocalDateTime.now();
 		
 		// add 24 auctions
 		for(int i = 1; i < 25; i++)
 		{
 			try
 			{
-				myCalendar.addAuction(new AuctionModel("testOrg" + i, "testUserName" + i, startDate.plusDays(i), startDate.plusDays(i).plusHours(1)));
+				myCalendar.addAuction(new AuctionModel("testOrg" + i, "testUserName" + i, dayStart.plusDays(i), dayStart.plusDays(i).plusHours(1)));
 			}
 			catch(Exception e)
 			{
@@ -133,7 +139,7 @@ public class CalendarModelTest {
 		// add one final auction
 		try
 		{
-			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", startDate.plusDays(25), startDate.plusDays(25).plusHours(1)));
+			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", dayStart.plusDays(25), dayStart.plusDays(25).plusHours(1)));
 			exceptionThrown = false;
 		}
 		catch(Exception e)
@@ -161,7 +167,7 @@ public class CalendarModelTest {
 		assertEquals(myCalendar.getAllFutureAuctions().size(), 0);
 		
 		// create auction 80 days in the future
-		AuctionModel auctionToAdd = new AuctionModel("testOrg", "testUserName", LocalDateTime.now().plusDays(80), LocalDateTime.now().plusDays(80).plusHours(2));
+		AuctionModel auctionToAdd = new AuctionModel("testOrg", "testUserName", dayStart.plusDays(80), dayStart.plusDays(80).plusHours(2));
 		try
 		{
 			myCalendar.addAuction(auctionToAdd);
@@ -193,12 +199,13 @@ public class CalendarModelTest {
 		
 		try
 		{
-			// add auction 90 days in future
-			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", LocalDateTime.now().plusDays(90),  LocalDateTime.now().plusDays(90).plusHours(1)));
+			// add auction 90 days in future (dayStart is already 1 day ahead of current day, so add 89
+			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", dayStart.plusDays(89), dayStart.plusDays(89).plusHours(1)));
 			exceptionThrown = false;
 		}
 		catch(Exception e)
 		{
+			System.out.println(e.getMessage());
 			exceptionThrown = true;
 		}
 		
@@ -225,7 +232,7 @@ public class CalendarModelTest {
 		try
 		{
 			// add auction 90 days in future
-			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", LocalDateTime.now().plusDays(90).plusDays(1),  LocalDateTime.now().plusDays(90).plusDays(1).plusHours(1)));
+			myCalendar.addAuction(new AuctionModel("testOrg", "testUserName", dayStart.plusDays(89).plusDays(1),  dayStart.plusDays(89).plusDays(1).plusHours(1)));
 			errorMessage = false;
 		}
 		catch(Exception e)
@@ -258,8 +265,8 @@ public class CalendarModelTest {
 		boolean secondAdded;
 		
 		// auctions to add
-		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", LocalDateTime.now(), LocalDateTime.now().plusHours(3));
-		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", LocalDateTime.now().plusHours(5), LocalDateTime.now().plusHours(6));
+		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", dayStart, dayStart.plusHours(3));
+		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", dayStart.plusHours(5), dayStart.plusHours(6));
 		
 		// add first auction
 		try
@@ -304,10 +311,10 @@ public class CalendarModelTest {
 	{
 		boolean firstAdded;
 		boolean errorMessage;
-		
+
 		// auctions to add
-		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", LocalDateTime.now(), LocalDateTime.now().plusHours(3));
-		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", LocalDateTime.now().plusHours(5).minusMinutes(1), LocalDateTime.now().plusHours(6));
+		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", dayStart, dayStart.plusHours(3));
+		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", dayStart.plusHours(5).minusMinutes(1), dayStart.plusHours(6));
 		
 		// add first auction
 		try
@@ -358,10 +365,10 @@ public class CalendarModelTest {
 	{
 		boolean firstAdded;
 		boolean secondAdded;
-		
+
 		// auctions to be added
-		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", LocalDateTime.now(), LocalDateTime.now().plusHours(3));
-		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", LocalDateTime.now().plusHours(5).plusMinutes(1), LocalDateTime.now().plusHours(6));
+		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", dayStart, dayStart.plusHours(3));
+		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", dayStart.plusHours(5).plusMinutes(1), dayStart.plusHours(6));
 		
 		// add first auction
 		try
@@ -408,9 +415,8 @@ public class CalendarModelTest {
 		boolean errorMessage;
 		
 		// the auctions to be added
-		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", LocalDateTime.now(), LocalDateTime.now().plusHours(3));
-		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", LocalDateTime.now().plusHours(1), LocalDateTime.now().plusHours(4));
-		
+		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", dayStart, dayStart.plusHours(3));
+		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", dayStart.plusHours(1), dayStart.plusHours(4));
 		// add first auction
 		try
 		{
@@ -463,7 +469,7 @@ public class CalendarModelTest {
 		boolean secondAdded;
 		boolean errorMessage;
 		
-		LocalDateTime dayStart = LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(0, 0));
+		
 		
 		// the auctions to be added
 		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", dayStart, dayStart.plusHours(1));
@@ -537,8 +543,6 @@ public class CalendarModelTest {
 		boolean firstAdded;
 		boolean secondAdded;
 		
-		LocalDateTime dayStart = LocalDateTime.of(LocalDate.now().plusDays(1), LocalTime.of(0, 0));
-		
 		// the auctions to be added
 		AuctionModel testAuction1 = new AuctionModel("testOrg1", "testUserName1", dayStart, dayStart.plusHours(1));
 		AuctionModel testAuction2 = new AuctionModel("testOrg2", "testUserName2", dayStart.plusHours(3), dayStart.plusHours(4));
@@ -588,7 +592,7 @@ public class CalendarModelTest {
 		boolean auctionsAdded[] = new boolean[4];
 		boolean finalAdded;
 		
-		LocalDateTime dayStart = LocalDateTime.of(LocalDate.now().plusDays(3), LocalTime.of(0, 0));
+		dayStart = dayStart.plusDays(7);
 		
 		// the auctions to be added
 		auctions[0] = new AuctionModel("testOrg1", "testUserName1", dayStart.minusDays(2), dayStart.minusDays(2).plusHours(1));
@@ -647,7 +651,7 @@ public class CalendarModelTest {
 		boolean auctionsAdded[] = new boolean[5];
 		boolean errorMessage;
 		
-		LocalDateTime dayStart = LocalDateTime.of(LocalDate.now().plusDays(3), LocalTime.of(0, 0));
+		dayStart = dayStart.plusDays(7);
 		
 		// the auctions to be added
 		auctions[0] = new AuctionModel("testOrg1", "testUserName1", dayStart.minusDays(2), dayStart.minusDays(2).plusHours(1));
