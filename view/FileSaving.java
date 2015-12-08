@@ -1,6 +1,10 @@
 package view;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,9 +69,7 @@ public class FileSaving {
 	protected static void saveAll(ArrayList<UserModel> myUserList, ArrayList<AuctionModel> myAuctionList, CalendarModel myCalendar) 
 	{
 		try {
-			Serialization.serializeObject(USER_SER_STRING, (Object) myUserList);
-			//Serialization.serializeObject(myAuctionFileString, (Object) myUserList);
-			//Serialization.serializeObject(myCalendarFileString, (Object) myCalendar);
+			serializeObject(USER_SER_STRING, (Object) myUserList);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -84,7 +86,7 @@ public class FileSaving {
 	public static void loadUsers(String theFile, ArrayList<UserModel> theUserList) 
 	{
 		try {
-			Object temp = Serialization.deSerializeObject(USER_SER_STRING);
+			Object temp = deSerializeObject(USER_SER_STRING);
 			
 			if (temp instanceof ArrayList<?>) {
 				ArrayList<?> temp2 = (ArrayList<?>) temp;
@@ -133,7 +135,7 @@ public class FileSaving {
 	 */
 	public static void loadAuctions(ArrayList<UserModel> myUserList, String theAuctionFileString, ArrayList<AuctionModel> theAuctionList, CalendarModel theCalendar) {
 		try {
-			Object temp = Serialization.deSerializeObject(theAuctionFileString);
+			Object temp = deSerializeObject(theAuctionFileString);
 			
 			if (temp instanceof ArrayList<?>) {
 				ArrayList<?> temp2 = (ArrayList<?>) temp;
@@ -184,7 +186,7 @@ public class FileSaving {
 			}
 		}
 		try {
-			Serialization.serializeObject(theAuctionFile, (Object) theAuctionList);
+			serializeObject(theAuctionFile, (Object) theAuctionList);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -232,4 +234,39 @@ public class FileSaving {
 		}
 		return answerUser;
 	}
+	
+	/**
+	 * 
+	 * @param OutputFileName
+	 * @param theObject
+	 * @throws IOException
+	 * @author Quinn
+	 */
+	 public static void serializeObject(String OutputFileName, Object theObject) throws IOException
+	   {
+	         FileOutputStream OutputFile = new FileOutputStream(OutputFileName);
+	         ObjectOutputStream output = new ObjectOutputStream(OutputFile);
+	         output.writeObject(theObject);
+	         output.close();
+	         OutputFile.close();
+	   }
+
+	 /**
+	  * 
+	  * @param theInputFileName
+	  * @return
+	  * @throws IOException
+	  * @throws ClassNotFoundException
+	  * @author Quinn
+	  */
+	   public static Object deSerializeObject(String theInputFileName) throws IOException, ClassNotFoundException
+	   {
+		   	 Object theObject;
+	         FileInputStream InputFile = new FileInputStream(theInputFileName);
+	         ObjectInputStream input = new ObjectInputStream(InputFile);
+	         theObject = input.readObject();
+	         input.close();
+	         InputFile.close();
+	         return theObject;
+	    }
 }

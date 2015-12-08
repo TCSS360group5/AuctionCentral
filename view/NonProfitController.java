@@ -80,11 +80,6 @@ public class NonProfitController extends UserController {
 		case VIEWMAINMENU:
 			answer.add(UserController.Command.ADDAUCTION);
 			answer.add(UserController.Command.VIEWMYAUCTION);
-			// if(myNonProfitModel.canAddAuction()) {
-			// answer.add(UserController.Command.ADDAUCTION);
-			// } else {
-			// answer.add(UserController.Command.VIEWMYAUCTION);
-			// }
 			break;
 		default:
 			System.out.println("Menu Command Not Recognized");
