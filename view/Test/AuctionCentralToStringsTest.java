@@ -50,8 +50,8 @@ public class AuctionCentralToStringsTest {
 		assertEquals(AuctionCentralToStrings.auctionToString(auction), "Name: " + auction.getAuctionName() + "\n" +
 				"Organization name: " + auction.getAuctionOrg() + "\n" + 
 				 "Date: " + startDateTime.getMonth() + " " + startDateTime.getDayOfMonth() +", " + startDateTime.getYear() + "\n" +
-				"Start time: " + startDateTime.getHour() + ":" + startDateTime.getMinute() + "\n" +
-				"End: " + endDateTime.getHour() + ":" + endDateTime.getMinute() + "\n" +
+				"Start time: " + startDateTime.getHour() + ":" + String.format("%02d", startDateTime.getMinute()) + "\n" +
+				"End: " + endDateTime.getHour() + ":" + String.format("%02d", endDateTime.getMinute()) + "\n" +
 				"Items: " + items.size()
 				);
 	}

@@ -28,9 +28,9 @@ public class AuctionCentralToStrings {
 		  answer.append("Organization name: " + theAuctionModel.getAuctionOrg() + "\n");
 		  LocalDateTime theStartDateTime = theAuctionModel.getStartTime();
 		  answer.append("Date: " + theStartDateTime.getMonth() + " " + theStartDateTime.getDayOfMonth() +", " + theStartDateTime.getYear() + "\n");
-		  answer.append("Start time: " + theStartDateTime.getHour() + ":" + theStartDateTime.getMinute() + "\n");
+		  answer.append("Start time: " + theStartDateTime.getHour() + ":" + String.format("%02d", theStartDateTime.getMinute()) + "\n");
 		  LocalDateTime theEndDateTime = theAuctionModel.getEndTime();
-		  answer.append("End: " + theEndDateTime.getHour() + ":" + theEndDateTime.getMinute() + "\n");
+		  answer.append("End: " + theEndDateTime.getHour() + ":" + String.format("%02d", theEndDateTime.getMinute()) + "\n");
 		  
 		  List<ItemModel> items = theAuctionModel.getAuctionItems();  
 		  if(items!= null) 
