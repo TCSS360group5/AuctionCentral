@@ -238,7 +238,7 @@ public class FileSaving {
 	 * @param NPOName
 	 *            the name of the organization
 	 * @return the user with that NPO name
-	 * @author
+	 * @author Demy
 	 */
 	private static UserModel FindUserByNPOName(String NPOName,
 			ArrayList<UserModel> myUserList) {
@@ -259,7 +259,7 @@ public class FileSaving {
 	 * @param theUserName
 	 *            the user name being searched for
 	 * @return a user if one exists, null otherwise
-	 * @author
+	 * @author Shannon
 	 */
 	public static UserModel findUserByName(String theUserName,
 			ArrayList<UserModel> myUserList) {
