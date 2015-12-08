@@ -163,6 +163,8 @@ public class CalendarModel
 	 * 
 	 * @param theAuctionStart the Auction start.
 	 * @return true iff Auction start is (number) days after the current date.
+	 * 
+	 * @author Demy
 	 */
 	private boolean checkDaysAway(LocalDateTime theAuctionStart)
 	{
@@ -180,6 +182,8 @@ public class CalendarModel
 	 * 
 	 * @param theAuctionDate the date of the Auction.
 	 * @return true iff there are already (number) auctions scheduled for the 7 day period.
+	 * 
+	 * @author Demy
 	 */
 	private boolean checkWeek(LocalDate theAuctionDate)
 	{

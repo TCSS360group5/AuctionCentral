@@ -3,7 +3,6 @@ package model;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * This class represents an item for AuctionCentral.
