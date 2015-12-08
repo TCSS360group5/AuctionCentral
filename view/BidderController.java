@@ -89,6 +89,7 @@ public class BidderController extends UserController
 					{
 						System.out.println(i + ") Item Name: " + entry.getKey().getItemName() + " Your bid: $" + df.format(entry.getValue()));
 						bidsToEdit.add(entry.getKey());
+						i++;
 					}
 					System.out.println("Which would you like to edit?");
 					int auctionNum = myScanner.nextInt();
@@ -119,7 +120,6 @@ public class BidderController extends UserController
 	{
 		Double bid = null;
 		String actionMessage = "Please Enter a Bid, Press Q to cancel:";
-		System.out.println("Found in bids: " + myBidderModel.getBids().containsKey(theItem));
 		String exitString = "Q";
 
 		boolean exitBid = false;
