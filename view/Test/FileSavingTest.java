@@ -77,14 +77,13 @@ public class FileSavingTest {
 		} catch (IOException io) {
 			System.out.println(io.getMessage());
 		}
-	}
-
-	/**
-	 * Test method for {@link view.FileSaving#FileSaving()}.
-	 */
-	@Test
-	public void testFileSaving() {
-		// not sure we need to test this
+		
+		try 
+		{
+			FileSaving.serializeObject("users.ser", myNPOUser);
+		} catch (IOException io) {
+			System.out.println(io.getMessage());
+		}
 	}
 
 	/**
@@ -96,11 +95,22 @@ public class FileSavingTest {
 	}
 
 	/**
-	 * Test method for {@link view.FileSaving#loadUsers(java.io.File, java.util.ArrayList)}.
+	 * Test method for the loadUsers() method.
+	 * Tests that users are deserialized correctly.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
 	public void testLoadUsers() {
-		fail("Not yet implemented");
+		UserModel theUser = null;
+		try {
+			theUser = (UserModel) FileSaving.deSerializeObject("users.ser");
+		} catch (IOException io) {
+			System.out.println(io.getMessage());
+		} catch (ClassNotFoundException c) {
+			System.out.println(c.getMessage());
+		}
+		assertEquals(theUser.getUserName(), myNPOUser.getUserName());
 	}
 
 	/**
@@ -108,7 +118,15 @@ public class FileSavingTest {
 	 */
 	@Test
 	public void testLoadAuctions() {
-		fail("Not yet implemented");
+		Object theAuction = null;
+		try {
+			theAuction = (AuctionModel) FileSaving.deSerializeObject("auction.ser");
+		} catch (IOException io) {
+			System.out.println(io.getMessage());
+		} catch (ClassNotFoundException c) {
+			System.out.println(c.getMessage());
+		}
+		assertTrue(compareAuction((AuctionModel) theAuction, myAuction));
 	}
 
 	/**
