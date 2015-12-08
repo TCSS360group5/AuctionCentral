@@ -12,7 +12,7 @@ public class AuctionTooFarAwayException extends Exception {
 	String myExceptionString = "";
 	
 	public AuctionTooFarAwayException() {
-		myExceptionString = "An auction may not be scheduled more than " + MAX_DAYS_AWAY + " days in the future.";
+		myExceptionString = "An auction may not be scheduled more than " + MAX_DAYS_AWAY + " days in the future. Or anytime in the past.";
 	}
 	
 	public String getMessage()
