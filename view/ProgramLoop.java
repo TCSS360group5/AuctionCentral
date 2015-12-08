@@ -472,23 +472,4 @@ public class ProgramLoop {
 		} while (!validCommand);
 		return commandInt;
 	}
-
-	// /**
-	// * Returns whether or not the specified NPO has an auction already.
-	// *
-	// * @param theNPOname the name of the NonProfit Organization we are
-	// checking
-	// * @return true if an auction exists, false otherwise
-	// */
-	// public boolean hasExistingAuction(String theNPOname) {
-	// AuctionModel auction;
-	// boolean result = false;
-	// for(int i = 0; i < myAuctionList.size(); i++) {
-	// auction = myAuctionList.get(i);
-	// if(auction.myOrgName.equals(theNPOname)) {
-	// result = true;
-	// }
-	// }
-	// return result;
-	// }
 }
