@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 /**
  * This class represents an item for AuctionCentral.
  * 
- * @author TCSS 360 Group 5
+ * @author Brendan, Quinn
  */
 public class ItemModel implements Serializable {
 	/** Required for serialization */
@@ -20,10 +20,13 @@ public class ItemModel implements Serializable {
 	private Map<UserModel, Double> myBids;
 
 	/**
+	 * Contstructs a new ItemModel.
 	 * 
-	 * @param theItemName
-	 * @param theStartingBid
-	 * @param theDescription
+	 * @param theItemName Name of item to be added.
+	 * @param theStartingBid Starting bid of item to be added.
+	 * @param theDescription Description of item to be added.
+	 * 
+	 * @author Brendan
 	 */
 	public ItemModel(String theItemName, double theStartingBid,
 			String theDescription) {
@@ -34,9 +37,12 @@ public class ItemModel implements Serializable {
 	}
 
 	/**
+	 * Sets a new name for the ItemModel.
 	 * 
-	 * @param theItemName
-	 * @return
+	 * @param theItemName The new name for the ItemModel.
+	 * @return true iff name was changed.
+	 * 
+	 * @author Brendan
 	 */
 	public boolean setItemName(String theItemName) {
 		myItemName = theItemName;
@@ -44,9 +50,12 @@ public class ItemModel implements Serializable {
 	}
 
 	/**
+	 * Sets the starting bid of an ItemModel.
 	 * 
-	 * @param theStartingBid
-	 * @return
+	 * @param theStartingBid The new starting bid for the ItemModel.
+	 * @return true iff the starting bid was changed.
+	 * 
+	 * @author Brendan
 	 */
 	public boolean setStartingBid(double theStartingBid) {
 		myStartingBid = theStartingBid;
@@ -54,9 +63,12 @@ public class ItemModel implements Serializable {
 	}
 
 	/**
+	 * Sets the description of an ItemModel.
 	 * 
-	 * @param theDescription
-	 * @return
+	 * @param theDescription The new description for the ItemModel.
+	 * @return true iff the description was changed.
+	 * 
+	 * @author Brendan
 	 */
 	public boolean setDescription(String theDescription) {
 		myDescription = theDescription;
@@ -64,97 +76,96 @@ public class ItemModel implements Serializable {
 	}
 
 	/**
+	 * Gets the name of an ItemModel.
 	 * 
-	 * @return
+	 * @return The itemName stored in the ItemModel.
+	 * 
+	 * @author Brendan
 	 */
 	public String getItemName() {
 		return myItemName;
 	}
 
 	/**
+	 * Gets the starting bid of an ItemModel.
 	 * 
-	 * @return
+	 * @return The starting bid.
+	 * 
+	 * @author Brendan
 	 */
 	public double getStartingBid() {
 		return myStartingBid;
 	}
 
 	/**
+	 * Gets the description of an ItemModel.
 	 * 
-	 * @return
+	 * @return The description stored in the ItemModel.
+	 * 
+	 * @author Brendan
 	 */
 	public String getDescription() {
 		return myDescription;
 	}
 
 	/**
+	 * Gets the list of bids for an ItemModel.
 	 * 
-	 * @return
+	 * @return Map containing users as keys and their bid as the values.
+	 * 
+	 * @author Brendan
 	 */
 	public Map<UserModel, Double> getBids() {
 		return myBids;
 	}
 
 	/**
+	 * Sets the bids for an ItemModel.
 	 * 
-	 * @param theBids
+	 * @param The Bids to be added.
+	 * 
+	 * @author Brendan
 	 */
 	public void setBids(Map<UserModel, Double> theBids) {
 		myBids = theBids;
 	}
 
 	/**
+	 * Method to bid on an ItemModel.
 	 * 
-	 * @param user
-	 * @param bid
+	 * @param user The user that placed the bid.
+	 * @param bid The bid that the user placed.
+	 * 
+	 * @author Brendan
 	 */
 	public void bidOnItem(UserModel user, double bid) {
 		myBids.put(user, bid);
 	}
 
 	/**
+	 * Checks if the bid is an acceptable value.
 	 * 
-	 * @param theBid
-	 * @return
+	 * @param theBid The value of a bid to be added.
+	 * @return true iff theBid is equal to or greater than the starting bid.
+	 * 
+	 * @author Brendan
 	 */
 	public boolean isBidAboveStartingBid(Double theBid) {
 		return (theBid >= myStartingBid);
 	}
 
 	/**
+	 * Updates a bid placed by a user.
 	 * 
-	 * @param user
-	 * @param newBid
+	 * @param user The user who changed the bid.
+	 * @param newBid The user's new bid.
+	 * 
+	 * @author Brendan
 	 */
 	public void updateBid(UserModel user, double newBid) {
 		myBids.put(user, newBid);
 	}
 
-	/**
-   * 
-   */
-	public String toString() {
-		StringBuilder answer = new StringBuilder();
-		answer.append("Name: " + myItemName + "\n");
-		answer.append("Description: " + myDescription + "\n");
-		answer.append("Starting Bid: " + myStartingBid + "\n");
-		return answer.toString();
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	public String toStringWithBids() {
-		StringBuilder answer = new StringBuilder();
-		answer.append("Name: " + myItemName + "\n");
-		answer.append("Description: " + myDescription + "\n");
-		answer.append("Starting Bid: " + myStartingBid + "\n");
-		for (Entry<UserModel, Double> entry : myBids.entrySet()) {
-			answer.append(entry.getKey() + " " + entry.getValue() + "\n");
-		}
-		return answer.toString();
-	}
 
 	/**
 	 * Compares this object to another object.
