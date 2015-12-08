@@ -155,9 +155,6 @@ public class NonProfitModel extends UserModel {
 			if (!theOtherModel.myLastAuctionDate.equals(myLastAuctionDate)) {
 				answer = false;
 			}
-			if (!theOtherModel.myAuction.equals(myAuction)) {
-				answer = false;
-			}
 		}
 		return answer;
 	}
@@ -173,8 +170,6 @@ public class NonProfitModel extends UserModel {
 		int answer = 0;
 		answer += myNPOName.hashCode();
 		answer += myLastAuctionDate.toString().hashCode();
-		answer += myAuction.hashCode();
 		return answer;
 	}
-
 }

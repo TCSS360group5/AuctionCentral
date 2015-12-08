@@ -1,4 +1,5 @@
 package model;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,102 +10,152 @@ import java.util.Map.Entry;
  * 
  * @author TCSS 360 Group 5
  */
-public class ItemModel  implements Serializable
-{
+public class ItemModel implements Serializable {
 	/** Required for serialization */
 	private static final long serialVersionUID = -6836348504277068061L;
-	
+
 	private String myItemName;
 	private String myDescription;
 	private double myStartingBid;
 	private Map<UserModel, Double> myBids;
-  
-  public ItemModel(String theItemName, double theStartingBid, String theDescription)
-  {
-	  myBids = new HashMap<>();
-	  myItemName = theItemName;
-	  myStartingBid = theStartingBid;
-	  myDescription = theDescription;	  
-  }
-  
-  public boolean setItemName(String theItemName)
-  {
-	  myItemName = theItemName;
-	  return true;
-  }
-  
-  public boolean setStartingBid(double theStartingBid)
-  {	  
-	  myStartingBid = theStartingBid;
-	  return true;	  
-  }
-  
-  public boolean setDescription(String theDescription)
-  {
-	  myDescription = theDescription;
-	  return true;
-  }
-  
-  public String getItemName()
-  {
-	  return myItemName;
-  }
-  
-  public double getStartingBid()
-  {
-	  return myStartingBid;
-  }
-  
-  public String getDescription()
-  {
-	  return myDescription;
-  }
-  
-  public Map<UserModel, Double> getBids()
-  {
-	  return myBids;
-  }
-  
-  public void setBids(Map<UserModel, Double> theBids)
-  {
-	  myBids = theBids;
-  }
-  
-  public void bidOnItem(UserModel user, double bid)
-  {
-	  	  myBids.put(user, bid);
-  }
-  
-  public boolean isBidAboveStartingBid(Double theBid)
-  {
-	  return (theBid >= myStartingBid);
-  }
-  
-  public void updateBid(UserModel user, double newBid)
-  {
-	 myBids.put(user, newBid);
-  }
-  
-  public String toString() {
-	  StringBuilder answer = new StringBuilder();
-	  answer.append("Name: " + myItemName + "\n");
-	  answer.append("Description: " + myDescription + "\n");
-	  answer.append("Starting Bid: " + myStartingBid + "\n");
-	  return answer.toString();
-  }
-  
-  public String toStringWithBids() {
-	  StringBuilder answer = new StringBuilder();
-	  answer.append("Name: " + myItemName + "\n");
-	  answer.append("Description: " + myDescription + "\n");
-	  answer.append("Starting Bid: " + myStartingBid + "\n");
-	  for (Entry<UserModel, Double> entry : myBids.entrySet()) 
-	  {
-		  answer.append(entry.getKey() + " " + entry.getValue() + "\n");
-	  }
-	  return answer.toString();
-  }
-  
+
+	/**
+	 * 
+	 * @param theItemName
+	 * @param theStartingBid
+	 * @param theDescription
+	 */
+	public ItemModel(String theItemName, double theStartingBid,
+			String theDescription) {
+		myBids = new HashMap<>();
+		myItemName = theItemName;
+		myStartingBid = theStartingBid;
+		myDescription = theDescription;
+	}
+
+	/**
+	 * 
+	 * @param theItemName
+	 * @return
+	 */
+	public boolean setItemName(String theItemName) {
+		myItemName = theItemName;
+		return true;
+	}
+
+	/**
+	 * 
+	 * @param theStartingBid
+	 * @return
+	 */
+	public boolean setStartingBid(double theStartingBid) {
+		myStartingBid = theStartingBid;
+		return true;
+	}
+
+	/**
+	 * 
+	 * @param theDescription
+	 * @return
+	 */
+	public boolean setDescription(String theDescription) {
+		myDescription = theDescription;
+		return true;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getItemName() {
+		return myItemName;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public double getStartingBid() {
+		return myStartingBid;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getDescription() {
+		return myDescription;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Map<UserModel, Double> getBids() {
+		return myBids;
+	}
+
+	/**
+	 * 
+	 * @param theBids
+	 */
+	public void setBids(Map<UserModel, Double> theBids) {
+		myBids = theBids;
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param bid
+	 */
+	public void bidOnItem(UserModel user, double bid) {
+		myBids.put(user, bid);
+	}
+
+	/**
+	 * 
+	 * @param theBid
+	 * @return
+	 */
+	public boolean isBidAboveStartingBid(Double theBid) {
+		return (theBid >= myStartingBid);
+	}
+
+	/**
+	 * 
+	 * @param user
+	 * @param newBid
+	 */
+	public void updateBid(UserModel user, double newBid) {
+		myBids.put(user, newBid);
+	}
+
+	/**
+   * 
+   */
+	public String toString() {
+		StringBuilder answer = new StringBuilder();
+		answer.append("Name: " + myItemName + "\n");
+		answer.append("Description: " + myDescription + "\n");
+		answer.append("Starting Bid: " + myStartingBid + "\n");
+		return answer.toString();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String toStringWithBids() {
+		StringBuilder answer = new StringBuilder();
+		answer.append("Name: " + myItemName + "\n");
+		answer.append("Description: " + myDescription + "\n");
+		answer.append("Starting Bid: " + myStartingBid + "\n");
+		for (Entry<UserModel, Double> entry : myBids.entrySet()) {
+			answer.append(entry.getKey() + " " + entry.getValue() + "\n");
+		}
+		return answer.toString();
+	}
+
 	/**
 	 * Compares this object to another object.
 	 * 
@@ -114,22 +165,17 @@ public class ItemModel  implements Serializable
 	 * @author Quinn
 	 */
 	@Override
-	public boolean equals(Object theOther) 
-	{
+	public boolean equals(Object theOther) {
 		boolean answer = true;
-		if (theOther instanceof ItemModel) 
-		{
+		if (theOther instanceof ItemModel) {
 			ItemModel theOtherModel = (ItemModel) theOther;
-			if (theOtherModel.myItemName.compareTo(myItemName) != 0) 
-			{
+			if (theOtherModel.myItemName.compareTo(myItemName) != 0) {
 				answer = false;
 			}
-			if (theOtherModel.myDescription.compareTo(myDescription) != 0)
-			{
+			if (theOtherModel.myDescription.compareTo(myDescription) != 0) {
 				answer = false;
 			}
-			if (theOtherModel.myStartingBid != myStartingBid) 
-			{
+			if (theOtherModel.myStartingBid != myStartingBid) {
 				answer = false;
 			}
 		} else {
@@ -152,6 +198,5 @@ public class ItemModel  implements Serializable
 		answer += myStartingBid;
 		return answer;
 	}
-  
-}
 
+}

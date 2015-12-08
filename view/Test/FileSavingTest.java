@@ -9,8 +9,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import model.AuctionModel;
+import model.BidderModel;
+import model.CalendarModel;
+import model.EmployeeModel;
 import model.ItemModel;
 import model.UserModel;
+import model.UserModel.UserType;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,12 +29,16 @@ import view.FileSaving;
  */
 public class FileSavingTest {
 	
+	private static final String USER_TEST_SER_STRING = "userListTest.ser";
+	private static final String AUCTION_TEST_SER_STRING = "auctionListTest.ser";
 	AuctionModel myAuction;
 	AuctionModel myAuctionWithItems;
 	AuctionModel myAuctionWithItemsWithBids;
+	ArrayList<AuctionModel> myAuctionArray;
 	UserModel myNPOUser;
 	UserModel myEmployeeUser;
 	UserModel myBidderUser;
+	ArrayList<UserModel> myUserArray;
 	LocalDateTime myDate;
 
 	/**
@@ -77,65 +85,58 @@ public class FileSavingTest {
 		} catch (IOException io) {
 			System.out.println(io.getMessage());
 		}
+		myEmployeeUser = new EmployeeModel("EmployeeGuy", UserType.EMPLOYEE);
+		myBidderUser = new BidderModel("BidderGuy", UserType.BIDDER);
+		myUserArray = new ArrayList<UserModel>();
+		myUserArray.add(myNPOUser);
+		myUserArray.add(myEmployeeUser);
+		myUserArray.add(myBidderUser);
+		myAuctionArray = new ArrayList<AuctionModel>();
+		myAuctionArray.add(myAuction);
+		myAuctionArray.add(myAuctionWithItems);
+		myAuctionArray.add(myAuctionWithItemsWithBids);
+		CalendarModel aCalendar = new CalendarModel();
+		FileSaving.saveAll(myUserArray, myAuctionArray, aCalendar, USER_TEST_SER_STRING, AUCTION_TEST_SER_STRING);
+	}
+
+
+	/**
+	 * 
+	 */
+	@Test
+	public void testLoadAllForUsers() {
+		CalendarModel aCalendar = new CalendarModel();
+		ArrayList<UserModel> tempUserArray = new ArrayList<UserModel>();
+		ArrayList<AuctionModel> tempAuctionArray = new ArrayList<AuctionModel>();
+		FileSaving.loadAll(tempUserArray,
+				tempAuctionArray, aCalendar,
+				USER_TEST_SER_STRING, AUCTION_TEST_SER_STRING);
+		assertTrue(tempUserArray.equals(myUserArray));
+	}
+	
+	/**
+	 * 
+	 */
+	@Test
+	public void testLoadAllForAuctions() {
+		CalendarModel aCalendar = new CalendarModel();
+		ArrayList<UserModel> tempUserArray = new ArrayList<UserModel>();
+		ArrayList<AuctionModel> tempAuctionArray = new ArrayList<AuctionModel>();
+		FileSaving.loadAll(tempUserArray,
+				tempAuctionArray, aCalendar,
+				USER_TEST_SER_STRING, AUCTION_TEST_SER_STRING);
+		assertTrue(tempAuctionArray.equals(myAuctionArray));
 	}
 
 	/**
-	 * Test method for {@link view.FileSaving#FileSaving()}.
+	 * Tests that you can find a user by their user name in an array of userModels.
+	 * @author Quinn
 	 */
 	@Test
-	public void testFileSaving() {
-		// not sure we need to test this
+	public void testFindUserByName() {
+		String tempName = myBidderUser.getUserName();
+		assertTrue(myBidderUser.equals(FileSaving.findUserByName(tempName, myUserArray)));
 	}
-
-	/**
-	 * Test method for {@link view.FileSaving#saveAll(java.util.ArrayList, java.util.ArrayList, model.CalendarModel)}.
-	 */
-	@Test
-	public void testSaveAll() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link view.FileSaving#loadUsers(java.io.File, java.util.ArrayList)}.
-	 */
-	@Test
-	public void testLoadUsers() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link view.FileSaving#loadAuctions(java.util.ArrayList, java.io.File, java.util.ArrayList, model.CalendarModel)}.
-	 */
-	@Test
-	public void testLoadAuctions() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link view.FileSaving#outputUsers(java.io.File, java.util.ArrayList)}.
-	 */
-	@Test
-	public void testOutputUsers() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link view.FileSaving#outputAuctions(java.io.File, java.util.ArrayList, model.CalendarModel)}.
-	 */
-	@Test
-	public void testOutputAuctions() {
-		fail("Not yet implemented");
-	}
-
-	/**
-	 * Test method for {@link view.FileSaving#findUserByName(java.lang.String, java.util.ArrayList)}.
-	 */
-	@Test
-	public void testFindUser() {
-		fail("Not yet implemented");
-	}
-
-
 
 	/**
 	 * There isn't much to test for this method, as long as an exception isn't thrown we 
