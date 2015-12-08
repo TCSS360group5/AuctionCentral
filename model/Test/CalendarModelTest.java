@@ -701,4 +701,34 @@ public class CalendarModelTest {
 		// assert that auction was not calendar
 		assertEquals(5, myCalendar.numFutureAuctions());
 	}
+	
+	/**
+	 * Add 5 auctions in the current month and then make sure there are 5 auctions returned when.
+	 * GetAuctionForMonth is called.
+	 * 
+	 * @return Number of auctions for current month = 5
+	 */
+	@Test
+	public void testGetAuctionsForCurrentMonthOnCalendarWith5AuctionsForCurrentMonth()
+	{
+		AuctionModel[] auctions = new AuctionModel[5];
+		
+		int year = LocalDate.now().getYear();
+		int month = LocalDate.now().getMonthValue();
+		
+		for(int  i = 1; i <= 5; i++)
+		{
+			auctions[i-1] = new AuctionModel("testOrg" + i, "testUsername" + i, LocalDateTime.of(year, month, i, 2, 0), LocalDateTime.of(year, month, i, 5, 0) );
+		}
+		
+		for(int  i = 0; i < 5; i++)
+		{
+			// so we can add past auctions
+			myCalendar.addSavedAuction(auctions[i]);
+		}
+		
+		Map<LocalDate, ArrayList<AuctionModel>> monthAuctions = myCalendar.getAuctionsForCurrentMonth();
+		System.out.println(monthAuctions.size());
+		assertEquals(monthAuctions.size(), 5);
+	}
 }

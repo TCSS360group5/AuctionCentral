@@ -45,6 +45,8 @@ public class CalendarModel
 	 * @throws AuctionsAtCapacityForWeekException 
 	 * @throws AuctionsAtCapacityException 
 	 * @throws AuctionTooFarAwayException 
+	 * 
+	 * @author Demy
 	 */
 	public void addAuction(AuctionModel theAuction) throws AuctionTimeBetweenException, 
 														   AuctionsPerDayException,
@@ -85,6 +87,7 @@ public class CalendarModel
 	
 	/**
 	 * Determines which exception to throw.
+	 * 
 	 * @param theFutureAuctions
 	 * @param theNinetyDays
 	 * @param theWeekCheck
@@ -93,6 +96,8 @@ public class CalendarModel
 	 * @throws AuctionsAtCapacityException 
 	 * @throws AuctionsAtCapacityForWeekException 
 	 * @throws AuctionBackwardsTimeException 
+	 * 
+	 * @author Demy
 	 */
 	private void determineError(boolean theFutureAuctions,
 								boolean theNinetyDays, 
@@ -126,6 +131,8 @@ public class CalendarModel
 	 * @param theAuctionStart Auction start
 	 * @param theAuctionEnd Auction end
 	 * @return whether the time criteria mentioned in the description is met.
+	 * 
+	 * @author Demy
 	 */
 	private boolean checkTimes(LocalDateTime theAuctionStart, LocalDateTime theAuctionEnd)
 	{
@@ -214,6 +221,8 @@ public class CalendarModel
 	 * @return true iff there is room for the auction in the day and the hours between start and end of the other scheduled auction(s) is okay.
 	 * @throws AuctionTimeBetweenException 
 	 * @throws AuctionsPerDayException 
+	 * 
+	 * @author Demy
 	 */
 	private void checkAuctionsForDay(AuctionModel theAuction) throws AuctionTimeBetweenException, AuctionsPerDayException
 	{
@@ -262,56 +271,13 @@ public class CalendarModel
 		}
 	}
 	
-	/**
-	 * Changes the Auction start and end time of an Auction already in the Calendar.
-	 * 
-	 * @param theAuction the Auction to be changed
-	 * @param month the new month.
-	 * @param day the new day.
-	 * @param year the new year.
-	 * @param auctionHourStart the new Auction hour start.
-	 * @param auctionMinuteStart the new Auction minute start.
-	 * @param auctionHourEnd the new Auction hour end.		
-	 * @param auctionMinuteEnd the new Auction minute end.
-	 * @return whether or not the Auction was edited.
-	 */
-	/*
-	public boolean editAuctionDateTime(AuctionModel theAuction,int month, int day, int year,
-			int auctionHourStart, int auctionMinuteStart,
-			int auctionHourEnd, int auctionMinuteEnd)
-	{
-		LocalDateTime newStart = LocalDateTime.of(year, month, day, auctionHourStart, auctionMinuteStart);
-		LocalDateTime newEnd = LocalDateTime.of(year, month, day, auctionHourEnd, auctionMinuteEnd);
-		  
-		LocalDateTime oldStart = theAuction.getStartTime();
-		LocalDateTime oldEnd = theAuction.getEndTime();
-	
-		ArrayList<AuctionModel> oldList = myAuctionByDateList.get(oldStart.toLocalDate());
-		ArrayList<AuctionModel> removeFrom = oldList;
-		removeFrom.remove(theAuction);
-		  
-		myAuctionByDateList.replace(oldStart.toLocalDate(), removeFrom);
-		  
-		theAuction.setAuctionDate(newStart, newEnd);
-		  
-		if(addAuction(theAuction))
-		{
-			return true;
-		}
-		else
-		{
-			theAuction.setAuctionDate(oldStart, oldEnd);
-			myAuctionByDateList.replace(oldStart.toLocalDate(), oldList);
-			return false;
-		}
-		  
-		  
-	}*/
 	  
 	/**
 	 * Returns a sorted (by date) map of auctions for the current month.
 	 * 
 	 * @return sorted by date map of auctions for the current month.
+	 * 
+	 * @author Demy
 	 */
 	public Map<LocalDate, ArrayList<AuctionModel>> getAuctionsForCurrentMonth()
 	{
@@ -323,13 +289,15 @@ public class CalendarModel
 	 * 
 	 * @param theMonth the month to get a map for.
 	 * @return sorted by date map of auctions for the entered month.
+	 * 
+	 * @author Demy
 	 */
 	public Map<LocalDate, ArrayList<AuctionModel>> getAuctionsForChosenMonth(LocalDate theMonth)
 	{
 		Map<LocalDate, ArrayList<AuctionModel>> returnMap = new TreeMap<LocalDate,ArrayList<AuctionModel>>();
 		for(Entry<LocalDate, ArrayList<AuctionModel>> entry : myAuctionByDateList.entrySet())
 		{
-			if(entry.getKey().equals(theMonth))
+			if(entry.getKey().getMonthValue() == theMonth.getMonthValue())
 			{
 				returnMap.put(entry.getKey(), entry.getValue());
 			}
@@ -342,6 +310,8 @@ public class CalendarModel
 	/**
 	 * Gets a Map of all future Auctions.
 	 * @return Map of all future Auctions.
+	 * 
+	 * @author Demy
 	 */
 	public Map<LocalDate, ArrayList<AuctionModel>> getAllFutureAuctions()
 	{
@@ -364,6 +334,8 @@ public class CalendarModel
 	 * @param auctionName the Auction name.
 	 * @param auctionDate the Auction date.
 	 * @return the chosen Auction.
+	 * 
+	 * @author Demy
 	 */
 	public AuctionModel viewAuction(String auctionName, LocalDate auctionDate)
 	{
@@ -390,6 +362,8 @@ public class CalendarModel
 	 * Removes the desired Auction. 
 	 * 
 	 * @param theAuction the Auction to be removed.
+	 * 
+	 * @author Demy
 	 */
 	public void removeAuction(AuctionModel theAuction) 
 	{
@@ -412,6 +386,8 @@ public class CalendarModel
 	 * 
 	 * @param theDate the Date chosen (only the month matters)
 	 * @return String representation for the chosen month.
+	 * 
+	 * @author Demy
 	 */
 	public String toString(LocalDate theDate) 
 	{
@@ -432,6 +408,8 @@ public class CalendarModel
 	/**
 	 * Counts up the total number of future auctions.
 	 * @return  number of auctions in the future.
+	 * 
+	 * @author Demy
 	 */
 	public int numFutureAuctions()
 	{
@@ -447,5 +425,30 @@ public class CalendarModel
 		
 		return count;
 	}
-  
+	
+	/**
+	 * Adds an auction to the calendar without checking business rules. Used when loading
+	 * a file, to add past auctions without errors.
+	 * 
+	 * @param the Auction to add to the calendar
+	 * 
+	 * @author Demy
+	 */
+	public void addSavedAuction(AuctionModel theAuction)
+	{
+		ArrayList<AuctionModel> putAuction;
+		LocalDate auctionDay = theAuction.getStartTime().toLocalDate();
+		
+		if(myAuctionByDateList.containsKey(auctionDay))
+		{
+			putAuction = myAuctionByDateList.get(auctionDay);
+			myAuctionByDateList.replace(auctionDay, putAuction);
+		}
+		else
+		{
+			putAuction = new ArrayList<AuctionModel>();
+			putAuction.add(theAuction);
+			myAuctionByDateList.put(auctionDay, putAuction);
+		}
+	}
 }
