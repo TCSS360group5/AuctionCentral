@@ -386,30 +386,6 @@ public class CalendarModel
 	}
 	  
 	/**
-	 * Returns a String of the auctions for the chosen month.
-	 * 
-	 * @param theDate the Date chosen (only the month matters)
-	 * @return String representation for the chosen month.
-	 * 
-	 * @author Demy
-	 */
-	public String toString(LocalDate theDate) 
-	{
-		Map<LocalDate, ArrayList<AuctionModel>> displayMap = getAuctionsForChosenMonth(theDate);
-		StringBuilder answer = new StringBuilder();
-		for (Map.Entry<LocalDate,ArrayList<AuctionModel>> entry : displayMap.entrySet()) 
-		{
-			answer.append(entry.getKey());
-			ArrayList<AuctionModel> Auctions = entry.getValue();
-			for (int i = 0; i < Auctions.size(); i++)
-			{
-				answer.append(i + " " + Auctions.get(i).toString());
-			}
-		}
-		return answer.toString();
-	}
-	
-	/**
 	 * Counts up the total number of future auctions.
 	 * @return  number of auctions in the future.
 	 * 

@@ -181,40 +181,4 @@ public class AuctionModel implements Serializable
 	  return myUserName;
   }
 
-  
-  /**
-   * Returns a simple to String for this auction.
-   * 
-   * @return the auction name and date.
-   */
-  public String toStringSimple(){
-	  StringBuilder answer = new StringBuilder();
-	  answer.append("Name: " + myAuctionName + "\n");
-	  answer.append("Date: " + myStartTime.getMonth() + " " + myStartTime.getDayOfMonth() +", " + myStartTime.getYear() + "\n");
-	  return answer.toString();  
-  }
-  
-  /**
-   * Returns a String representation of this auction.
-   * 
-   * @return the name, org name, date, and inventory.
-   */
-  public String toString(){
-	  StringBuilder answer = new StringBuilder();
-	  answer.append("Name: " + myAuctionName + "\n");
-	  answer.append("Organization name: " + myOrgName + "\n");
-	  answer.append("Date: " + myStartTime.getMonth() + " " + myStartTime.getDayOfMonth() +", " + myStartTime.getYear() + "\n");
-	  answer.append("Start time: " + myStartTime.getHour() + ":" + myStartTime.getMinute() + "\n");
-	  answer.append("End: " + myEndTime.getHour() + ":" + myEndTime.getMinute() + "\n");
-	  if(myInventory!= null) 
-	  {
-		  answer.append("Items: " + myInventory.size());
-	  } 
-	  else 
-	  {
-		  answer.append("Items: 0");
-	  }
-	  return answer.toString();
-  }
-
 }

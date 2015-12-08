@@ -239,7 +239,7 @@ public class CalendarModelTest {
 		}
 		catch(Exception e)
 		{
-			if(e.getMessage().equals("An auction may not be scheduled more than " + 90 + " days in the future."))
+			if(e.getMessage().equals("An auction may not be scheduled more than " + 90 + " days in the future. Or anytime in the past."))
 			{
 				// only true if this error message is received
 				errorMessage = true;
@@ -249,6 +249,7 @@ public class CalendarModelTest {
 		}
 		
 		// assert proper error message received
+		
 		assertTrue(errorMessage);
 		// assert auction wasn't added
 		assertEquals(myCalendar.numFutureAuctions(), 0);
