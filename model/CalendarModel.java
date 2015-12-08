@@ -199,7 +199,6 @@ public class CalendarModel
 			if(myAuctionByDateList.containsKey(theAuctionDate.plusDays(i)))
 			{
 				ArrayList<AuctionModel> dayAuctions = myAuctionByDateList.get(theAuctionDate.plusDays(i));
-				System.out.println();
 				count += dayAuctions.size();
 			}
 			if(myAuctionByDateList.containsKey(theAuctionDate.minusDays(i)))
