@@ -411,4 +411,12 @@ public class NonProfitController extends UserController {
 		}
 		return LocalDateTime.of(year, month, day, hour, minutes);
 	}
+	
+	/**
+	 * Returns the NPOModel, necessary for testing.
+	 * @return
+	 */
+	public NonProfitModel getNPOModel() {
+		return myNonProfitModel;
+	}
 }

@@ -35,7 +35,9 @@ public class AuctionCentralToStringsTest {
 	}
 
 	/**
-	 * Test method for {@link view.AuctionCentralToStrings#auctionToString(model.AuctionModel)}.
+	 * Tests to make sure that the toString method for an auction returns what we expect.
+	 * 
+	 * @author Shannon
 	 */
 	@Test
 	public void testAuctionToString() {
@@ -55,7 +57,7 @@ public class AuctionCentralToStringsTest {
 	}
 
 	/**
-	 * Test method for {@link view.AuctionCentralToStrings#itemToString(model.ItemModel)}.
+	 * Tests that the toString for the items returns what we expect.
 	 */
 	@Test
 	public void testItemToString() {
