@@ -101,15 +101,13 @@ public class FileSavingTest {
 		CalendarModel aCalendar = new CalendarModel();
 		FileSaving.saveAll(myUserArray, myAuctionArray, aCalendar,
 				USER_TEST_SER_STRING, AUCTION_TEST_SER_STRING);
+		 try
+		 {
+		 FileSaving.serializeObject("users.ser", myNPOUser);
+		 } catch (IOException io) {
+		 System.out.println(io.getMessage());
+		 }
 	}
-
-	// try
-	// {
-	// FileSaving.serializeObject("users.ser", myNPOUser);
-	// } catch (IOException io) {
-	// System.out.println(io.getMessage());
-	// }
-	// }
 
 	/**
 	 * Test method for the loadUsers() method. Tests that users are deserialized
@@ -119,7 +117,7 @@ public class FileSavingTest {
 	 */
 	@Test
 	public void testLoadUsers() {
-		UserModel theUser = null;
+		UserModel theUser = new UserModel(null, null);
 		try {
 			theUser = (UserModel) FileSaving.deSerializeObject("users.ser");
 		} catch (IOException io) {
