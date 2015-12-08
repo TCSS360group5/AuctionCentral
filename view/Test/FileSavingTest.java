@@ -25,7 +25,6 @@ import view.FileSaving;
  */
 public class FileSavingTest {
 	
-	//FileSaving myTestFileSaver;
 	AuctionModel myAuction;
 	AuctionModel myAuctionWithItems;
 	AuctionModel myAuctionWithItemsWithBids;
@@ -34,8 +33,15 @@ public class FileSavingTest {
 	UserModel myBidderUser;
 	LocalDateTime myDate;
 
+	/**
+	 * This class creates all the files needed to set up for the testing.  Including creating and then 
+	 * serializing an auction, an auction with items, an auction with items and bids, and the three users.
+	 * 
+	 * @throws Exception
+	 * @author Quinn
+	 */
 	@Before
-	public void setUp() throws Exception {
+	public void setUp(){
 		myDate = LocalDateTime.of(2015, 12, 15, 12, 30);
 		myAuction = new AuctionModel("Org Name", "UserForSerialize", myDate, myDate.plusHours(2));
 		try
