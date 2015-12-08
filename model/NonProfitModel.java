@@ -66,10 +66,10 @@ public class NonProfitModel extends UserModel {
 	 * @author Quinn
 	 */
 	public void check365(LocalDate theDate) throws AuctionException {
-		if (theDate.minusDays(365).isBefore(myLastAuctionDate)) {
+		if (theDate.minusDays(365).isBefore(myLastAuctionDate) || myAuction != null && theDate.minusDays(365).isBefore(myAuction.getEndTime().toLocalDate())) {
 			throw new AuctionException(
 					"Your next auction must be 365 days after your last auction");
-		}
+		} 
 	}
 
 	/**

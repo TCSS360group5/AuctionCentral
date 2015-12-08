@@ -314,9 +314,6 @@ public class NonProfitController extends UserController {
 					// System.out.println(myNonProfitModel.getAuction().toString());
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
-					theCalendar.addAuction(oldAuction);
-					
-					// System.out.println("There was an error. Your auction has not been edited.");
 				}
 			}
 		}

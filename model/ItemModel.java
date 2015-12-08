@@ -105,5 +105,53 @@ public class ItemModel  implements Serializable
 	  return answer.toString();
   }
   
+	/**
+	 * Compares this object to another object.
+	 * 
+	 * @param theOther
+	 *            this is the other object being compared.
+	 * @return returns true if the objects have the same values in their fields
+	 * @author Quinn
+	 */
+	@Override
+	public boolean equals(Object theOther) 
+	{
+		boolean answer = true;
+		if (theOther instanceof ItemModel) 
+		{
+			ItemModel theOtherModel = (ItemModel) theOther;
+			if (theOtherModel.myItemName.compareTo(myItemName) != 0) 
+			{
+				answer = false;
+			}
+			if (theOtherModel.myDescription.compareTo(myDescription) != 0)
+			{
+				answer = false;
+			}
+			if (theOtherModel.myStartingBid != myStartingBid) 
+			{
+				answer = false;
+			}
+		} else {
+			answer = false;
+		}
+		return answer;
+	}
+
+	/**
+	 * This method produces the hashCode of this object.
+	 * 
+	 * @return returns the hashCode of this object.
+	 * @author Quinn
+	 */
+	@Override
+	public int hashCode() {
+		int answer = 0;
+		answer += myItemName.hashCode();
+		answer += myDescription.toString().hashCode();
+		answer += myStartingBid;
+		return answer;
+	}
+  
 }
 

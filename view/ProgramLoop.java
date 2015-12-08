@@ -19,8 +19,15 @@ import model.ItemModel;
 import model.NonProfitModel;
 import model.UserModel;
 
+/**
+ * This is the main loop class of the program. It logs the user in, helps with
+ * displaying the menus, calls the user classes to spread computational labor
+ * and does some activities that were difficult for the user classes to
+ * implement.
+ * 
+ * @author UWT Group 5
+ */
 public class ProgramLoop {
-	//private FileSaving myFileSaver;
 	private UserModel myUserModel;
 	private UserController myUserController;
 	private static CalendarModel myCalendar;
@@ -40,11 +47,12 @@ public class ProgramLoop {
 		myUserList = new ArrayList<UserModel>();
 		myAuctionList = new ArrayList<AuctionModel>();
 		myScanner = new Scanner(System.in);
-		//myFileSaver = new FileSaving();
 	}
 
 	/**
 	 * Loads and stores the files, handles user log in, and outputs files.
+	 * 
+	 * @author Shannon, Quinn
 	 */
 	public void startProgram() {
 		FileSaving.loadAll(myUserList, myAuctionList, myCalendar);
@@ -83,6 +91,14 @@ public class ProgramLoop {
 		myScanner.close();
 	}
 
+	/**
+	 * This method is the UI for logging in. It calls the find user by name
+	 * method and finds the user if they are in the user list and then loads the
+	 * user into the program according to their type.
+	 * 
+	 * @return returns true if the login was successful, false otherwise.
+	 * @author Quinn.
+	 */
 	private boolean login() {
 		boolean foundUser = false;
 		System.out.print("Please enter your username: ");
@@ -109,6 +125,15 @@ public class ProgramLoop {
 		return foundUser;
 	}
 
+	/**
+	 * This method is not a user story and it is therefore hidden from the user
+	 * interface, however it is still accessable by a hidden command for use by
+	 * system admins. This method creates a new user with one of the new types
+	 * and if needed, gets the NPO name as well.
+	 * 
+	 * @return returns true if a user was created, false otherwise.
+	 * @author Quinn
+	 */
 	private boolean createNewUser() {
 		boolean addedUser = false;
 		System.out.print("Please enter your username: ");
@@ -149,7 +174,7 @@ public class ProgramLoop {
 		} else // user already is in user list
 		{
 			System.out.println("Cannot add the user name "
-					+ myUserModel.getUserName()
+					+ userName
 					+ " as it is already in our system!");
 		}
 		return addedUser;
@@ -178,7 +203,11 @@ public class ProgramLoop {
 	// }
 
 	/**
-	 * Executes the program.
+	 * This is the main program loop while a user is logged in. It executes the
+	 * program including moving through the menus and calling the user
+	 * controllers if more needs to be done.
+	 * 
+	 * @author Quinn.
 	 */
 	private void executeProgramLoop() {
 		if (myUserModel.getUserType() == UserModel.UserType.NPO) {
@@ -188,6 +217,7 @@ public class ProgramLoop {
 		}
 		boolean notLogout = true;
 		do {
+			// print out the menu title
 			System.out.println("\n"
 					+ myUserController.menuTitle(myCurrentState));
 			if (myCurrentState == UserController.Command.VIEWAUCTIONDETAILS) {
@@ -257,6 +287,12 @@ public class ProgramLoop {
 		} while (notLogout);
 	}
 
+	/**
+	 * This method displays the auctions that a bidder can bid on and allows the
+	 * bidder to select one of them and look at its details.
+	 * 
+	 * @author Quinn
+	 */
 	private void viewBidderAuctions() {
 		System.out.println("Future Auctions View");
 		ArrayList<AuctionModel> futureAuctions = auctionMapToList(myCalendar
@@ -280,7 +316,10 @@ public class ProgramLoop {
 	}
 
 	/**
-	 * Displays/controls menu for viewing items of the current auction.
+	 * This method displays a list of items of the current auction and allows
+	 * the user to choose one of the item to look at its details.
+	 * 
+	 * @author Quinn, Shannon
 	 */
 	private void viewItems() {
 
@@ -318,7 +357,11 @@ public class ProgramLoop {
 	}
 
 	/**
-	 * Displays/Controls the View Calendar menu.
+	 * Displays/Controls the View Calendar menu. This allows a user to look at a
+	 * list of auctions and select one of them to view more details or go back
+	 * to a previous menu.
+	 * 
+	 * @author Shannon, Quinn
 	 */
 	private void viewCalendarAuctions() {
 		myAuctionList.clear();
@@ -345,6 +388,15 @@ public class ProgramLoop {
 		}
 	}
 
+	/**
+	 * This method converts a map of auctions that came from the calendar and
+	 * converts them to a list of AuctionModels.
+	 * 
+	 * @param theAuctionMap
+	 *            This is the auction map that comes from the calendar.
+	 * @return returns an arrayList of Auction Models
+	 * @author Quinn
+	 */
 	private ArrayList<AuctionModel> auctionMapToList(
 			Map<LocalDate, ArrayList<AuctionModel>> theAuctionMap) {
 		ArrayList<AuctionModel> allAuctions = new ArrayList<AuctionModel>();
@@ -357,6 +409,15 @@ public class ProgramLoop {
 		return allAuctions;
 	}
 
+	/**
+	 * This method is used to print out a list of auctions with a number next to
+	 * it so the user can know which one they want to select.
+	 * 
+	 * @param theAuctionList
+	 *            This is the auction list to be printed out.
+	 * @return This returns the number of auctions in the auction list
+	 * @author Shannon, Quinn
+	 */
 	private int printOutAllAuctions(ArrayList<AuctionModel> theAuctionList) {
 		int AuctionListNumber = 1;
 		for (int i = 0; i < theAuctionList.size(); i++) {
@@ -371,9 +432,11 @@ public class ProgramLoop {
 	}
 
 	/**
-	 * Gets the user input between a range of integer values.
+	 * Gets the user input between a range of integer values. Will not let the
+	 * user continue unless they select a value within the range.
 	 * 
-	 * @return the user's selection
+	 * @return the user's selection as an int
+	 * @author Quinn
 	 */
 	private int getNumberFromUserWithinRange(int Start, int End) {
 		return getNumberFromUserWithinRange(Start, End, Start);
@@ -381,9 +444,11 @@ public class ProgramLoop {
 
 	/**
 	 * Gets the user input between a range of integer values and includes a
-	 * hidden value option.
+	 * hidden value option. Will not let the user continue unless they select a
+	 * value within the range or the hidden value.
 	 * 
-	 * @return the user's selection
+	 * @return the user's selection as an int
+	 * @author Quinn
 	 */
 	private int getNumberFromUserWithinRange(int Start, int End,
 			int HiddenOption) {

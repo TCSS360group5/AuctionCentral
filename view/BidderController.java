@@ -92,6 +92,7 @@ public class BidderController extends UserController
 					}
 					System.out.println("Which would you like to edit?");
 					int auctionNum = myScanner.nextInt();
+					myScanner.nextLine();
 					if(auctionNum > bidsToEdit.size())
 					{
 						System.out.println("Invalid bid.");
@@ -118,6 +119,7 @@ public class BidderController extends UserController
 	{
 		Double bid = null;
 		String actionMessage = "Please Enter a Bid, Press Q to cancel:";
+		System.out.println("Found in bids: " + myBidderModel.getBids().containsKey(theItem));
 		String exitString = "Q";
 
 		boolean exitBid = false;

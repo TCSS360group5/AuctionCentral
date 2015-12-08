@@ -236,10 +236,12 @@ public class FileSaving {
 	}
 	
 	/**
+	 * This method actually does the serialization.  It takes the output file name and saves the
+	 * object into that file.
 	 * 
-	 * @param OutputFileName
-	 * @param theObject
-	 * @throws IOException
+	 * @param OutputFileName  This is the name of the file that you want the object to be saved to.
+	 * @param theObject  This is the object that you are saving.
+	 * @throws IOException This is thrown if there is a problem saving to a file with that file name.
 	 * @author Quinn
 	 */
 	 public static void serializeObject(String OutputFileName, Object theObject) throws IOException
@@ -252,11 +254,14 @@ public class FileSaving {
 	   }
 
 	 /**
+	  * This method does the de-serialization.  It takes the input file name and gets the object stored
+	  * in that file and returns it.
 	  * 
-	  * @param theInputFileName
-	  * @return
-	  * @throws IOException
-	  * @throws ClassNotFoundException
+	  * @param theInputFileName This string is the name of the input file that has the stored data on it.
+	  * @return returns the object that was stored in the file.
+	  * @throws IOException This exception is thrown if the file could not be found or there was 
+	  * a problem reading the file.
+	  * @throws ClassNotFoundException This exception is thrown if the object in the file could not be read.
 	  * @author Quinn
 	  */
 	   public static Object deSerializeObject(String theInputFileName) throws IOException, ClassNotFoundException
