@@ -306,9 +306,10 @@ public class NonProfitController extends UserController {
 						myNonProfitModel.getNPOName(),
 						myNonProfitModel.getUserName(), startTime, endTime,
 						auctionItems);
+				AuctionModel oldAuction = myNonProfitModel.getAuction();
 
 				try {
-					theCalendar.removeAuction(myNonProfitModel.getAuction());
+					theCalendar.removeAuction(oldAuction);
 					theCalendar.addAuction(newAuction);
 					myNonProfitModel.setAuction(newAuction);
 					System.out.println("Auction has been edited.");
@@ -318,8 +319,8 @@ public class NonProfitController extends UserController {
 					// System.out.println(myNonProfitModel.getAuction().toString());
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
-
-					// theCalendar.addAuction(myNonProfitModel.getAuction());
+					theCalendar.addAuction(oldAuction);
+					
 					// System.out.println("There was an error. Your auction has not been edited.");
 				}
 			}
